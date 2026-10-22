@@ -1,0 +1,176 @@
+/* =====================================================================
+   Light / dark theme
+   ---------------------------------------------------------------------
+   Dark is the default design. Light mode turns on when <html> has
+   data-theme="light" (the nav toggle sets it and remembers it).
+
+   How it works: instead of editing every component, this file re-colours
+   the exact colour classes the sections use, but only in light mode.
+
+   Sections marked with the attribute data-keep-dark stay dark in BOTH
+   modes. Use it on sections that sit on dark photos or video (the hero,
+   the laptop section, the contact section).
+
+   Import this file once, in src/app/layout.tsx, after globals.css:
+     import "./theme.css";
+   ===================================================================== */
+
+/* Light mode swaps the three colour variables from globals.css.
+   The page background, the default text colour and every bg-background,
+   text-foreground and bg-accent class follow them automatically. */
+:root[data-theme="light"] {
+  --background: #f5f6f8;
+  --foreground: #0b0f14;
+  color-scheme: light;
+}
+
+/* The hero's bottom fade blends it into the dark laptop section. In light mode the hero is light,
+   so the fade is hidden and the hero ends with a clean edge. */
+:root[data-theme="light"] .hero-fade {
+  display: none;
+}
+
+/* Dark-locked sections get the dark values back, so they look the same in both modes */
+:root[data-theme="light"] [data-keep-dark] {
+  --background: #07090c;
+  --foreground: #f4f6fb;
+  color-scheme: dark;
+  color: var(--foreground);
+}
+
+/* Toggle icons: sun in dark mode (click for light), moon in light mode */
+.theme-icon-moon {
+  display: none;
+}
+:root[data-theme="light"] .theme-icon-sun {
+  display: none;
+}
+:root[data-theme="light"] .theme-icon-moon {
+  display: block;
+}
+
+/* Colours fade for a moment right after a click */
+:root.theme-transition,
+:root.theme-transition *,
+:root.theme-transition *::before,
+:root.theme-transition *::after {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease !important;
+}
+
+/* ---------------------------------------------------------------------
+   Light-mode colours. Everything inside a data-keep-dark section is
+   skipped by the :not() below.
+   --------------------------------------------------------------------- */
+:root[data-theme="light"] :not([data-keep-dark], [data-keep-dark] *) {
+  /* Backgrounds */
+  /* bg-background and its /70 and /95 versions follow --background above */
+  &[class~="bg-[#07090c]"] {
+    background-color: #f5f6f8;
+  }
+  &[class~="bg-[#0a0d12]"] {
+    background-color: #eceff3;
+  }
+  &[class~="bg-[#0b0f14]"] {
+    background-color: #ffffff;
+  }
+  &[class~="bg-[#0b0f14]/80"] {
+    background-color: rgba(255, 255, 255, 0.85);
+  }
+  &[class~="bg-[#0d1117]"] {
+    background-color: #f0f2f5;
+  }
+  &[class~="bg-[#161c24]"] {
+    background-color: #e4e8ee;
+  }
+
+  /* Borders and lines */
+  &[class~="border-[#242d38]"] {
+    border-color: #dde2e8;
+  }
+  &[class~="border-[#1c232d]"] {
+    border-color: #e3e7ec;
+  }
+  &[class~="border-white/10"] {
+    border-color: rgba(11, 15, 20, 0.1);
+  }
+
+  /* Text: headings and strong text */
+  &[class~="text-white"]:not([class~="keep-white"]),
+  &[class~="text-[#eef1f5]"] {
+    color: #0b0f14;
+  }
+  &[class~="text-slate-200"] {
+    color: #2f3945;
+  }
+  &[class~="text-slate-300"] {
+    color: #3d4753;
+  }
+  &[class~="text-slate-400"] {
+    color: #5b6572;
+  }
+
+  /* Hero prompt box (frosted glass, white pills) */
+  &[class~="bg-slate-800/50"] {
+    background-color: rgba(255, 255, 255, 0.75);
+  }
+  &[class~="border-white/20"] {
+    border-color: rgba(11, 15, 20, 0.14);
+  }
+  &[class~="border-white/40"] {
+    border-color: rgba(11, 15, 20, 0.28);
+  }
+  &[class~="text-white/90"] {
+    color: rgba(11, 15, 20, 0.9);
+  }
+  &[class~="hover:bg-white/10"]:hover {
+    background-color: rgba(11, 15, 20, 0.06);
+  }
+  &[class~="focus-visible:ring-white"]:focus-visible {
+    --tw-ring-color: #0b0f14;
+  }
+
+  /* Text: greys, from strongest to quietest */
+  &[class~="text-[#aab3be]"] {
+    color: #4b5663;
+  }
+  &[class~="text-[#9aa3ae]"] {
+    color: #66707d;
+  }
+  &[class~="text-[#8b95a1]"] {
+    color: #5b6572;
+  }
+  &[class~="text-[#7d8794]"] {
+    color: #5f6b79;
+  }
+  &[class~="text-[#6b7480]"],
+  &[class~="text-[#59616b]"] {
+    color: #7a8491;
+  }
+  &[class~="text-[#5b7cff]"] {
+    color: #3a55e0;
+  }
+
+  /* Hover and placeholder colours */
+  &[class~="hover:text-white"]:hover {
+    color: #0b0f14;
+  }
+  &[class~="hover:text-[#aab3be]"]:hover {
+    color: #2f3945;
+  }
+  &[class~="placeholder:text-[#6b7480]"]::placeholder {
+    color: #7a8491;
+  }
+
+  /* The heavy black glow around cards becomes a soft shadow */
+  &[class*="shadow-[0_0_40px"] {
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+  }
+
+  /* Customer logos are turned white for dark mode. Make them dark for light mode. */
+  &[class~="invert"] {
+    filter: brightness(0);
+  }
+}
