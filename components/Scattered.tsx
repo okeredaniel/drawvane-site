@@ -5,8 +5,8 @@ import { motion } from "motion/react";
 
 // Put the two images in /public/scattered/ as before.jpg and after.jpg.
 // If yours are .png or .webp, change the extension in the paths below.
-const BEFORE = { src: "/scattered/before.jpg", alt: "A pile of scattered paper drawings" };
-const AFTER = { src: "/scattered/after.jpg", alt: "Drawings linked into one project set" };
+const BEFORE = { src: "/scattered/card-2.avif", alt: "A pile of scattered paper drawings" };
+const AFTER = { src: "/scattered/card-1.avif", alt: "Drawings linked into one project set" };
 const CAPTION = "Every sheet, spec and RFI, linked.";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -17,13 +17,13 @@ const CARDS = [
   {
     title: "RFIs, ready to send",
     text: "References and markups included.",
-    image: "/scattered/card-1.jpg",
+    image: "/scattered/card-3.avif",
     from: "left" as const,
   },
   {
     title: "Fits your stack",
     text: "Works with the tools your team already uses.",
-    image: "/scattered/card-2.jpg",
+    image: "/scattered/card-4.avif",
     from: "right" as const,
   },
 ];

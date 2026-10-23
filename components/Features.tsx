@@ -11,17 +11,17 @@ const ITEMS = [
   {
     title: "Flag conflicts",
     text: "Plans checked against specs, in context.",
-    image: "/features/feature-1.jpg",
+    image: "/features/feature-1.avif",
   },
   {
     title: "Compare revisions",
     text: "See exactly what changed between two sets.",
-    image: "/features/feature-2.jpg",
+    image: "/features/feature-2.avif",
   },
   {
     title: "Measure takeoffs",
     text: "Quantities pulled straight from the drawings.",
-    image: "/features/feature-3.jpg",
+    image: "/features/feature-3.avif",
   },
 ];
 
@@ -32,7 +32,10 @@ export default function Features() {
   return (
     <section
       id="features"
-      className="bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
+      // overflow-x-clip: the two columns slide in from the sides, and before
+      // they animate the right one sits 40px off to the right, which was
+      // creating a sideways scrollbar on small screens.
+      className="overflow-x-clip bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}

@@ -18,19 +18,19 @@ const CASES = [
     label: "Multifamily · Developer",
     title: "1,200 review hours back to the team",
     text: "Takeoffs and scope checks tied to the sheets they came from.",
-    image: "/customers/case-1.jpg",
+    image: "/customers/case-1.avif",
   },
   {
     label: "Data center · MEP contractor",
     title: "Two weeks saved in coordination",
     text: "Spec and drawing conflicts resolved before the first submittal.",
-    image: "/customers/case-2.jpg",
+    image: "/customers/case-2.avif",
   },
   {
     label: "Healthcare · General contractor",
     title: "38% fewer RFIs on a 214-sheet pavilion",
     text: "Conflicts surfaced in preconstruction instead of in the field.",
-    image: "/customers/case-3.jpg",
+    image: "/customers/case-3.avif",
   },
 ];
 
@@ -49,10 +49,7 @@ function CaseCard({
   const [missing, setMissing] = useState(false);
   return (
     <article
-      className="case-card relative overflow-hidden rounded-[28px] border border-[#242d38] bg-[#0b0f14] shadow-[0_0_40px_rgba(0,0,0,0.5)] will-change-transform"
-      style={{
-        width: "min(930px, 100%, max(560px, calc((100vh - 300px) * 1.5)))",
-      }}
+      className="case-card relative w-full overflow-hidden rounded-[22px] border border-[#242d38] bg-[#0b0f14] shadow-[0_0_40px_rgba(0,0,0,0.5)] will-change-transform md:w-[min(930px,100%,max(560px,calc((100vh-300px)*1.5)))] md:rounded-[28px]"
     >
       <div className="aspect-[1.5/1] w-full bg-[#0d1117]">
         {!missing && (
@@ -66,11 +63,11 @@ function CaseCard({
           />
         )}
       </div>
-      <div className="border-t border-[#1c232d] px-6 py-6">
+      <div className="border-t border-[#1c232d] px-5 py-5 md:px-6 md:py-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#5b7cff]">
           {label}
         </p>
-        <h3 className="mt-3 text-2xl font-medium leading-tight tracking-[-0.03em] text-[#eef1f5]">
+        <h3 className="mt-3 text-xl font-medium leading-tight tracking-[-0.03em] text-[#eef1f5] md:text-2xl">
           {title}
         </h3>
         <p className="mt-2 text-base text-[#8b95a1]">{text}</p>
@@ -86,49 +83,56 @@ export default function Customers() {
 
   useGSAP(
     () => {
-      const cards = gsap.utils.toArray<HTMLElement>(".case-card");
-      const dims = gsap.utils.toArray<HTMLElement>(".case-dim");
-      const late = gsap.utils.toArray<HTMLElement>(".case-late");
-      if (cards.length < 3) return;
-      const [c1, c2, c3] = cards;
-      const [d1, d2] = dims;
+      const mm = gsap.matchMedia();
 
-      gsap.set(cards, { transformOrigin: "50% 0%" });
-      gsap.set([c2, c3], { y: () => window.innerHeight });
-      gsap.set(late, { visibility: "visible" });
+      // The stacking scroll animation is desktop only. On phones and small
+      // tablets the cards are just a normal vertical list (see the classes
+      // below), so nothing is pinned or hidden and nothing can break.
+      mm.add("(min-width: 768px)", () => {
+        const cards = gsap.utils.toArray<HTMLElement>(".case-card");
+        const dims = gsap.utils.toArray<HTMLElement>(".case-dim");
+        const late = gsap.utils.toArray<HTMLElement>(".case-late");
+        if (cards.length < 3) return;
+        const [c1, c2, c3] = cards;
+        const [d1, d2] = dims;
 
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: pin.current,
-          start: "top 96px",
-          end: () => "+=" + Math.round(window.innerHeight * 2.2),
-          pin: true,
-          scrub: 0.6,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
+        gsap.set(cards, { transformOrigin: "50% 0%" });
+        gsap.set([c2, c3], { y: () => window.innerHeight });
+        gsap.set(late, { visibility: "visible" });
 
-      tl.fromTo(
-        c2,
-        { y: () => window.innerHeight },
-        { y: PEEK, duration: 1 },
-        0
-      )
-        .to(c1, { scale: SCALE_ONE_BEHIND, duration: 1 }, 0)
-        .to(d1, { opacity: 0.45, duration: 1 }, 0)
-        .fromTo(
-          c3,
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: pin.current,
+            start: "top 96px",
+            end: () => "+=" + Math.round(window.innerHeight * 2.2),
+            pin: true,
+            scrub: 0.6,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        tl.fromTo(
+          c2,
           { y: () => window.innerHeight },
-          { y: PEEK * 2, duration: 1 },
-          1
+          { y: PEEK, duration: 1 },
+          0
         )
-        .to(c2, { scale: SCALE_ONE_BEHIND, duration: 1 }, 1)
-        .to(c1, { scale: SCALE_TWO_BEHIND, duration: 1 }, 1)
-        .to(d1, { opacity: 0.75, duration: 1 }, 1)
-        .to(d2, { opacity: 0.45, duration: 1 }, 1)
-        .to({}, { duration: 0.35 });
+          .to(c1, { scale: SCALE_ONE_BEHIND, duration: 1 }, 0)
+          .to(d1, { opacity: 0.45, duration: 1 }, 0)
+          .fromTo(
+            c3,
+            { y: () => window.innerHeight },
+            { y: PEEK * 2, duration: 1 },
+            1
+          )
+          .to(c2, { scale: SCALE_ONE_BEHIND, duration: 1 }, 1)
+          .to(c1, { scale: SCALE_TWO_BEHIND, duration: 1 }, 1)
+          .to(d1, { opacity: 0.75, duration: 1 }, 1)
+          .to(d2, { opacity: 0.45, duration: 1 }, 1)
+          .to({}, { duration: 0.35 });
+      });
     },
     { scope: root }
   );
@@ -138,22 +142,23 @@ export default function Customers() {
       ref={root}
       id="customers"
       aria-label="Customers"
-      className="overflow-x-clip border-t border-[#242d38] bg-background px-6 pb-[120px] pt-[120px] md:px-24 md:pb-[160px] md:pt-[130px]"
+      className="overflow-x-clip border-t border-[#242d38] bg-background px-5 pb-[80px] pt-[80px] md:px-24 md:pb-[160px] md:pt-[130px]"
     >
       <motion.h2
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.8, ease: EASE }}
-        className="text-center text-[clamp(2.25rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#eef1f5]"
+        className="text-center text-[clamp(2rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#eef1f5]"
       >
         {HEADING}
       </motion.h2>
 
+      {/* Phones: a normal list with gaps. Desktop: the cards stack on top of
+          each other and the section is pinned while you scroll. */}
       <div
         ref={pin}
-        className="relative mt-14 md:mt-[80px]"
-        style={{ paddingBottom: PEEK * 2 }}
+        className="relative mt-10 flex flex-col gap-6 md:mt-[80px] md:block md:pb-[56px]"
       >
         {CASES.map((c, i) => (
           <motion.div
@@ -161,8 +166,8 @@ export default function Customers() {
             className={
               i === 0
                 ? "relative z-10 flex justify-center"
-                : `case-late invisible absolute inset-x-0 top-0 flex justify-center ${
-                    i === 1 ? "z-20" : "z-30"
+                : `case-late relative flex justify-center md:invisible md:absolute md:inset-x-0 md:top-0 ${
+                    i === 1 ? "md:z-20" : "md:z-30"
                   }`
             }
             {...(i === 0

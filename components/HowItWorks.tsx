@@ -14,17 +14,17 @@ const STEPS = [
   {
     title: "1. Upload the set",
     text: "Drawings and specs in one drop.",
-    image: "/how-it-works/step-1.jpg",
+    image: "/how-it-works/step-1.avif",
   },
   {
     title: "2. Ask anything",
     text: "Plain language, cited answers.",
-    image: "/how-it-works/step-2.jpg",
+    image: "/how-it-works/step-2.avif",
   },
   {
     title: "3. Share the answer",
     text: "Send it with the sheet attached.",
-    image: "/how-it-works/step-3.jpg",
+    image: "/how-it-works/step-3.avif",
   },
 ];
 
@@ -136,6 +136,11 @@ export default function HowItWorks() {
         {STEPS.map((step, i) => (
           <article
             key={step.title}
+            // The cards stay dark in light mode, so they opt out of the light
+            // theme's colour swap (data-keep-dark) and the title is pinned to
+            // white (keep-white). Without this the title turns dark and
+            // disappears against the dark card.
+            data-keep-dark
             // the middle card sits on top so the side cards slide out from behind it
             className={`step-card relative overflow-hidden rounded-[32px] border border-[#1c232d] bg-[#0b0e14] shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)] ${
               i === 1 ? "z-10" : "z-0"
@@ -143,7 +148,7 @@ export default function HowItWorks() {
           >
             <StepImage src={step.image} />
             <div className="px-7 pb-8 pt-7">
-              <h3 className="text-2xl font-medium tracking-tight text-white">
+              <h3 className="keep-white text-2xl font-medium tracking-tight text-white">
                 {step.title}
               </h3>
               <p className="mt-3 text-lg text-slate-400">{step.text}</p>

@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 // Put the image in /public/share/ as share.jpg.
 // If yours is .png or .webp, change the extension here.
-const IMAGE = { src: "/share/share.jpg", alt: "A glowing glass slab on a dark surface" };
+const IMAGE = { src: "/share/share.avif", alt: "A glowing glass slab on a dark surface" };
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 

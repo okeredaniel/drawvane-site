@@ -7,16 +7,16 @@ import { useEffect, useRef, useState } from "react";
 // When you add the real file, the logo appears in place of the name.
 // To change a customer, edit its name and src, or add/remove lines.
 const LOGOS: { name: string; src: string }[] = [
-  { name: "Customer 1", src: "/logos/customer-1.svg" },
-  { name: "Customer 2", src: "/logos/customer-2.svg" },
-  { name: "Customer 3", src: "/logos/customer-3.svg" },
-  { name: "Customer 4", src: "/logos/customer-4.svg" },
-  { name: "Customer 5", src: "/logos/customer-5.svg" },
-  { name: "Customer 6", src: "/logos/customer-6.svg" },
+  { name: "Customer 1", src: "/logo/customer-1.avif" },
+  { name: "Customer 2", src: "/logo/customer-2.avif" },
+  { name: "Customer 3", src: "/logo/customer-3.avif" },
+  { name: "Customer 4", src: "/logo/customer-4.avif" },
+  { name: "Customer 5", src: "/logo/customer-5.avif" },
+  { name: "Customer 6", src: "/logo/customer-6.avif" },
 ];
 
 // The small line above the logos. Change or clear it as you like.
-const LABEL = "Trusted by AEC teams";
+const LABEL = "Add your customer logo here";
 
 // Repeat the list so one row is always wider than the screen
 const copies = Math.max(1, Math.ceil(20 / LOGOS.length));

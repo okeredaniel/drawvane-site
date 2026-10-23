@@ -23,12 +23,18 @@ const ROLES = [
   "Other",
 ];
 
-// Optional background image: put it in /public/contact/ as bg.jpg
-// (change the extension here if yours differs). Without it you get a dark glow.
-const BG_IMAGE = "/contact/bg.jpg";
-
 const HEADING = "Run it on your own plan set.";
 const SUBLINE = "Send one project. In a week you will know exactly what it finds.";
+
+// Background is pure CSS (no image needed): dark base, soft grey sheen on the
+// left, and a small blue glow behind the form. Tune the colours here.
+const BG_BASE = "linear-gradient(180deg, #090c11 0%, #0b0f16 50%, #090c11 100%)";
+const BG_LEFT_SHEEN =
+  "radial-gradient(ellipse 520px 560px at 9% 52%, rgba(135,145,165,0.30), transparent 70%), radial-gradient(ellipse 260px 320px at 11% 50%, rgba(170,180,200,0.16), transparent 70%)";
+const BG_RIGHT_SHADE =
+  "radial-gradient(ellipse 600px 800px at 100% 50%, rgba(0,0,0,0.45), transparent 70%)";
+const BG_BLUE_HAZE =
+  "radial-gradient(ellipse 760px 300px at 50% 55%, rgba(37,99,235,0.10), transparent 70%)";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -60,7 +66,6 @@ export default function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
-  const [bgMissing, setBgMissing] = useState(false);
 
   function set<K extends keyof Values>(key: K, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -109,35 +114,48 @@ export default function Contact() {
       id="contact"
       data-keep-dark
       aria-label="Request a pilot"
-      className="relative overflow-hidden border-b border-[#242d38] bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
+      className="relative overflow-hidden border-b border-[#242d38] bg-[#090c11] px-6 py-[120px] md:px-24 md:py-[190px]"
     >
+      {/* Background layers */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "radial-gradient(ellipse 520px 620px at 8% 55%, rgba(255,255,255,0.07), transparent 70%), radial-gradient(ellipse 700px 320px at 50% 52%, rgba(37,99,235,0.22), transparent 70%)",
+          background: `${BG_LEFT_SHEEN}, ${BG_RIGHT_SHADE}, ${BG_BLUE_HAZE}, ${BG_BASE}`,
         }}
       />
-      {!bgMissing && (
-        <img
-          src={BG_IMAGE}
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-          draggable={false}
-          onError={() => setBgMissing(true)}
-        />
-      )}
 
       <div className="relative mx-auto max-w-[990px]">
+        {/* Blue glow that peeks out from behind the form (sits under the fields) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-[272px] z-0 hidden -translate-x-1/2 -translate-y-1/2 md:block"
+        >
+          {/* wide, faint horizontal streak */}
+          <div
+            className="absolute left-1/2 top-1/2 h-[90px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(59,91,255,0.40), rgba(37,99,235,0.12) 55%, transparent 75%)",
+            }}
+          />
+          {/* the bright dot */}
+          <div
+            className="relative size-[6px] rounded-full bg-[#7fb2ff]"
+            style={{
+              boxShadow:
+                "0 0 10px 3px rgba(96,150,255,0.95), 0 0 40px 14px rgba(59,91,255,0.55), 0 0 110px 40px rgba(37,99,235,0.30)",
+            }}
+          />
+        </div>
+
         {status === "sent" ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
             role="status"
-            className="rounded-2xl border border-[#1c232d] bg-[#0b0f14]/80 px-8 py-14 text-center backdrop-blur"
+            className="relative z-10 rounded-2xl border border-[#1c232d] bg-[#0b0f14]/80 px-8 py-14 text-center backdrop-blur"
           >
             <p className="text-2xl font-medium tracking-[-0.03em] text-[#eef1f5]">
               Thanks, we got your request.
@@ -147,7 +165,7 @@ export default function Contact() {
             </p>
           </motion.div>
         ) : (
-          <form onSubmit={onSubmit} noValidate className="space-y-5">
+          <form onSubmit={onSubmit} noValidate className="relative z-10 space-y-5">
             {fields.map((f, i) => (
               <motion.div
                 key={f.key}
@@ -263,7 +281,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.9, ease: EASE, delay: 0.5 }}
-          className="mt-[70px] text-center"
+          className="relative z-10 mt-[70px] text-center"
         >
           <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-medium leading-[1] tracking-[-0.05em] text-white">
             {HEADING}

@@ -14,12 +14,12 @@ const CARDS = [
   {
     title: "Ask in plain language",
     text: "Cited answers in seconds.",
-    image: "/whole-team/card-1.jpg",
+    image: "/whole-team/card-1.avif",
   },
   {
     title: "Check the source",
     text: "Drawings, specs and RFIs in one drop.",
-    image: "/whole-team/card-2.jpg",
+    image: "/whole-team/card-2.avif",
   },
 ];
 
@@ -109,11 +109,16 @@ export default function WholeTeam() {
         {CARDS.map((card) => (
           <article
             key={card.title}
+            // The cards stay dark in light mode, so they opt out of the light
+            // theme's colour swap (data-keep-dark) and the title is pinned to
+            // white (keep-white). Without this the title turns dark and
+            // disappears against the dark card.
+            data-keep-dark
             className="team-card overflow-hidden rounded-[32px] border border-[#1c232d] bg-[#0b0e14] shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)]"
           >
             <CardImage src={card.image} />
             <div className="px-7 pb-8 pt-7">
-              <h3 className="text-2xl font-medium tracking-tight text-white">
+              <h3 className="keep-white text-2xl font-medium tracking-tight text-white">
                 {card.title}
               </h3>
               <p className="mt-3 text-lg text-slate-400">{card.text}</p>
