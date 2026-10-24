@@ -10,25 +10,26 @@ type CardData = {
   y: number; // top, px (at full 1500px width)
   w: number; // width, % of the card field
   r: number; // resting rotation, deg
-  back?: boolean; // dimmed + blurred, sits behind
+  p: number; // starting point on its own circle, radians (different per card)
+  o: number; // size of its own circle, px at full size (different per card)
 };
 
 // Layout copied from the reference. Put your images in /public/blueprints/
 const CARDS: CardData[] = [
-  { src: "/blueprints/plan-1.avif", x: 22.3, y: 23, w: 12.7, r: -2 },
-  { src: "/blueprints/plan-2.avif", x: 43.5, y: 17, w: 12, r: 1, back: true },
-  { src: "/blueprints/plan-3.avif", x: 59.3, y: 7, w: 12, r: 2, back: true },
-  { src: "/blueprints/plan-4.avif", x: 57, y: 71, w: 14.3, r: 1 },
-  { src: "/blueprints/plan-5.avif", x: 1.7, y: 170, w: 9.3, r: -2 },
-  { src: "/blueprints/plan-6.avif", x: 14, y: 160, w: 8.7, r: 2, back: true },
-  { src: "/blueprints/plan-7.avif", x: 41, y: 112, w: 10.7, r: -1, back: true },
-  { src: "/blueprints/plan-8.avif", x: 79, y: 116, w: 8.7, r: 2, back: true },
-  { src: "/blueprints/plan-9.avif", x: 88.7, y: 198, w: 9.2, r: 3 },
-  { src: "/blueprints/plan-10.avif", x: 8.6, y: 325, w: 9.3, r: -2 },
-  { src: "/blueprints/plan-1.avif", x: 26, y: 388, w: 13.3, r: 1 },
-  { src: "/blueprints/plan-2.avif", x: 43, y: 392, w: 13.3, r: -1, back: true },
-  { src: "/blueprints/plan-3.avif", x: 66, y: 320, w: 13.3, r: -2 },
-  { src: "/blueprints/plan-4.avif", x: 78, y: 317, w: 7.3, r: 2, back: true },
+  { src: "/blueprints/plan-1.avif", x: 22.3, y: 23, w: 12.7, r: -2, p: 0, o: 150 },
+  { src: "/blueprints/plan-2.avif", x: 43.5, y: 17, w: 12, r: 1, p: 2.1, o: 110 },
+  { src: "/blueprints/plan-3.avif", x: 59.3, y: 7, w: 12, r: 2, p: 4.0, o: 135 },
+  { src: "/blueprints/plan-4.avif", x: 57, y: 71, w: 14.3, r: 1, p: 5.6, o: 95 },
+  { src: "/blueprints/plan-5.avif", x: 1.7, y: 170, w: 9.3, r: -2, p: 1.2, o: 140 },
+  { src: "/blueprints/plan-6.avif", x: 14, y: 160, w: 8.7, r: 2, p: 3.3, o: 100 },
+  { src: "/blueprints/plan-7.avif", x: 41, y: 112, w: 10.7, r: -1, p: 0.7, o: 120 },
+  { src: "/blueprints/plan-8.avif", x: 78.5, y: 116, w: 8.7, r: 2, p: 4.8, o: 90 },
+  { src: "/blueprints/plan-9.avif", x: 88.7, y: 198, w: 9.2, r: 3, p: 2.7, o: 150 },
+  { src: "/blueprints/plan-10.avif", x: 8.6, y: 325, w: 9.3, r: -2, p: 5.1, o: 115 },
+  { src: "/blueprints/plan-1.avif", x: 26, y: 388, w: 13.3, r: 1, p: 3.9, o: 100 },
+  { src: "/blueprints/plan-2.avif", x: 43, y: 392, w: 13.3, r: -1, p: 1.7, o: 135 },
+  { src: "/blueprints/plan-3.avif", x: 66, y: 320, w: 13.3, r: -2, p: 0.3, o: 105 },
+  { src: "/blueprints/plan-4.avif", x: 78, y: 317, w: 7.3, r: 2, p: 4.4, o: 125 },
 ];
 
 // The card field is designed at this size. On smaller laptops it is scaled
@@ -37,6 +38,34 @@ const DESIGN_W = 1500;
 const DESIGN_H = 560;
 const BOX_TOP = 177; // prompt box top, at full size
 const BOX_ROOM = 300; // space kept free for the prompt box under its top
+
+// ---- Card motion settings -------------------------------------------------
+// Every card travels around its own full circle in 3D: sideways, back behind
+// the others, around, and forward again. The container itself never moves.
+const SPREAD = 0.82; // 1 = original layout, lower = cards pulled closer together
+const CIRCLE_SIZE = 0.85; // 1 = full circles, lower = tighter circles
+const CYCLE_SECONDS = 8; // time for one full loop: lower = faster
+const DIRECTION = 1; // 1 = one way round, -1 = the other way
+const PERSPECTIVE = 1100; // px, lower = stronger 3D
+// Your laptop has "reduce motion" turned on, so this is true to let you see it.
+// Set to false to respect that system setting for everyone (the cards then
+// stay still for anyone who has it on).
+const IGNORE_REDUCED_MOTION = true;
+
+// Resting spot of each card after pulling the layout toward the centre
+const FIELD_CX = DESIGN_W / 2;
+const FIELD_CY = DESIGN_H / 2;
+const LAYOUT = CARDS.map((c) => {
+  const w = (c.w / 100) * DESIGN_W;
+  const h = w * 0.75;
+  const cx = (c.x / 100) * DESIGN_W + w / 2;
+  const cy = c.y + h / 2;
+  return {
+    w,
+    left: FIELD_CX + (cx - FIELD_CX) * SPREAD - w / 2,
+    top: FIELD_CY + (cy - FIELD_CY) * SPREAD - h / 2,
+  };
+});
 
 // Unique image sources, used to preload the large preview versions
 const UNIQUE_SRCS = Array.from(new Set(CARDS.map((c) => c.src)));
@@ -57,24 +86,27 @@ const QUESTIONS = [
 
 function BlueprintCard({
   card,
+  spot,
+  register,
   onActive,
 }: {
   card: CardData;
+  spot: { left: number; top: number; w: number };
+  register: (el: HTMLDivElement | null) => void;
   onActive: (src: string | null) => void;
 }) {
   return (
     <div
+      ref={register}
       tabIndex={0}
       aria-label="View drawing sheet"
       className="absolute aspect-[4/3] cursor-zoom-in overflow-hidden rounded-lg shadow-[0_0_40px_rgba(37,70,255,0.35)] ring-1 ring-blue-400/30 outline-none focus-visible:ring-2 focus-visible:ring-white"
       style={{
-        left: `${card.x}%`,
-        top: card.y,
-        width: `${card.w}%`,
-        rotate: `${card.r}deg`,
-        opacity: card.back ? 0.55 : 1,
-        filter: card.back ? "blur(1.5px)" : undefined,
-        zIndex: card.back ? 5 : 10,
+        left: spot.left,
+        top: spot.top,
+        width: spot.w,
+        transform: `rotate(${card.r}deg)`,
+        willChange: "transform, opacity, filter",
       }}
       onMouseEnter={() => onActive(card.src)}
       onMouseLeave={() => onActive(null)}
@@ -185,6 +217,7 @@ export default function Hero() {
   const [scale, setScale] = useState(1);
   const [wide, setWide] = useState(false); // 1024px and up
   const stage = useRef<HTMLDivElement>(null);
+  const cardEls = useRef<(HTMLDivElement | null)[]>([]);
 
   // How much to shrink the card field so it fits the available width
   useEffect(() => {
@@ -208,6 +241,36 @@ export default function Hero() {
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
+
+  // Moves every card around its own 3D circle. Cards at the back of their
+  // circle get smaller (perspective), dimmer and blurred; cards at the front
+  // are bigger and sharp. Layout and the container stay put.
+  useEffect(() => {
+    if (!wide) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce && !IGNORE_REDUCED_MOTION) return;
+    let raf = 0;
+    const tick = (now: number) => {
+      const phase = DIRECTION * ((now / 1000) * 2 * Math.PI) / CYCLE_SECONDS;
+      CARDS.forEach((c, i) => {
+        const el = cardEls.current[i];
+        if (!el) return;
+        const a = phase + c.p;
+        const R = c.o * CIRCLE_SIZE;
+        const s = Math.sin(a);
+        const dx = R * Math.cos(a);
+        const dy = R * 0.28 * s;
+        const z = R * s;
+        el.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, ${z.toFixed(1)}px) rotate(${c.r}deg)`;
+        const back = s < 0 ? -s : 0;
+        el.style.filter = back > 0.08 ? `blur(${(back * 4).toFixed(1)}px)` : "none";
+        el.style.opacity = (0.5 + 0.5 * ((s + 1) / 2)).toFixed(2);
+      });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [wide]);
 
   const fieldH = Math.max(DESIGN_H * scale, (BOX_TOP) * scale + BOX_ROOM);
   const vars = {
@@ -236,12 +299,13 @@ export default function Hero() {
       <div
         ref={stage}
         style={vars}
-        className="relative mx-auto mt-10 max-w-[1500px] px-4 sm:px-6 lg:mt-14 lg:h-[var(--field-h)] lg:px-0"
+        className="hero-field relative mx-auto mt-10 max-w-[1500px] px-4 sm:px-6 lg:mt-14 lg:h-[var(--field-h)] lg:overflow-hidden lg:px-0"
       >
         {/* Small screens: compact fanned stack */}
         <MobileCards />
 
-        {/* Large screens: the full card field, scaled to fit */}
+        {/* Large screens: the full card field, scaled to fit. The field stays
+            still; each card moves around its own circle in 3D. */}
         <div
           className="absolute left-0 top-0 hidden lg:block"
           style={{
@@ -251,9 +315,21 @@ export default function Hero() {
             transformOrigin: "top left",
           }}
         >
-          {CARDS.map((c) => (
-            <BlueprintCard key={c.src + c.x} card={c} onActive={setActive} />
-          ))}
+          <div className="absolute inset-0" style={{ perspective: PERSPECTIVE }}>
+            <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
+              {CARDS.map((c, i) => (
+                <BlueprintCard
+                  key={c.src + c.x}
+                  card={c}
+                  spot={LAYOUT[i]}
+                  register={(el) => {
+                    cardEls.current[i] = el;
+                  }}
+                  onActive={setActive}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Prompt box: glass look. Centered over the cards on large screens,

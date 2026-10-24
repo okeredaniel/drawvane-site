@@ -24,6 +24,32 @@
   color-scheme: light;
 }
 
+/* Hero cards drift around a small circle, all in step. The element itself does
+   not spin: it is turned forward, pushed out, then turned back by the same amount. */
+@keyframes hero-orbit {
+  from {
+    transform: rotate(0deg) translateX(var(--orbit-r, 20px)) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(var(--orbit-r, 20px)) rotate(-360deg);
+  }
+}
+.hero-orbit {
+  animation: hero-orbit var(--orbit-t, 24s) linear infinite;
+  will-change: transform;
+}
+/* Freeze while the mouse is over the card field, so the big preview doesn't
+   flicker as cards slide out from under the cursor */
+.hero-field:hover .hero-orbit {
+  animation-play-state: paused;
+}
+/* Only used when IGNORE_REDUCED_MOTION is false in Hero.tsx */
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-respect {
+    animation: none;
+  }
+}
+
 /* The hero's bottom fade blends it into the dark laptop section. In light mode the hero is light,
    so the fade is hidden and the hero ends with a clean edge. */
 :root[data-theme="light"] .hero-fade {
@@ -113,10 +139,10 @@
   }
 
   /* Hero prompt box (frosted glass, white pills) */
-  &[class~="bg-slate-800/50"] {
-    background-color: rgba(255, 255, 255, 0.75);
+  &[class~="bg-slate-800/15"] {
+    background-color: rgba(255, 255, 255, 0.4);
   }
-  &[class~="border-white/20"] {
+  &[class~="border-white/15"] {
     border-color: rgba(11, 15, 20, 0.14);
   }
   &[class~="border-white/40"] {
