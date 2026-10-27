@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stratora landing page
 
-## Getting Started
+Next.js landing page for Stratora, adapted from the Drawvane template.
 
-First, run the development server:
+## Run and verify
 
-```bash
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site uses the Next.js App Router. Read `AGENTS.md` and the installed Next.js documentation before changing framework code.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Content and interactions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- The homepage presents Stratora's document and drawing-review workspace.
+- The interactive sample uses fictional documents and prepared answers. It is not connected to live project data or an analysis service. The search filters sample questions; source buttons reveal their supporting excerpts.
+- Contact opens an email to the existing published address, `info@stratora.ai`. There is no lead-submission API or claim that a message has been delivered. The visible address is a fallback for visitors without a configured email app.
+- Workspace links point to `https://app.stratora.ai/auth/login`.
+- Privacy links to the existing `https://www.stratora.ai/privacy-policy.html`.
+- Advanced takeoff work is described as planned. Do not publish unverified customer, benchmark, security-audit or integration claims.
+- The original large presentation video and placeholder customer/results sections are no longer imported by the homepage. Original media remain in repository history.
 
-## Learn More
+## Original-version backup
 
-To learn more about Next.js, take a look at the following resources:
+Before this update, the original repository revision was preserved remotely:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Branch: `backup/pre-stratora-update-2026-10-27`
+- Commit: `42b7c052a29be04713ec551552583fdec5d12428`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Restore through a reviewed revert or a new commit based on the backup. Do not force-push over newer work.
 
-## Deploy on Vercel
+## Release checks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Verify both themes and desktop/mobile layouts, all three sample answers, each source excerpt, no-match search and recovery, mobile navigation and Escape, FAQ keyboard interaction, and contact/workspace/privacy destinations. Check that no placeholder claims or missing media are rendered. A successful build alone does not establish these interactions or email delivery.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The current canonical URL is `https://startorav2.vercel.app`. Update metadata when a production custom domain is assigned.

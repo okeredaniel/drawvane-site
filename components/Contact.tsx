@@ -1,293 +1,62 @@
-"use client";
-
-import { useState, type FormEvent } from "react";
-import { motion } from "motion/react";
-
-// ---- Things you will want to change -------------------------------------
-
-// Where the form is sent. Put the address of your form tool, email service or
-// API route here, for example "/api/pilot". It receives a POST with JSON:
-// { name, company, email, role }.
-// While this is empty NOTHING is sent. In development the form still shows its
-// success message so you can see it. On the live site it shows an error instead,
-// so visitors are never told their request went through when it didn't.
-const SUBMIT_ENDPOINT = "";
-
-// Placeholder roles. Replace with your own list.
-const ROLES = [
-  "Architect",
-  "Engineer",
-  "Contractor",
-  "Owner or developer",
-  "Project manager",
-  "Other",
-];
-
-const HEADING = "Run it on your own plan set.";
-const SUBLINE = "Send one project. In a week you will know exactly what it finds.";
-
-// Background is pure CSS (no image needed): dark base, soft grey sheen on the
-// left, and a small blue glow behind the form. Tune the colours here.
-const BG_BASE = "linear-gradient(180deg, #090c11 0%, #0b0f16 50%, #090c11 100%)";
-const BG_LEFT_SHEEN =
-  "radial-gradient(ellipse 520px 560px at 9% 52%, rgba(135,145,165,0.30), transparent 70%), radial-gradient(ellipse 260px 320px at 11% 50%, rgba(170,180,200,0.16), transparent 70%)";
-const BG_RIGHT_SHADE =
-  "radial-gradient(ellipse 600px 800px at 100% 50%, rgba(0,0,0,0.45), transparent 70%)";
-const BG_BLUE_HAZE =
-  "radial-gradient(ellipse 760px 300px at 50% 55%, rgba(37,99,235,0.10), transparent 70%)";
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-type Values = { name: string; company: string; email: string; role: string };
-type Errors = Partial<Record<keyof Values, string>>;
-
-function validate(v: Values): Errors {
-  const e: Errors = {};
-  if (!v.name.trim()) e.name = "Please enter your name.";
-  if (!v.company.trim()) e.company = "Please enter your company.";
-  if (!v.email.trim()) e.email = "Please enter your work email.";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email.trim()))
-    e.email = "That email doesn't look right.";
-  if (!v.role) e.role = "Please choose a role.";
-  return e;
-}
-
-const fieldClass =
-  "h-10 w-full rounded-xl border border-[#1c232d] bg-[#0b0f14] px-4 text-sm text-[#eef1f5] placeholder:text-[#6b7480] outline-none transition-colors focus:border-[#3b5bff] aria-[invalid=true]:border-[#d9534f]";
+// Contact details and account entry are published on stratora.ai/contact-us.html.
+// Keep this a direct email action until an owned submission service is available.
+const CONTACT_EMAIL = "info@stratora.ai";
+const WORKSPACE_URL = "https://app.stratora.ai/auth/login";
 
 export default function Contact() {
-  const [values, setValues] = useState<Values>({
-    name: "",
-    company: "",
-    email: "",
-    role: "",
-  });
-  const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
-  );
-
-  function set<K extends keyof Values>(key: K, value: string) {
-    setValues((v) => ({ ...v, [key]: value }));
-    if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
-  }
-
-  async function onSubmit(ev: FormEvent) {
-    ev.preventDefault();
-    const found = validate(values);
-    setErrors(found);
-    if (Object.keys(found).length) return;
-
-    setStatus("sending");
-    try {
-      if (!SUBMIT_ENDPOINT) {
-        if (process.env.NODE_ENV === "production") throw new Error("not connected");
-        console.warn("Contact form: SUBMIT_ENDPOINT is empty, nothing was sent.");
-        await new Promise((r) => setTimeout(r, 500));
-      } else {
-        const res = await fetch(SUBMIT_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        });
-        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-      }
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    }
-  }
-
-  const fields: {
-    key: keyof Values;
-    label: string;
-    type?: string;
-    placeholder?: string;
-  }[] = [
-    { key: "name", label: "Name", placeholder: "Full Name" },
-    { key: "company", label: "Company", placeholder: "Company Name" },
-    { key: "email", label: "Work Email", type: "email", placeholder: "name@company.com" },
-  ];
-
   return (
     <section
       id="contact"
-      data-keep-dark
-      aria-label="Request a pilot"
-      className="relative overflow-hidden border-b border-[#242d38] bg-[#090c11] px-6 py-[120px] md:px-24 md:py-[190px]"
+      aria-labelledby="contact-heading"
+      className="section-shell contact-section"
     >
-      {/* Background layers */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `${BG_LEFT_SHEEN}, ${BG_RIGHT_SHADE}, ${BG_BLUE_HAZE}, ${BG_BASE}`,
-        }}
-      />
-
-      <div className="relative mx-auto max-w-[990px]">
-        {/* Blue glow that peeks out from behind the form (sits under the fields) */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-[272px] z-0 hidden -translate-x-1/2 -translate-y-1/2 md:block"
-        >
-          {/* wide, faint horizontal streak */}
-          <div
-            className="absolute left-1/2 top-1/2 h-[90px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
-            style={{
-              background:
-                "radial-gradient(ellipse at center, rgba(59,91,255,0.40), rgba(37,99,235,0.12) 55%, transparent 75%)",
-            }}
-          />
-          {/* the bright dot */}
-          <div
-            className="relative size-[6px] rounded-full bg-[#7fb2ff]"
-            style={{
-              boxShadow:
-                "0 0 10px 3px rgba(96,150,255,0.95), 0 0 40px 14px rgba(59,91,255,0.55), 0 0 110px 40px rgba(37,99,235,0.30)",
-            }}
-          />
+      <div className="contact-layout">
+        <div>
+          <p className="eyebrow">Your next project</p>
+          <h2 id="contact-heading" className="section-heading">
+            Let’s talk about how your team works.
+          </h2>
+          <p className="muted mt-6 max-w-xl text-lg leading-relaxed">
+            Tell us what slows your project down, from finding the right drawing
+            to keeping decisions connected. We can discuss where Stratora fits.
+          </p>
         </div>
 
-        {status === "sent" ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            role="status"
-            className="relative z-10 rounded-2xl border border-[#1c232d] bg-[#0b0f14]/80 px-8 py-14 text-center backdrop-blur"
+        <div className="contact-card">
+          <h3 className="text-2xl font-semibold tracking-tight">Talk to Stratora</h3>
+          <p className="muted mt-4 leading-relaxed">
+            Share your role, the kind of projects you work on, and the workflow
+            you want to improve.
+          </p>
+          <a
+            href={`mailto:${CONTACT_EMAIL}?subject=Stratora%20project%20enquiry`}
+            className="button button-primary mt-7"
           >
-            <p className="text-2xl font-medium tracking-[-0.03em] text-[#eef1f5]">
-              Thanks, we got your request.
-            </p>
-            <p className="mt-3 text-base text-[#8b95a1]">
-              We'll be in touch at {values.email.trim()}.
-            </p>
-          </motion.div>
-        ) : (
-          <form onSubmit={onSubmit} noValidate className="relative z-10 space-y-5">
-            {fields.map((f, i) => (
-              <motion.div
-                key={f.key}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.7, ease: EASE, delay: i * 0.1 }}
-              >
-                <label
-                  htmlFor={`contact-${f.key}`}
-                  className="mb-2 block text-xs text-[#9aa3ae]"
-                >
-                  {f.label}
-                </label>
-                <input
-                  id={`contact-${f.key}`}
-                  name={f.key}
-                  type={f.type ?? "text"}
-                  value={values[f.key]}
-                  onChange={(e) => set(f.key, e.target.value)}
-                  placeholder={f.placeholder}
-                  autoComplete={
-                    f.key === "name" ? "name" : f.key === "email" ? "email" : "organization"
-                  }
-                  aria-invalid={errors[f.key] ? true : undefined}
-                  aria-describedby={errors[f.key] ? `contact-${f.key}-err` : undefined}
-                  className={fieldClass}
-                />
-                {errors[f.key] && (
-                  <p id={`contact-${f.key}-err`} className="mt-1.5 text-xs text-[#ef7b77]">
-                    {errors[f.key]}
-                  </p>
-                )}
-              </motion.div>
-            ))}
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
+            Email Stratora
+            <span aria-hidden="true">↗</span>
+          </a>
+          <p className="muted mt-4 text-sm leading-relaxed">
+            Opens your email app. You choose what to send.
+          </p>
+          <p className="muted mt-2 text-sm leading-relaxed">
+            Or write to{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="underline underline-offset-4"
             >
-              <label htmlFor="contact-role" className="mb-2 block text-xs text-[#9aa3ae]">
-                Role
-              </label>
-              <div className="relative">
-                <select
-                  id="contact-role"
-                  name="role"
-                  value={values.role}
-                  onChange={(e) => set("role", e.target.value)}
-                  aria-invalid={errors.role ? true : undefined}
-                  aria-describedby={errors.role ? "contact-role-err" : undefined}
-                  className={`${fieldClass} appearance-none pr-10 ${
-                    values.role ? "" : "text-[#6b7480]"
-                  }`}
-                >
-                  <option value="" disabled>
-                    Select...
-                  </option>
-                  {ROLES.map((r) => (
-                    <option key={r} value={r} className="text-black">
-                      {r}
-                    </option>
-                  ))}
-                </select>
-                <svg
-                  aria-hidden="true"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#9aa3ae"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2"
-                >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
-              </div>
-              {errors.role && (
-                <p id="contact-role-err" className="mt-1.5 text-xs text-[#ef7b77]">
-                  {errors.role}
-                </p>
-              )}
-            </motion.div>
+              {CONTACT_EMAIL}
+            </a>
+            .
+          </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.7, ease: EASE, delay: 0.4 }}
-            >
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="h-10 w-full rounded-full bg-[#3b5bff] text-sm font-semibold text-white transition-colors hover:bg-[#506cff] disabled:opacity-60"
-              >
-                {status === "sending" ? "Sending..." : "Submit"}
-              </button>
-              {status === "error" && (
-                <p role="alert" className="mt-3 text-center text-sm text-[#ef7b77]">
-                  Something went wrong sending your request. Please try again.
-                </p>
-              )}
-            </motion.div>
-          </form>
-        )}
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.9, ease: EASE, delay: 0.5 }}
-          className="relative z-10 mt-[70px] text-center"
-        >
-          <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-medium leading-[1] tracking-[-0.05em] text-white">
-            {HEADING}
-          </h2>
-          <p className="mt-6 text-lg text-[#eef1f5] md:text-xl">{SUBLINE}</p>
-        </motion.div>
+          <div className="mt-8 border-t border-white/15 pt-6">
+            <p className="muted mb-4 text-sm">Already have an account?</p>
+            <a href={WORKSPACE_URL} className="button button-secondary">
+              Open your workspace
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
