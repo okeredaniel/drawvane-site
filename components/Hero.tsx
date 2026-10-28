@@ -424,11 +424,7 @@ export default function Hero() {
       {/* NEW: headline block */}
       <div className="mx-auto max-w-[1500px] px-5 pt-12 text-center sm:px-6 md:pt-16">
         <p className="mx-auto inline-flex items-center gap-2.5 rounded-full bg-white/5 py-1.5 pl-3 pr-4 text-sm text-slate-300">
-          <span aria-hidden className="relative flex size-2">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-blue-400/70" />
-            <span className="relative inline-flex size-2 rounded-full bg-blue-400" />
-          </span>
-          Document intelligence for AEC teams
+          Built for a Greener and Cleaner Canada
         </p>
 
         <h1 className="mt-7 font-display text-[clamp(2.75rem,8.5vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.055em]">
@@ -437,7 +433,7 @@ export default function Hero() {
         </h1>
 
         <p className="mx-auto mt-7 max-w-[520px] text-lg leading-relaxed text-slate-300">
-          Cited answers from your drawings, specs and RFIs.
+          $52B is lost to construction rework every year. Stratora gives you answers before mistakes happen.
         </p>
 
        

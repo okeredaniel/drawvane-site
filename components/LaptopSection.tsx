@@ -216,7 +216,8 @@ export default function LaptopSection() {
                 aria-hidden
                 className="pointer-events-none absolute inset-0 z-[1] bg-[#0d1117] opacity-0"
               />
-              <video
+              {/* Stratora demo video */}
+              {/* <video
                 ref={video}
                 className="block h-auto w-full"
                 autoPlay
@@ -230,7 +231,7 @@ export default function LaptopSection() {
               >
                 <source src="/laptop.webm" type="video/webm" />
                 <source src="/laptop.mp4" type="video/mp4" />
-              </video>
+              </video> */}
             </div>
           </div>
         </div>
