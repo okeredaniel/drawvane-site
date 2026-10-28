@@ -52,10 +52,13 @@ function validate(v: Values): Errors {
   return e;
 }
 
-const fieldClass =
-  "h-10 w-full rounded-xl border border-[#1c232d] bg-[#0b0f14] px-4 text-sm text-[#eef1f5] placeholder:text-[#6b7480] outline-none transition-colors focus:border-[#3b5bff] aria-[invalid=true]:border-[#d9534f]";
+const fieldClass = (isPage: boolean) =>
+  isPage
+    ? "h-10 w-full rounded-xl border border-[#dfe4eb] bg-white px-4 text-sm text-[#0b0f14] placeholder:text-[#697484] outline-none transition-colors focus:border-[#F5C93C] aria-[invalid=true]:border-[#d9534f]"
+    : "h-10 w-full rounded-xl border border-[#1c232d] bg-[#0b0f14] px-4 text-sm text-[#eef1f5] placeholder:text-[#6b7480] outline-none transition-colors focus:border-[#3b5bff] aria-[invalid=true]:border-[#d9534f]";
 
-export default function Contact() {
+export default function Contact({ variant = "landing" }: { variant?: "landing" | "page" }) {
+  const isPage = variant === "page";
   const [values, setValues] = useState<Values>({
     name: "",
     company: "",
@@ -112,9 +115,13 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      data-keep-dark
+      data-keep-dark={!isPage}
       aria-label="Request a pilot"
-      className="relative overflow-hidden border-b border-[#242d38] bg-[#090c11] px-6 py-[120px] md:px-24 md:py-[190px]"
+      className={
+        isPage
+          ? "relative overflow-hidden border-b border-[#e5e7eb] bg-[#f5f6f8] px-6 py-[120px] md:px-24 md:py-[190px]"
+          : "relative overflow-hidden border-b border-[#242d38] bg-[#090c11] px-6 py-[120px] md:px-24 md:py-[190px]"
+      }
     >
       {/* Background layers */}
       <div
@@ -155,13 +162,17 @@ export default function Contact() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
             role="status"
-            className="relative z-10 rounded-2xl border border-[#1c232d] bg-[#0b0f14]/80 px-8 py-14 text-center backdrop-blur"
+            className={
+              isPage
+                ? "relative z-10 rounded-2xl border border-[#dfe4eb] bg-white px-8 py-14 text-center shadow-[0_20px_60px_rgba(15,23,42,0.06)] backdrop-blur"
+                : "relative z-10 rounded-2xl border border-[#1c232d] bg-[#0b0f14]/80 px-8 py-14 text-center backdrop-blur"
+            }
           >
-            <p className="text-2xl font-medium tracking-[-0.03em] text-[#eef1f5]">
+            <p className={`text-2xl font-medium tracking-[-0.03em] ${isPage ? "text-[#0b0f14]" : "text-[#eef1f5]"}`}>
               Thanks, we got your request.
             </p>
-            <p className="mt-3 text-base text-[#8b95a1]">
-              We'll be in touch at {values.email.trim()}.
+            <p className={`mt-3 text-base ${isPage ? "text-[#4b5563]" : "text-[#8b95a1]"}`}>
+              We&apos;ll be in touch at {values.email.trim()}.
             </p>
           </motion.div>
         ) : (
@@ -176,7 +187,7 @@ export default function Contact() {
               >
                 <label
                   htmlFor={`contact-${f.key}`}
-                  className="mb-2 block text-xs text-[#9aa3ae]"
+                  className={`mb-2 block text-xs ${isPage ? "text-[#4b5563]" : "text-[#9aa3ae]"}`}
                 >
                   {f.label}
                 </label>
@@ -192,7 +203,7 @@ export default function Contact() {
                   }
                   aria-invalid={errors[f.key] ? true : undefined}
                   aria-describedby={errors[f.key] ? `contact-${f.key}-err` : undefined}
-                  className={fieldClass}
+                  className={fieldClass(isPage)}
                 />
                 {errors[f.key] && (
                   <p id={`contact-${f.key}-err`} className="mt-1.5 text-xs text-[#ef7b77]">
@@ -208,7 +219,10 @@ export default function Contact() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
             >
-              <label htmlFor="contact-role" className="mb-2 block text-xs text-[#9aa3ae]">
+              <label
+                htmlFor="contact-role"
+                className={`mb-2 block text-xs ${isPage ? "text-[#4b5563]" : "text-[#9aa3ae]"}`}
+              >
                 Role
               </label>
               <div className="relative">
@@ -219,8 +233,8 @@ export default function Contact() {
                   onChange={(e) => set("role", e.target.value)}
                   aria-invalid={errors.role ? true : undefined}
                   aria-describedby={errors.role ? "contact-role-err" : undefined}
-                  className={`${fieldClass} appearance-none pr-10 ${
-                    values.role ? "" : "text-[#6b7480]"
+                  className={`${fieldClass(isPage)} appearance-none pr-10 ${
+                    values.role ? "" : isPage ? "text-[#697484]" : "text-[#6b7480]"
                   }`}
                 >
                   <option value="" disabled>
@@ -238,7 +252,7 @@ export default function Contact() {
                   height="14"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#9aa3ae"
+                  stroke={isPage ? "#475569" : "#9aa3ae"}
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -263,7 +277,11 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="h-10 w-full rounded-full bg-[#3b5bff] text-sm font-semibold text-white transition-colors hover:bg-[#506cff] disabled:opacity-60"
+                className={
+                  isPage
+                    ? "h-10 w-full rounded-full bg-[#F5C93C] text-sm font-semibold text-[#0b0f14] transition-colors hover:opacity-90 disabled:opacity-60"
+                    : "h-10 w-full rounded-full bg-[#3b5bff] text-sm font-semibold text-white transition-colors hover:bg-[#506cff] disabled:opacity-60"
+                }
               >
                 {status === "sending" ? "Sending..." : "Submit"}
               </button>
@@ -283,10 +301,10 @@ export default function Contact() {
           transition={{ duration: 0.9, ease: EASE, delay: 0.5 }}
           className="relative z-10 mt-[70px] text-center"
         >
-          <h2 className="text-[clamp(2.2rem,4.5vw,4rem)] font-medium leading-[1] tracking-[-0.05em] text-white">
+          <h2 className={`text-[clamp(2.2rem,4.5vw,4rem)] font-medium leading-[1] tracking-[-0.05em] ${isPage ? "text-[#0b0f14]" : "text-white"}`}>
             {HEADING}
           </h2>
-          <p className="mt-6 text-lg text-[#eef1f5] md:text-xl">{SUBLINE}</p>
+          <p className={`mt-6 text-lg md:text-xl ${isPage ? "text-[#4b5563]" : "text-[#eef1f5]"}`}>{SUBLINE}</p>
         </motion.div>
       </div>
     </section>

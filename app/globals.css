@@ -3,7 +3,7 @@
 :root {
   --background: #07090c;
   --foreground: #f4f6fb;
-  --accent: #3a5bff;
+  --accent: #F5C93C;
   color-scheme: dark;
 }
 
@@ -17,7 +17,7 @@
 
 html {
   scroll-behavior: smooth;
-  
+
   scroll-padding-top: 66px; /* keeps section headings clear of the fixed nav */
 }
 
@@ -56,4 +56,12 @@ body {
 .fade-edges {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+
+/* While jumping to a #section on load, hide the page and skip smooth scrolling */
+html.hash-pending {
+  scroll-behavior: auto !important;
+}
+html.hash-pending body {
+  visibility: hidden;
 }

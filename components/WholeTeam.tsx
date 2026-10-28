@@ -9,7 +9,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 // The two cards. Put the images in /public/whole-team/ and make sure each
 // `image` path matches your file (.jpg, .png or .webp). Until the file
-// exists, a dark panel is shown instead.
+// exists, a light panel is shown instead.
 const CARDS = [
   {
     title: "Ask in plain language",
@@ -34,7 +34,7 @@ function CardImage({ src }: { src: string }) {
   }, []);
 
   return (
-    <div className="aspect-[3/2] w-full overflow-hidden bg-gradient-to-b from-[#121823] to-[#0b0e14]">
+    <div className="aspect-[3/2] w-full overflow-hidden bg-gradient-to-b from-neutral-100 to-neutral-200">
       {!missing && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -98,8 +98,8 @@ export default function WholeTeam() {
       className="overflow-x-clip bg-background px-6 pb-24 pt-8 lg:px-24 lg:pb-32 lg:pt-16"
     >
       <h2 className="text-center font-display text-[40px] font-medium leading-[0.98] tracking-[-0.05em] md:text-[56px]">
-        <span className="block text-white">Built for the whole team</span>
-        <span className="block text-slate-400">Answers everyone can check</span>
+        <span className="block text-neutral-900">Built for the whole team</span>
+        <span className="block text-neutral-400">Answers everyone can check</span>
       </h2>
 
       <div
@@ -109,19 +109,14 @@ export default function WholeTeam() {
         {CARDS.map((card) => (
           <article
             key={card.title}
-            // The cards stay dark in light mode, so they opt out of the light
-            // theme's colour swap (data-keep-dark) and the title is pinned to
-            // white (keep-white). Without this the title turns dark and
-            // disappears against the dark card.
-            data-keep-dark
-            className="team-card overflow-hidden rounded-[32px] border border-[#1c232d] bg-[#0b0e14] shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)]"
+            className="team-card overflow-hidden rounded-[32px] border border-neutral-200 bg-white shadow-[0_4px_20px_-8px_rgba(15,23,42,0.15)]"
           >
             <CardImage src={card.image} />
             <div className="px-7 pb-8 pt-7">
-              <h3 className="keep-white text-2xl font-medium tracking-tight text-white">
+              <h3 className="text-2xl font-medium tracking-tight text-neutral-900">
                 {card.title}
               </h3>
-              <p className="mt-3 text-lg text-slate-400">{card.text}</p>
+              <p className="mt-3 text-lg text-neutral-500">{card.text}</p>
             </div>
           </article>
         ))}

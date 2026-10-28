@@ -19,7 +19,7 @@
    The page background, the default text colour and every bg-background,
    text-foreground and bg-accent class follow them automatically. */
 :root[data-theme="light"] {
-  --background: #f5f6f8;
+  --background: #ffffff;
   --foreground: #0b0f14;
   color-scheme: light;
 }
@@ -64,28 +64,6 @@
   color: var(--foreground);
 }
 
-/* Toggle icons: sun in dark mode (click for light), moon in light mode */
-.theme-icon-moon {
-  display: none;
-}
-:root[data-theme="light"] .theme-icon-sun {
-  display: none;
-}
-:root[data-theme="light"] .theme-icon-moon {
-  display: block;
-}
-
-/* Colours fade for a moment right after a click */
-:root.theme-transition,
-:root.theme-transition *,
-:root.theme-transition *::before,
-:root.theme-transition *::after {
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease,
-    border-color 0.35s ease !important;
-}
-
 /* ---------------------------------------------------------------------
    Light-mode colours. Everything inside a data-keep-dark section is
    skipped by the :not() below.
@@ -94,7 +72,7 @@
   /* Backgrounds */
   /* bg-background and its /70 and /95 versions follow --background above */
   &[class~="bg-[#07090c]"] {
-    background-color: #f5f6f8;
+    background-color: #ffffff;
   }
   &[class~="bg-[#0a0d12]"] {
     background-color: #eceff3;
@@ -176,7 +154,7 @@
     color: #7a8491;
   }
   &[class~="text-[#5b7cff]"] {
-    color: #3a55e0;
+    color: #0b0f14;
   }
 
   /* Hover and placeholder colours */

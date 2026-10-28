@@ -8,9 +8,10 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// Put the image in /public/share/ as share.jpg.
-// If yours is .png or .webp, change the extension here.
-const IMAGE = { src: "/share/share.avif", alt: "A glowing glass slab on a dark surface" };
+// Put the image in /public/share/ as share.avif.
+// If yours is .png, .jpg or .webp, change the extension here.
+// Change the alt text to describe your own image.
+const IMAGE = { src: "/share/share.avif", alt: "A shared answer with its source sheet attached" };
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -71,18 +72,18 @@ export default function Share() {
         transition={{ duration: 0.8, ease: EASE }}
         className="text-center"
       >
-        <h2 className="text-[clamp(2.5rem,4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.04em] text-white">
+        <h2 className="text-[clamp(2.5rem,4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-900">
           Share the answer
         </h2>
-        <p className="text-[clamp(2.5rem,4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#7d8794]">
+        <p className="text-[clamp(2.5rem,4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-400">
           Keep the project aligned
         </p>
       </motion.div>
 
       <div className="mt-14 md:mt-[100px]">
         <div ref={card} className="mx-auto w-full will-change-transform">
-          <div className="rounded-[28px] border border-[#242d38] bg-[#0b0f14] p-2 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
-            <div className="relative aspect-[1.9/1] overflow-hidden rounded-[22px] bg-[#0d1117]">
+          <div className="rounded-[28px] border border-neutral-200 bg-white p-2 shadow-[0_4px_20px_-8px_rgba(15,23,42,0.15)]">
+            <div className="relative aspect-[1.9/1] overflow-hidden rounded-[22px] bg-neutral-100">
               <div ref={img} className="absolute inset-0 will-change-transform">
                 {!missing && (
                   // eslint-disable-next-line @next/next/no-img-element

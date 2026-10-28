@@ -1,3 +1,4 @@
+import HashScroll from "@/components/HashScroll";
 import Hero from "@/components/Hero";
 import LaptopSection from "@/components/LaptopSection";
 import LogoStrip from "@/components/LogoStrip";
@@ -15,21 +16,23 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main>
-      <Hero />
-      <LaptopSection />
-      <LogoStrip />
-      <HowItWorks />
-      <WholeTeam />
-      <Features />
-      <Scattered />
-      <Share />
-      <Results />
-      <Security />
-      <Customers />
-      <Faq />
-      <Contact />
-      <Footer />
-    </main>
+    <>
+      <HashScroll />
+      <main>
+        <Hero />
+        <LaptopSection />
+        <LogoStrip />
+        <HowItWorks />
+        <WholeTeam />
+        <Features />
+        <Scattered />
+        <Share />
+        <Results />
+        <Security />
+        <Customers />
+        <Faq />
+        <Footer />
+      </main>
+    </>
   );
 }

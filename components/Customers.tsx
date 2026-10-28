@@ -8,28 +8,30 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// PLACEHOLDER CONTENT. These case studies and figures came from the template.
-// Replace them with real customers and numbers you can back up.
-// Put the images in /public/customers/ as case-1.jpg, case-2.jpg, case-3.jpg
+// These cards describe use cases only, with no statistics, because there are
+// no real customer results to publish yet. When you have real, approved
+// results, add them to `title`/`text` and change the heading to something like
+// "Proof from real project teams."
+// Put the images in /public/customers/ as case-1.avif, case-2.avif, case-3.avif
 // (change the extension here if yours differ).
-const HEADING = "Proof from real project teams.";
+const HEADING = "Where project teams use it.";
 const CASES = [
   {
     label: "Multifamily · Developer",
-    title: "1,200 review hours back to the team",
-    text: "Takeoffs and scope checks tied to the sheets they came from.",
+    title: "Takeoffs tied to their source sheets",
+    text: "Quantities and scope checks that link back to the sheet they came from.",
     image: "/customers/case-1.avif",
   },
   {
     label: "Data center · MEP contractor",
-    title: "Two weeks saved in coordination",
-    text: "Spec and drawing conflicts resolved before the first submittal.",
+    title: "Conflicts caught before submittals",
+    text: "Spec and drawing conflicts surfaced before the first submittal.",
     image: "/customers/case-2.avif",
   },
   {
     label: "Healthcare · General contractor",
-    title: "38% fewer RFIs on a 214-sheet pavilion",
-    text: "Conflicts surfaced in preconstruction instead of in the field.",
+    title: "Issues found in preconstruction",
+    text: "Conflicts surfaced early instead of turning into field RFIs.",
     image: "/customers/case-3.avif",
   },
 ];
@@ -49,9 +51,9 @@ function CaseCard({
   const [missing, setMissing] = useState(false);
   return (
     <article
-      className="case-card relative w-full overflow-hidden rounded-[22px] border border-[#242d38] bg-[#0b0f14] shadow-[0_0_40px_rgba(0,0,0,0.5)] will-change-transform md:w-[min(930px,100%,max(560px,calc((100vh-300px)*1.5)))] md:rounded-[28px]"
+      className="case-card relative w-full overflow-hidden rounded-[22px] border border-neutral-200 bg-white shadow-[0_4px_20px_-8px_rgba(15,23,42,0.18)] will-change-transform md:w-[min(930px,100%,max(560px,calc((100vh-300px)*1.5)))] md:rounded-[28px]"
     >
-      <div className="aspect-[1.5/1] w-full bg-[#0d1117]">
+      <div className="aspect-[1.5/1] w-full bg-neutral-100">
         {!missing && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -63,16 +65,17 @@ function CaseCard({
           />
         )}
       </div>
-      <div className="border-t border-[#1c232d] px-5 py-5 md:px-6 md:py-6">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#5b7cff]">
+      <div className="border-t border-neutral-200 px-5 py-5 md:px-6 md:py-6">
+        <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600">
+          <span className="size-1.5 rounded-full bg-accent" />
           {label}
         </p>
-        <h3 className="mt-3 text-xl font-medium leading-tight tracking-[-0.03em] text-[#eef1f5] md:text-2xl">
+        <h3 className="mt-3 text-xl font-medium leading-tight tracking-[-0.03em] text-neutral-900 md:text-2xl">
           {title}
         </h3>
-        <p className="mt-2 text-base text-[#8b95a1]">{text}</p>
+        <p className="mt-2 text-base text-neutral-500">{text}</p>
       </div>
-      <div className="case-dim pointer-events-none absolute inset-0 bg-[#07090c] opacity-0" />
+      <div className="case-dim pointer-events-none absolute inset-0 bg-white opacity-0" />
     </article>
   );
 }
@@ -142,14 +145,14 @@ export default function Customers() {
       ref={root}
       id="customers"
       aria-label="Customers"
-      className="overflow-x-clip border-t border-[#242d38] bg-background px-5 pb-[80px] pt-[80px] md:px-24 md:pb-[160px] md:pt-[130px]"
+      className="overflow-x-clip border-t border-neutral-200 bg-background px-5 pb-[80px] pt-[80px] md:px-24 md:pb-[160px] md:pt-[130px]"
     >
       <motion.h2
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.8, ease: EASE }}
-        className="text-center text-[clamp(2rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#eef1f5]"
+        className="text-center text-[clamp(2rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-900"
       >
         {HEADING}
       </motion.h2>

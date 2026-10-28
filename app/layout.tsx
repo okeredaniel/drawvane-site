@@ -24,13 +24,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="light"
       suppressHydrationWarning
       className={`${inter.variable} ${interTight.variable}`}
     >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem("theme") === "light") document.documentElement.dataset.theme = "light";}catch(e){}`,
+            __html: `if(location.hash.length>1){var d=document.documentElement;d.classList.add("hash-pending");setTimeout(function(){d.classList.remove("hash-pending")},3000)}`,
           }}
         />
       </head>
