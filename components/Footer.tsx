@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 
-const BRAND = "Drawvane";
+const BRAND = "Stratora";
 const TAGLINE = "AI that reads the drawing set, with the receipts.";
 const YEAR = new Date().getFullYear();
 
@@ -24,8 +24,8 @@ const LINKS = [
 // nothing. When you have the pages, give each one a real href (for example
 // "/privacy") and remove `placeholder: true`.
 const LEGAL = [
-  { label: "Privacy", href: "#", placeholder: true },
-  { label: "Terms", href: "#", placeholder: true },
+  { label: "Privacy", href: "/privacy", placeholder: false },
+  { label: "Terms", href: "/terms", placeholder: false },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -67,15 +67,7 @@ export default function Footer() {
       <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <span
-              aria-hidden="true"
-              className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/25 ring-1 ring-accent/60"
-            >
-              <span className="h-2 w-2 rounded-full bg-accent" />
-            </span>
-            <span className="text-lg font-medium tracking-[-0.02em] text-neutral-900">
-              {BRAND}
-            </span>
+            <img src="/stratora-logo.png" alt="Stratora" className="h-7 w-auto" />
           </div>
           <p className="mt-4 text-base text-neutral-500">{TAGLINE}</p>
           {ROADMAP_NOTE && (
@@ -104,13 +96,19 @@ export default function Footer() {
         <ul className="flex gap-8 font-mono text-xs uppercase tracking-[0.15em] text-neutral-500">
           {LEGAL.map((l) => (
             <li key={l.label}>
-              <a
-                href={l.href}
-                onClick={l.placeholder ? (e) => e.preventDefault() : undefined}
-                className="transition-colors hover:text-neutral-900"
-              >
-                {l.label}
-              </a>
+              {l.placeholder ? (
+                <a
+                  href={l.href}
+                  onClick={(e) => e.preventDefault()}
+                  className="transition-colors hover:text-neutral-900"
+                >
+                  {l.label}
+                </a>
+              ) : (
+                <Link href={l.href} className="transition-colors hover:text-neutral-900">
+                  {l.label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>

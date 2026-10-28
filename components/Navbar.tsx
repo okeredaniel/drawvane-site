@@ -95,10 +95,7 @@ export default function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-neutral-200 bg-white">
       <div className="mx-auto flex h-[66px] max-w-[1900px] items-center justify-between gap-3 px-4 sm:px-6 md:px-10 2xl:px-[96px]">
         <NavLink href="/#home" className="flex shrink-0 items-center gap-2.5">
-         <span className="grid size-7 place-items-center rounded-lg bg-accent/25 ring-1 ring-accent/60">
-           <span className="size-2 rounded-full bg-accent" />
-         </span>
-         <span className="text-[17px] font-medium tracking-tight">Drawvane</span>
+         <img src="/stratora-logo.png" alt="Stratora" className="h-7 w-auto" />
         </NavLink>
 
         <nav className="hidden items-center gap-6 xl:flex 2xl:gap-8" aria-label="Main">

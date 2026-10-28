@@ -11,9 +11,9 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  title: "Drawvane | Document intelligence for AEC teams",
+  title: "Stratora | Document intelligence for AEC teams",
   description:
-    "Ask the plan set. Get the sheet number. Cited answers from your drawings, specs and RFIs.",
+    "Ask the plan set. Get the sheet number. Cited answers from your drawings, specs and RFIs." ,
 };
 
 export default function RootLayout({

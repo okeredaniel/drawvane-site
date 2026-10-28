@@ -226,7 +226,7 @@ export default function LaptopSection() {
                 preload="auto"
                 disablePictureInPicture
                 poster="/laptop-poster.jpg"
-                aria-label="Drawvane demo: asking a question and getting an answer linked to the exact sheet"
+                aria-label="Stratora demo: asking a question and getting an answer linked to the exact sheet"
               >
                 <source src="/laptop.webm" type="video/webm" />
                 <source src="/laptop.mp4" type="video/mp4" />

@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 
@@ -37,7 +38,7 @@ const CARDS: CardData[] = [
 const DESIGN_W = 1500;
 const DESIGN_H = 560;
 const BOX_TOP = 177; // prompt box top, at full size
-const BOX_ROOM = 300; // space kept free for the prompt box under its top
+const BOX_ROOM = 340; // space kept free for the prompt box under its top (was 300, the new box is a bit taller)
 
 // ---- Card motion settings -------------------------------------------------
 // Every card travels around its own full circle in 3D: sideways, back behind
@@ -78,10 +79,27 @@ const FAN = [
   { src: UNIQUE_SRCS[8], r: 6, y: 10 },
 ];
 
-const QUESTIONS = [
-  "What is the fire rating of the corridor walls on Level 2?",
-  "Any conflicts between the plans and specs at the ceiling?",
-  "How many doors are in the east wing?",
+// PLACEHOLDER DEMO CONTENT. Swap the answers and sheet references for real
+// examples from your product before launch.
+const DEMO = [
+  {
+    short: "Fire ratings",
+    q: "What is the fire rating of the corridor walls on Level 2?",
+    a: "Corridor walls on Level 2 are 1-hour rated, with 20-minute rated doors.",
+    refs: ["Sheet A-201", "Spec 08 11 13"],
+  },
+  {
+    short: "Ceiling conflicts",
+    q: "Any conflicts between the plans and specs at the ceiling?",
+    a: "One. The plans show a 9'-0\" ceiling in Room 214, but the spec calls for 8'-6\".",
+    refs: ["Sheet A-301", "Spec 09 51 00"],
+  },
+  {
+    short: "Door counts",
+    q: "How many doors are in the east wing?",
+    a: "There are 42 doors in the east wing, across three levels.",
+    refs: ["Sheet A-601"],
+  },
 ];
 
 function BlueprintCard({
@@ -212,6 +230,123 @@ function Preview({ src }: { src: string | null }) {
   );
 }
 
+// NEW: the prompt box is now a live demo. It types a question, then shows a
+// cited answer with sheet chips. It keeps its own state so typing never
+// re-renders the Hero (and never touches the card animation).
+function PromptDemo() {
+  const [qi, setQi] = useState(0);
+  const [typed, setTyped] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [run, setRun] = useState(0); // bump to replay the current question
+
+  useEffect(() => {
+    const q = DEMO[qi].q;
+    const reduce =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches && !IGNORE_REDUCED_MOTION;
+    if (reduce) {
+      setTyped(q.length);
+      setShowAnswer(true);
+      return;
+    }
+    setTyped(0);
+    setShowAnswer(false);
+    let i = 0;
+    const timers: number[] = [];
+    const type = () => {
+      i += 1;
+      setTyped(i);
+      if (i < q.length) {
+        timers.push(window.setTimeout(type, 28));
+      } else {
+        timers.push(window.setTimeout(() => setShowAnswer(true), 450));
+        timers.push(window.setTimeout(() => setQi((v) => (v + 1) % DEMO.length), 6500));
+      }
+    };
+    timers.push(window.setTimeout(type, 400));
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [qi, run]);
+
+  const current = DEMO[qi];
+
+  return (
+    <div className="relative z-20 mx-auto w-full max-w-[620px] rounded-[28px] border border-white/15 bg-slate-800/15 p-4 backdrop-blur-xl sm:p-5 lg:absolute lg:left-1/2 lg:top-[var(--box-top)] lg:w-[min(620px,52%)] lg:max-w-none lg:-translate-x-1/2">
+      {/* the question being typed */}
+      <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/5 py-2.5 pl-4 pr-2.5">
+        <p className="min-h-[44px] flex-1 content-center text-[15px] leading-snug text-white sm:text-[16px]">
+          <span aria-live="off">{current.q.slice(0, typed)}</span>
+          <span
+            aria-hidden
+            className="ml-0.5 inline-block h-[1.05em] w-px translate-y-[3px] animate-pulse bg-white/80"
+          />
+        </p>
+        <button
+          type="button"
+          aria-label="Ask"
+          className="keep-white grid size-10 shrink-0 place-items-center rounded-full bg-accent text-white transition-transform hover:scale-105"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* the cited answer */}
+      <div className="mt-3 min-h-[108px] px-1">
+        <AnimatePresence mode="wait">
+          {showAnswer && (
+            <motion.div
+              key={qi}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="flex gap-3"
+            >
+              <span aria-hidden className="mt-1 w-0.5 shrink-0 self-stretch rounded-full bg-blue-400/70" />
+              <div>
+                <p className="text-[15px] leading-relaxed text-white/90">{current.a}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {current.refs.map((r) => (
+                    <span
+                      key={r}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-blue-400/30 bg-blue-500/10 px-2 py-1 text-xs text-blue-100"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 3v5h5" />
+                      </svg>
+                      {r}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* switch questions */}
+      <div className="mt-3 flex flex-wrap gap-2">
+        {DEMO.map((d, i) => (
+          <button
+            key={d.short}
+            type="button"
+            aria-pressed={i === qi}
+            onClick={() => (i === qi ? setRun((r) => r + 1) : setQi(i))}
+            className={`rounded-full border px-3 py-1.5 text-[13px] transition-colors ${
+              i === qi
+                ? "border-white/70 bg-white/10 text-white"
+                : "border-white/30 text-white/80 hover:bg-white/10"
+            }`}
+          >
+            {d.short}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Hero() {
   const [active, setActive] = useState<string | null>(null);
   const [scale, setScale] = useState(1);
@@ -285,15 +420,27 @@ export default function Hero() {
     >
       {/* fades the hero into the next section's background (dark mode only, see theme.css) */}
       <div className="hero-fade pointer-events-none absolute inset-x-0 bottom-0 z-0 h-64 bg-gradient-to-b from-transparent to-[#0d1117]" />
+
+      {/* NEW: headline block */}
       <div className="mx-auto max-w-[1500px] px-5 pt-12 text-center sm:px-6 md:pt-16">
-        <p className="text-base text-slate-400">Document intelligence for AEC teams</p>
-        <h1 className="mt-6 font-display text-[clamp(2.5rem,8vw,6rem)] font-medium leading-[0.95] tracking-[-0.05em]">
+        <p className="mx-auto inline-flex items-center gap-2.5 rounded-full bg-white/5 py-1.5 pl-3 pr-4 text-sm text-slate-300">
+          <span aria-hidden className="relative flex size-2">
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-blue-400/70" />
+            <span className="relative inline-flex size-2 rounded-full bg-blue-400" />
+          </span>
+          Document intelligence for AEC teams
+        </p>
+
+        <h1 className="mt-7 font-display text-[clamp(2.75rem,8.5vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.055em]">
           <span className="block text-white">Ask the plan set.</span>
           <span className="block text-slate-400">Get the sheet number.</span>
         </h1>
-        <p className="mt-8 text-lg text-slate-300">
+
+        <p className="mx-auto mt-7 max-w-[520px] text-lg leading-relaxed text-slate-300">
           Cited answers from your drawings, specs and RFIs.
         </p>
+
+       
       </div>
 
       <div
@@ -334,31 +481,7 @@ export default function Hero() {
 
         {/* Prompt box: glass look. Centered over the cards on large screens,
             a normal block under the fanned cards on small ones. */}
-        <div className="relative z-20 mx-auto w-full max-w-[620px] rounded-[28px] border border-white/15 bg-slate-800/15 p-5 backdrop-blur-xl sm:p-6 lg:absolute lg:left-1/2 lg:top-[var(--box-top)] lg:w-[min(620px,52%)] lg:max-w-none lg:-translate-x-1/2">
-          <p className="text-[16px] text-white/90 sm:text-[17px]">
-            Ask about a clause, a detail or a conflict...
-          </p>
-          <div className="mt-5 flex flex-col items-start gap-2.5 pr-14">
-            {QUESTIONS.map((q) => (
-              <button
-                key={q}
-                type="button"
-                className="rounded-full border border-white/40 px-3 py-1.5 text-left text-[13px] text-white/90 transition-colors hover:bg-white/10"
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            aria-label="Ask"
-            className="keep-white absolute bottom-5 right-5 grid size-11 place-items-center rounded-full bg-accent text-white transition-transform hover:scale-105 sm:bottom-6 sm:right-6"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 19V5M5 12l7-7 7 7" />
-            </svg>
-          </button>
-        </div>
+        <PromptDemo />
       </div>
       {wide && <PreloadPreviews />}
       <MotionConfig reducedMotion="user">
