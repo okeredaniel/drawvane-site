@@ -22,19 +22,19 @@ const STEPS = [
     n: "01",
     title: "Upload the set",
     text: "Drawings and specs in one drop.",
-    image: "/how-it-works/step-1.avif",
+    // image: "/how-it-works/step-1.avif",
   },
   {
     n: "02",
     title: "Ask anything",
     text: "Plain language, cited answers.",
-    image: "/how-it-works/step-2.avif",
+    // image: "/how-it-works/step-2.avif",
   },
   {
     n: "03",
     title: "Share the answer",
     text: "Send it with the sheet attached.",
-    image: "/how-it-works/step-3.avif",
+    // image: "/how-it-works/step-3.avif",
   },
 ];
 

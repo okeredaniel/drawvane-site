@@ -13,7 +13,7 @@ const CARDS = [
   {
     title: "Ask in plain language",
     text: "Cited answers in seconds.",
-    image: "/whole-team/card-1.avif",
+    // image: "/whole-team/card-1.avif",
     chips: [
       { label: "Slab thickness at Level 2?", className: "left-5 top-5", depth: 70 },
       { label: "200 mm · S-301, Note 4", className: "bottom-5 right-5", depth: 110 },
@@ -22,7 +22,7 @@ const CARDS = [
   {
     title: "Check the source",
     text: "Drawings, specs and RFIs in one drop.",
-    image: "/whole-team/card-2.avif",
+    // image: "/whole-team/card-2.avif",
     chips: [
       { label: "A-102 · Rev C", className: "left-5 top-5", depth: 70 },
       { label: "Spec 03 30 00", className: "right-5 top-1/2", depth: 100 },

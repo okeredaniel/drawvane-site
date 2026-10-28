@@ -11,7 +11,9 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 // Put the image in /public/share/ as share.avif.
 // If yours is .png, .jpg or .webp, change the extension here.
 // Change the alt text to describe your own image.
-const IMAGE = { src: "/share/share.avif", alt: "A shared answer with its source sheet attached" };
+const IMAGE = { 
+  // src: "/share/share.avif", 
+  alt: "A shared answer with its source sheet attached" };
 
 // PLACEHOLDER CONTENT: replace the link, people and benefit copy with your own.
 const SHARE_LINK = "app.example.com/a/7f3k2";

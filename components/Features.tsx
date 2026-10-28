@@ -23,17 +23,17 @@ const ITEMS = [
   {
     title: "Flag conflicts",
     text: "Plans checked against specs, in context.",
-    image: "/features/feature-1.avif",
+    // image: "/features/feature-1.avif",
   },
   {
     title: "Compare revisions",
     text: "See exactly what changed between two sets.",
-    image: "/features/feature-2.avif",
+    // image: "/features/feature-2.avif",
   },
   {
     title: "Measure takeoffs",
     text: "Quantities pulled straight from the drawings.",
-    image: "/features/feature-3.avif",
+    // image: "/features/feature-3.avif",
   },
 ];
 

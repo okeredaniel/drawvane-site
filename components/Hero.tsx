@@ -1,9 +1,10 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import FloatingPills from "./FloatingPills";
 
 type CardData = {
   src: string;
@@ -436,7 +437,7 @@ export default function Hero() {
           $52B is lost to construction rework every year. Stratora gives you answers before mistakes happen.
         </p>
 
-       
+        <FloatingPills />
       </div>
 
       <div

@@ -14,8 +14,12 @@ import {
 
 // Put the two images in /public/scattered/ as before.jpg and after.jpg.
 // If yours are .png or .webp, change the extension in the paths below.
-const BEFORE = { src: "/scattered/card-2.avif", alt: "A pile of scattered paper drawings" };
-const AFTER = { src: "/scattered/card-1.avif", alt: "Drawings linked into one project set" };
+const BEFORE = { 
+  // src: "/scattered/card-2.avif", 
+  alt: "A pile of scattered paper drawings" };
+const AFTER = { 
+  // src: "/scattered/card-1.avif", 
+  alt: "Drawings linked into one project set" };
 const CAPTION = "Every sheet, spec and RFI, linked.";
 
 // What goes into the linked set. Only list document types your product
@@ -33,13 +37,13 @@ const CARDS = [
   {
     title: "RFIs, ready to send",
     text: "References and markups included.",
-    image: "/scattered/card-3.avif",
+    // image: "/scattered/card-3.avif",
     from: "left" as const,
   },
   {
     title: "Fits your stack",
     text: "Works with the tools your team already uses.",
-    image: "/scattered/card-4.avif",
+    // image: "/scattered/card-4.avif",
     from: "right" as const,
   },
 ];

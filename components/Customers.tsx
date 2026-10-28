@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { useRef, useState } from "react";
+import {
+  motion,
+  useAnimationFrame,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "motion/react";
 
 // These cards describe use cases only, with no statistics, because there are
 // no real customer results to publish yet. When you have real, approved
@@ -14,9 +17,10 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 // "Proof from real project teams."
 // Put the images in /public/customers/ as case-1.avif, case-2.avif, case-3.avif
 // (change the extension here if yours differ).
-// `chip` is the small label that floats above each image. The references in
-// it are made up: replace them with your own or delete the chip.
+// `chip` is the small label that floats in front of each image. The sheet and
+// spec references are made up: replace them with your own or delete the chip.
 const HEADING = "Where project teams use it.";
+const SUBHEAD = "From preconstruction to the field.";
 const CASES = [
   {
     label: "Multifamily · Developer",
@@ -41,294 +45,301 @@ const CASES = [
   },
 ];
 
-// Short names for the progress rail, taken from the first part of each label.
-const SECTORS = CASES.map((c) => c.label.split("·")[0].trim());
-
-const PEEK = 28;
-const SCALE_ONE_BEHIND = 0.935;
-const SCALE_TWO_BEHIND = 0.87;
-
+const DURATION = 6500; // ms each project type stays on screen
+const PEEK = 30; // how far each card behind sticks out above the front one
+const SHRINK = 0.03; // how much smaller each card behind is
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-function CaseCard({
-  label,
-  title,
-  text,
-  image,
-  chip,
-}: (typeof CASES)[number]) {
+// Faint drawing grid shown behind the photos (and when a photo is missing)
+const GRID = {
+  backgroundImage:
+    "linear-gradient(rgba(15,23,42,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.06) 1px, transparent 1px)",
+  backgroundSize: "24px 24px",
+};
+
+function Photo({
+  src,
+  alt,
+  className = "aspect-[1.5/1]",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
   const [missing, setMissing] = useState(false);
-  const tilt = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      className={`relative w-full overflow-hidden bg-neutral-100 ${className}`}
+      style={GRID}
+    >
+      {!missing && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          onError={() => setMissing(true)}
+          className="h-full w-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
 
-  // Hover (mouse only): the card tilts toward the pointer, a light moves
-  // across it, and the floating chip slides against the image.
-  useEffect(() => {
-    const el = tilt.current;
-    if (!el) return;
-    const ok = window.matchMedia(
-      "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)"
-    );
-    if (!ok.matches) return;
+function Chip({ text }: { text: string }) {
+  return (
+    <span className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-[13px] font-medium text-neutral-700 shadow-[0_10px_24px_-10px_rgba(15,23,42,0.35)]">
+      <span className="size-2 rounded-full bg-accent" />
+      {text}
+    </span>
+  );
+}
 
-    gsap.set(el, { transformPerspective: 1300 });
-    const rx = gsap.quickTo(el, "rotationX", { duration: 0.6, ease: "power3.out" });
-    const ry = gsap.quickTo(el, "rotationY", { duration: 0.6, ease: "power3.out" });
+// Phones and tablets: a plain list. Each card fades up once.
+function MobileCard({ c }: { c: (typeof CASES)[number] }) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, ease: EASE }}
+      className="overflow-hidden rounded-[22px] border border-neutral-200 bg-white shadow-[0_4px_20px_-8px_rgba(15,23,42,0.18)]"
+    >
+      <div className="relative">
+        <Photo src={c.image} alt={c.title} />
+        <div className="absolute right-3 top-3">
+          <Chip text={c.chip} />
+        </div>
+      </div>
+      <div className="border-t border-neutral-200 px-5 py-5">
+        <p className="flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+          <span className="size-1.5 rounded-full bg-accent" />
+          {c.label}
+        </p>
+        <h3 className="mt-3 text-xl font-medium leading-tight tracking-[-0.03em] text-neutral-900">
+          {c.title}
+        </h3>
+        <p className="mt-2 text-base text-neutral-500">{c.text}</p>
+      </div>
+    </motion.article>
+  );
+}
 
-    const move = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      ry((px - 0.5) * 8);
-      rx((0.5 - py) * 6);
-      el.style.setProperty("--mx", `${px * 100}%`);
-      el.style.setProperty("--my", `${py * 100}%`);
-      el.style.setProperty("--px", String(px - 0.5));
-      el.style.setProperty("--py", String(py - 0.5));
-    };
-    const enter = () => el.style.setProperty("--glare", "1");
-    const leave = () => {
-      rx(0);
-      ry(0);
-      el.style.setProperty("--glare", "0");
-      el.style.setProperty("--px", "0");
-      el.style.setProperty("--py", "0");
-    };
+// Desktop: pick a project type on the left, the card stack on the right.
+function Showcase({ reduce }: { reduce: boolean }) {
+  const n = CASES.length;
+  const [active, setActive] = useState(0);
+  const [held, setHeld] = useState(false); // mouse over or keyboard focus inside
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "-80px" });
 
-    el.addEventListener("pointermove", move);
-    el.addEventListener("pointerenter", enter);
-    el.addEventListener("pointerleave", leave);
-    return () => {
-      el.removeEventListener("pointermove", move);
-      el.removeEventListener("pointerenter", enter);
-      el.removeEventListener("pointerleave", leave);
-    };
-  }, []);
+  // 0 to 1: how far through the current project type we are
+  const progress = useMotionValue(0);
+  const none = useMotionValue(0);
+  const paused = held || !inView || reduce;
+
+  // Auto-advance. `delta` is capped so a lag spike or a returning tab can
+  // never skip ahead or jump.
+  useAnimationFrame((_, delta) => {
+    if (paused) return;
+    const next = progress.get() + Math.min(delta, 64) / DURATION;
+    if (next >= 1) {
+      progress.set(0);
+      setActive((a) => (a + 1) % n);
+    } else {
+      progress.set(next);
+    }
+  });
+
+  function select(i: number) {
+    setActive(i);
+    progress.set(0);
+  }
+
+  // Mouse tilt of the whole stack (mouse only, never on touch)
+  const tx = useMotionValue(0.5);
+  const ty = useMotionValue(0.5);
+  const spring = { stiffness: 160, damping: 20, mass: 0.6 };
+  const rotateY = useSpring(useTransform(tx, [0, 1], [-7, 7]), spring);
+  const rotateX = useSpring(useTransform(ty, [0, 1], [5, -5]), spring);
+
+  function onMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (reduce || e.pointerType !== "mouse") return;
+    const r = e.currentTarget.getBoundingClientRect();
+    tx.set((e.clientX - r.left) / r.width);
+    ty.set((e.clientY - r.top) / r.height);
+  }
+  function onLeave() {
+    tx.set(0.5);
+    ty.set(0.5);
+  }
 
   return (
-    // .case-card is moved by the scroll timeline; the tilt lives one level in
-    // so the two never fight over the same transform.
-    <div className="case-card relative w-full will-change-transform md:w-[min(930px,100%,max(560px,calc((100vh-350px)*1.5)))]">
-      <div ref={tilt} className="relative [transform-style:preserve-3d]">
-        <article className="relative overflow-hidden rounded-[22px] border border-neutral-200 bg-white shadow-[0_24px_60px_-28px_rgba(15,23,42,0.35)] md:rounded-[28px]">
-          <div className="aspect-[1.5/1] w-full bg-gradient-to-b from-neutral-100 to-neutral-200">
-            {!missing && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={image}
-                alt={title}
-                className="h-full w-full object-cover"
-                draggable={false}
-                onError={() => setMissing(true)}
-              />
-            )}
-          </div>
-          <div className="border-t border-neutral-200 px-5 py-5 md:px-6 md:py-6">
-            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600">
-              <span className="size-1.5 rounded-full bg-accent" />
-              {label}
-            </p>
-            <h3 className="mt-3 text-xl font-medium leading-tight tracking-[-0.03em] text-neutral-900 md:text-2xl">
-              {title}
-            </h3>
-            <p className="mt-2 text-base text-neutral-500">{text}</p>
-          </div>
-          <div className="case-dim pointer-events-none absolute inset-0 bg-white opacity-0" />
-        </article>
+    <div
+      ref={ref}
+      onMouseEnter={() => setHeld(true)}
+      onMouseLeave={() => setHeld(false)}
+      onFocusCapture={() => setHeld(true)}
+      onBlurCapture={() => setHeld(false)}
+      className="mx-auto mt-16 hidden max-w-[1200px] grid-cols-[minmax(0,380px)_minmax(0,1fr)] items-center gap-14 lg:grid"
+    >
+      {/* Left: the three project types */}
+      <ul>
+        {CASES.map((c, i) => {
+          const open = i === active;
+          return (
+            <li key={c.title} className="relative border-b border-neutral-200 last:border-b-0">
+              <button
+                type="button"
+                onClick={() => select(i)}
+                aria-pressed={open}
+                className="group block w-full py-6 text-left"
+              >
+                <span className="flex items-center gap-3 text-[13px] font-medium uppercase tracking-[0.14em] text-neutral-500">
+                  <span
+                    className={`grid size-6 place-items-center rounded-full text-[12px] transition-colors duration-300 ${
+                      open ? "bg-accent text-black" : "bg-neutral-100 text-neutral-500"
+                    }`}
+                  >
+                    {i + 1}
+                  </span>
+                  {c.label}
+                </span>
+                <span
+                  className={`mt-3 block tracking-[-0.03em] transition-all duration-300 ${
+                    open
+                      ? "text-[28px] font-medium leading-tight text-neutral-900"
+                      : "text-[20px] text-neutral-400 group-hover:text-neutral-700"
+                  }`}
+                >
+                  {c.title}
+                </span>
+                <motion.span
+                  initial={false}
+                  animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+                  transition={{ duration: 0.4, ease: EASE }}
+                  className="block overflow-hidden"
+                >
+                  <span className="block pt-3 text-[17px] leading-relaxed text-neutral-500">
+                    {c.text}
+                  </span>
+                </motion.span>
+              </button>
 
-        {/* floats above the image */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute right-4 top-4 flex items-center gap-2 rounded-full border border-neutral-200 bg-white/90 px-3 py-1.5 text-[13px] font-medium text-neutral-700 shadow-[0_10px_24px_-10px_rgba(15,23,42,0.35)] backdrop-blur md:right-6 md:top-6 md:px-3.5 md:text-sm md:[transform:translate3d(calc(var(--px,0)*-16px),calc(var(--py,0)*-10px),70px)]"
-        >
-          <span className="size-2 rounded-full bg-accent" />
-          {chip}
-        </span>
+              {/* time bar for the current one */}
+              <span aria-hidden className="absolute inset-x-0 bottom-[-1px] h-[2px]">
+                <motion.span
+                  className="block h-full origin-left bg-accent"
+                  style={{ scaleX: open ? progress : none }}
+                />
+              </span>
+            </li>
+          );
+        })}
+      </ul>
 
-        {/* moving light */}
+      {/* Right: the stack of cards */}
+      <div className="relative">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-[22px] opacity-[var(--glare,0)] transition-opacity duration-500 md:rounded-[28px]"
-          style={{
-            background:
-              "radial-gradient(560px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.4), transparent 45%)",
-          }}
+          className="pointer-events-none absolute -inset-10 -z-10 rounded-full bg-accent/20 blur-3xl"
         />
+        <motion.div
+          onPointerMove={onMove}
+          onPointerLeave={onLeave}
+          style={{
+            rotateX: reduce ? 0 : rotateX,
+            rotateY: reduce ? 0 : rotateY,
+            transformPerspective: 1400,
+            transformStyle: "preserve-3d",
+          }}
+          className="relative pt-[70px]"
+        >
+          <div className="relative aspect-[1.5/1]">
+            {CASES.map((c, i) => {
+              const offset = (i - active + n) % n; // 0 = front
+              return (
+                <motion.div
+                  key={c.title}
+                  aria-hidden={offset !== 0}
+                  initial={false}
+                  animate={{ y: -offset * PEEK, scale: 1 - offset * SHRINK }}
+                  transition={
+                    reduce
+                      ? { duration: 0 }
+                      : { type: "spring", stiffness: 140, damping: 20, mass: 0.8 }
+                  }
+                  style={{
+                    zIndex: n - offset,
+                    transformOrigin: "50% 100%",
+                    transformStyle: "preserve-3d",
+                  }}
+                  className="absolute inset-0"
+                >
+                  <article className="relative h-full overflow-hidden rounded-[28px] border border-neutral-200 bg-white shadow-[0_24px_60px_-28px_rgba(15,23,42,0.35)]">
+                    <Photo src={c.image} alt={c.title} className="h-full" />
+                    {/* fades the cards behind */}
+                    <motion.div
+                      aria-hidden
+                      initial={false}
+                      animate={{ opacity: offset === 0 ? 0 : offset === 1 ? 0.45 : 0.7 }}
+                      transition={{ duration: 0.4 }}
+                      className="pointer-events-none absolute inset-0 bg-white"
+                    />
+                  </article>
+
+                  {/* floats in front of the image */}
+                  <motion.div
+                    aria-hidden
+                    initial={false}
+                    animate={{ opacity: offset === 0 ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ z: 50 }}
+                    className="pointer-events-none absolute right-5 top-5"
+                  >
+                    <Chip text={c.chip} />
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
 
 export default function Customers() {
-  const root = useRef<HTMLElement>(null);
-  const pin = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-
-      mm.add(
-        {
-          desktop: "(min-width: 768px)",
-          motion: "(prefers-reduced-motion: no-preference)",
-        },
-        (ctx) => {
-          const { desktop, motion: ok } = ctx.conditions as {
-            desktop: boolean;
-            motion: boolean;
-          };
-          const cards = gsap.utils.toArray<HTMLElement>(".case-card");
-
-          // Phones and small tablets: a normal vertical list. Each card tips
-          // up from the floor as you reach it.
-          if (!desktop) {
-            if (!ok) return;
-            cards.forEach((card) => {
-              gsap.from(card, {
-                rotationX: 24,
-                y: 50,
-                opacity: 0,
-                transformOrigin: "50% 100%",
-                transformPerspective: 900,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: card,
-                  start: "top 95%",
-                  end: "top 62%",
-                  scrub: 0.6,
-                },
-              });
-            });
-            return;
-          }
-
-          // Desktop: the section pins and the cards stack. Each new card
-          // swings up from below while the ones behind lean back. With
-          // reduced motion the stacking stays, only the lean is removed.
-          const m = ok ? 1 : 0;
-          const dims = gsap.utils.toArray<HTMLElement>(".case-dim");
-          const late = gsap.utils.toArray<HTMLElement>(".case-late");
-          const fills = gsap.utils.toArray<HTMLElement>(".prog-fill");
-          const labels = gsap.utils.toArray<HTMLElement>(".prog-label");
-          if (cards.length < 3) return;
-          const [c1, c2, c3] = cards;
-          const [d1, d2] = dims;
-          const [, f2, f3] = fills;
-          const [l1, l2, l3] = labels;
-
-          gsap.set(cards, { transformOrigin: "50% 0%", transformPerspective: 1600 });
-          gsap.set([c2, c3], { y: () => window.innerHeight });
-          gsap.set(late, { visibility: "visible" });
-          gsap.set(fills[0], { scaleX: 1 });
-          gsap.set([f2, f3], { scaleX: 0 });
-          gsap.set(labels, { color: "#a3a3a3" });
-          gsap.set(l1, { color: "#171717" });
-
-          const tl = gsap.timeline({
-            defaults: { ease: "none" },
-            scrollTrigger: {
-              trigger: pin.current,
-              start: "top 96px",
-              end: () => "+=" + Math.round(window.innerHeight * 2.2),
-              pin: true,
-              scrub: 0.6,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-
-          tl.fromTo(
-            c2,
-            { y: () => window.innerHeight, rotationX: 18 * m },
-            { y: PEEK, rotationX: 0, duration: 1 },
-            0
-          )
-            .to(c1, { scale: SCALE_ONE_BEHIND, rotationX: 3 * m, duration: 1 }, 0)
-            .to(d1, { opacity: 0.45, duration: 1 }, 0)
-            .to(f2, { scaleX: 1, duration: 1 }, 0)
-            .to(l1, { color: "#a3a3a3", duration: 0.4 }, 0.6)
-            .to(l2, { color: "#171717", duration: 0.4 }, 0.6)
-            .fromTo(
-              c3,
-              { y: () => window.innerHeight, rotationX: 18 * m },
-              { y: PEEK * 2, rotationX: 0, duration: 1 },
-              1
-            )
-            .to(c2, { scale: SCALE_ONE_BEHIND, rotationX: 3 * m, duration: 1 }, 1)
-            .to(c1, { scale: SCALE_TWO_BEHIND, rotationX: 6 * m, duration: 1 }, 1)
-            .to(d1, { opacity: 0.75, duration: 1 }, 1)
-            .to(d2, { opacity: 0.45, duration: 1 }, 1)
-            .to(f3, { scaleX: 1, duration: 1 }, 1)
-            .to(l2, { color: "#a3a3a3", duration: 0.4 }, 1.6)
-            .to(l3, { color: "#171717", duration: 0.4 }, 1.6)
-            .to({}, { duration: 0.35 });
-        }
-      );
-    },
-    { scope: root }
-  );
+  const reduce = !!useReducedMotion();
 
   return (
     <section
-      ref={root}
       id="customers"
       aria-label="Customers"
-      className="overflow-x-clip border-t border-neutral-200 bg-background px-5 pb-[80px] pt-[80px] md:px-24 md:pb-[160px] md:pt-[130px]"
+      className="overflow-x-clip border-t border-neutral-200 bg-background px-5 py-[80px] md:px-24 md:py-[130px]"
     >
-      <motion.h2
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.8, ease: EASE }}
-        className="text-center text-[clamp(2rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-900"
+        className="text-center"
       >
-        {HEADING}
-      </motion.h2>
+        <h2 className="text-[clamp(2rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-900">
+          {HEADING}
+        </h2>
+        <p className="mt-3 text-lg text-neutral-500">{SUBHEAD}</p>
+      </motion.div>
 
-      {/* Phones: a normal list with gaps. Desktop: the cards stack on top of
-          each other and the section is pinned while you scroll. */}
-      <div ref={pin} className="relative mt-10 md:mt-[64px]">
-        {/* progress rail: shows which of the three you are on (desktop only) */}
-        <div
-          aria-hidden
-          className="mx-auto mb-8 hidden w-[min(930px,100%,max(560px,calc((100vh-350px)*1.5)))] grid-cols-3 gap-4 md:grid"
-        >
-          {SECTORS.map((name) => (
-            <div key={name}>
-              <div className="h-1 overflow-hidden rounded-full bg-neutral-200">
-                <div className="prog-fill h-full origin-left rounded-full bg-accent" />
-              </div>
-              <p className="prog-label mt-2.5 text-[14px] font-medium text-neutral-400">
-                {name}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <div className="relative flex flex-col gap-6 md:block md:pb-[56px]">
-          {CASES.map((c, i) => (
-            <motion.div
-              key={c.title}
-              className={
-                i === 0
-                  ? "relative z-10 flex justify-center"
-                  : `case-late relative flex justify-center md:invisible md:absolute md:inset-x-0 md:top-0 ${
-                      i === 1 ? "md:z-20" : "md:z-30"
-                    }`
-              }
-              {...(i === 0
-                ? {
-                    initial: { opacity: 0, y: 40 },
-                    whileInView: { opacity: 1, y: 0 },
-                    viewport: { once: true, margin: "-80px" },
-                    transition: { duration: 0.9, ease: EASE },
-                  }
-                : {})}
-            >
-              <CaseCard {...c} />
-            </motion.div>
-          ))}
-        </div>
+      <div className="mt-10 flex flex-col gap-6 lg:hidden">
+        {CASES.map((c) => (
+          <MobileCard key={c.title} c={c} />
+        ))}
       </div>
+
+      <Showcase reduce={reduce} />
     </section>
   );
 }
