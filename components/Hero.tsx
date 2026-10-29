@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
-
+import AnimatedHeadline from "./AnimatedHeadline";
 
 type CardData = {
   src: string;
@@ -425,12 +425,19 @@ export default function Hero() {
       {/* NEW: headline block */}
       <div className="mx-auto max-w-[1500px] px-5 pt-12 text-center sm:px-6 md:pt-16">
         <p className="mx-auto inline-flex items-center gap-2.5 rounded-full bg-white/5 py-1.5 pl-3 pr-4 text-sm text-slate-300">
-          Built for a Greener and Cleaner Canada
+          <span>Built for a Greener and Cleaner Canada</span>
+          <img
+            src="/canada.png"
+            alt="Canada"
+            className="h-4 w-5 shrink-0 rounded-[3px] border border-white/10 object-cover"
+          />
         </p>
 
-        <h1 className="mt-7 font-display text-[clamp(2.75rem,8.5vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.055em]">
-          <span className="block text-white">The Construction</span>
-          <span className="block text-slate-400">Intelligence Layer</span>
+        <h1
+          aria-label="The Construction Intelligence Layer"
+          className="mt-7 font-display text-[clamp(2.75rem,8.5vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.055em]"
+        >
+          <AnimatedHeadline />
         </h1>
 
         <p className="mx-auto mt-7 max-w-[520px] text-lg leading-relaxed text-slate-300">
