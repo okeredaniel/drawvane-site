@@ -8,160 +8,141 @@ import {
   useReducedMotion,
   useSpring,
   useTransform,
-  type MotionValue,
 } from "motion/react";
 
-const PILLS = [
-  {
-    label: "Project value",
-    value: 2_000_000,
-    tone: "light" as const,
-    pos: "xl:left-[4%] xl:top-[30px]",
-    dur: 8,
-    delay: 0,
-    depth: 14,
-    rot: 9,
-  },
-  {
-    label: "Estimated rework cost",
-    value: 100_000,
-    tone: "yellow" as const,
-    pos: "xl:right-[4%] xl:top-0",
-    dur: 10,
-    delay: 1.1,
-    depth: 24,
-    rot: 11,
-  },
+// EXAMPLE FIGURES, not measured results. Replace them with numbers you can
+// back up. The caption under the panel says they are examples: delete it only
+// once the numbers are real.
+const CAPTION = "Example figures, not measured results.";
+const STATS = [
+  { label: "Project value", value: 2_000_000, highlight: false, z: 28, delay: 0 },
+  { label: "Estimated rework cost", value: 100_000, highlight: true, z: 48, delay: 0.25 },
 ];
-
-const TONES = {
-  light: {
-    face: "bg-white border border-neutral-200 text-neutral-900 shadow-[0_18px_36px_-16px_rgba(15,23,42,0.4)]",
-    l1: "bg-neutral-200",
-    l2: "bg-neutral-300",
-    label: "text-neutral-500",
-  },
-  yellow: {
-    face: "bg-accent text-black shadow-[0_18px_40px_-14px_rgba(245,201,60,0.75)]",
-    l1: "bg-[#d9a91c]",
-    l2: "bg-[#b8890f]",
-    label: "text-black/70",
-  },
-};
 
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   maximumFractionDigits: 0,
 });
+const SPRING = { stiffness: 140, damping: 20, mass: 0.6 };
 
-function Pill({
-  pill,
-  mx,
-  my,
+function Stat({
+  stat,
   reduce,
+  right,
 }: {
-  pill: (typeof PILLS)[number];
-  mx: MotionValue<number>;
-  my: MotionValue<number>;
+  stat: (typeof STATS)[number];
   reduce: boolean;
+  right: boolean;
 }) {
-  const t = TONES[pill.tone];
-  const x = useTransform(mx, [-0.5, 0.5], [-pill.depth, pill.depth]);
-  const y = useTransform(my, [-0.5, 0.5], [-pill.depth * 0.7, pill.depth * 0.7]);
-
-  const count = useMotionValue(reduce ? pill.value : 0);
+  // the number counts up once when the page loads
+  const count = useMotionValue(reduce ? stat.value : 0);
   const text = useTransform(count, (v) => money.format(Math.round(v)));
-
   useEffect(() => {
     if (reduce) {
-      count.set(pill.value);
+      count.set(stat.value);
       return;
     }
-    const controls = animate(count, pill.value, {
+    const controls = animate(count, stat.value, {
       duration: 1.8,
-      delay: 0.4 + pill.delay * 0.3,
+      delay: 0.4 + stat.delay,
       ease: [0.16, 1, 0.3, 1],
     });
     return () => controls.stop();
-  }, [reduce, count, pill.value, pill.delay]);
+  }, [reduce, count, stat.value, stat.delay]);
 
   return (
-    <motion.div
-      style={{ x, y }}
-      className={`pointer-events-none relative z-30 [perspective:900px] xl:absolute ${pill.pos}`}
+    <div
+      style={{ transform: `translateZ(${stat.z}px)` }}
+      className={right ? "sm:text-right" : ""}
     >
-      <motion.div
-        animate={
-          reduce
-            ? undefined
-            : {
-                rotateY: [-pill.rot, pill.rot, -pill.rot],
-                rotateX: [5, -5, 5],
-                y: [0, -12, 0],
-              }
-        }
-        transition={{ duration: pill.dur, delay: pill.delay, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformStyle: "preserve-3d" }}
-        className="relative"
-      >
-        <span aria-hidden className={`absolute inset-0 rounded-full ${t.l1} [transform:translateZ(-9px)]`} />
-        <span aria-hidden className={`absolute inset-0 rounded-full ${t.l2} [transform:translateZ(-18px)]`} />
-        <span
-          aria-hidden
-          className="absolute inset-x-6 -bottom-6 h-6 rounded-full bg-neutral-900/20 blur-xl [transform:translateZ(-40px)]"
-        />
-
-        <div
-          aria-hidden
-          style={{ transformStyle: "preserve-3d" }}
-          className={`relative rounded-full px-9 py-5 text-center ${t.face}`}
+      <p aria-hidden className="text-[clamp(1.9rem,4vw,2.75rem)] font-medium leading-none tracking-tight tabular-nums text-neutral-900">
+        <motion.span
+          className={`inline-block whitespace-nowrap font-semibold ${
+            stat.highlight ? "text-[#E5372E]" : ""
+          }`}
         >
-          <span className="pointer-events-none absolute inset-x-4 top-1 h-1/2 rounded-full bg-gradient-to-b from-white/50 to-transparent" />
-          <div className="relative [transform:translateZ(34px)]">
-            <motion.span className="block whitespace-nowrap text-[clamp(1.75rem,2.6vw,2.5rem)] font-medium leading-none tracking-tight tabular-nums">
-              {text}
-            </motion.span>
-          </div>
-          <div className="relative mt-2.5 [transform:translateZ(20px)]">
-            <span className={`block text-[11px] font-semibold uppercase tracking-[0.16em] ${t.label}`}>
-              {pill.label}
-            </span>
-          </div>
-        </div>
-
-        <span className="sr-only">
-          {pill.label}: {money.format(pill.value)}
-        </span>
-      </motion.div>
-    </motion.div>
+          {text}
+        </motion.span>
+      </p>
+      <p
+        aria-hidden
+        className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-500"
+      >
+        {stat.label}
+      </p>
+      <span className="sr-only">
+        {stat.label}: {money.format(stat.value)}
+      </span>
+    </div>
   );
 }
 
 export default function FloatingPills() {
   const reduce = !!useReducedMotion();
 
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const mx = useSpring(px, { stiffness: 50, damping: 20 });
-  const my = useSpring(py, { stiffness: 50, damping: 20 });
+  // Mouse position over the panel (0 to 1). The whole panel tilts as one piece.
+  const mx = useMotionValue(0.5);
+  const my = useMotionValue(0.5);
+  const rotateY = useSpring(useTransform(mx, [0, 1], [-5, 5]), SPRING);
+  const rotateX = useSpring(useTransform(my, [0, 1], [4, -4]), SPRING);
 
-  useEffect(() => {
-    if (reduce) return;
-    const move = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
-      px.set(e.clientX / window.innerWidth - 0.5);
-      py.set(e.clientY / window.innerHeight - 0.5);
-    };
-    window.addEventListener("pointermove", move, { passive: true });
-    return () => window.removeEventListener("pointermove", move);
-  }, [reduce, px, py]);
+  function onMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (reduce || e.pointerType !== "mouse") return;
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width);
+    my.set((e.clientY - r.top) / r.height);
+  }
+  function onLeave() {
+    mx.set(0.5);
+    my.set(0.5);
+  }
 
   return (
-    <div className="relative mx-auto mt-8 flex flex-wrap items-center justify-center gap-5 xl:mt-0 xl:block xl:h-0">
-      {PILLS.map((p) => (
-        <Pill key={p.label} pill={p} mx={mx} my={my} reduce={reduce} />
-      ))}
+    <div
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      className="mx-auto mt-16 w-full max-w-[720px] [perspective:1200px]"
+    >
+      {/* very slow idle sway */}
+      <motion.div
+        animate={reduce ? undefined : { rotateY: [-1.5, 1.5, -1.5] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        <motion.div
+          style={{
+            rotateX: reduce ? 0 : rotateX,
+            rotateY: reduce ? 0 : rotateY,
+            transformStyle: "preserve-3d",
+          }}
+          className="relative rounded-2xl border border-dashed border-accent bg-neutral-50 p-6 text-left sm:p-8"
+        >
+          {/* soft shadow on the "floor" under the panel */}
+          <div
+            aria-hidden
+            className="absolute inset-x-10 -bottom-4 h-8 rounded-full bg-neutral-900/10 blur-xl [transform:translateZ(-40px)]"
+          />
+
+          <div className="grid items-center gap-6 [transform-style:preserve-3d] sm:grid-cols-[1fr_auto_1fr] sm:gap-10">
+            <Stat stat={STATS[0]} reduce={reduce} right={false} />
+
+            {/* divider with a small yellow dot in the middle */}
+            <div
+              aria-hidden
+              className="relative h-px w-full bg-accent/60 sm:h-16 sm:w-px [transform:translateZ(38px)]"
+            >
+              <span className="absolute left-1/2 top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_0_4px_rgba(245,201,60,0.25)]" />
+            </div>
+
+            <Stat stat={STATS[1]} reduce={reduce} right />
+          </div>
+
+          <p className="mt-6 text-[12px] text-neutral-500 [transform:translateZ(10px)]">
+            {CAPTION}
+          </p>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
-import FloatingPills from "./FloatingPills";
+
 
 type CardData = {
   src: string;
@@ -429,15 +429,15 @@ export default function Hero() {
         </p>
 
         <h1 className="mt-7 font-display text-[clamp(2.75rem,8.5vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.055em]">
-          <span className="block text-white">Ask the plan set.</span>
-          <span className="block text-slate-400">Get the sheet number.</span>
+          <span className="block text-white">The Construction</span>
+          <span className="block text-slate-400">Intelligence Layer</span>
         </h1>
 
         <p className="mx-auto mt-7 max-w-[520px] text-lg leading-relaxed text-slate-300">
           $52B is lost to construction rework every year. Stratora gives you answers before mistakes happen.
         </p>
 
-        <FloatingPills />
+        {/* <FloatingPills /> */}
       </div>
 
       <div

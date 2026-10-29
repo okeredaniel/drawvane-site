@@ -21,26 +21,34 @@ import {
 // spec references are made up: replace them with your own or delete the chip.
 const HEADING = "Where project teams use it.";
 const SUBHEAD = "From preconstruction to the field.";
-const CASES = [
+type CaseItem = {
+  label: string;
+  title: string;
+  text: string;
+  image?: string;
+  chip: string;
+};
+
+const CASES: CaseItem[] = [
   {
     label: "Multifamily · Developer",
     title: "Takeoffs tied to their source sheets",
     text: "Quantities and scope checks that link back to the sheet they came from.",
-    image: "/customers/case-1.avif",
+    // image: "/customers/case-1.avif",
     chip: "Linked to sheet A-201",
   },
   {
     label: "Data center · MEP contractor",
     title: "Conflicts caught before submittals",
     text: "Spec and drawing conflicts surfaced before the first submittal.",
-    image: "/customers/case-2.avif",
+    // image: "/customers/case-2.avif",
     chip: "Spec 23 05 00 vs M-401",
   },
   {
     label: "Healthcare · General contractor",
     title: "Issues found in preconstruction",
     text: "Conflicts surfaced early instead of turning into field RFIs.",
-    image: "/customers/case-3.avif",
+    // image: "/customers/case-3.avif",
     chip: "Found before the field",
   },
 ];
@@ -62,17 +70,19 @@ function Photo({
   alt,
   className = "aspect-[1.5/1]",
 }: {
-  src: string;
+  src?: string;
   alt: string;
   className?: string;
 }) {
   const [missing, setMissing] = useState(false);
+  const showImage = !!src && !missing;
+
   return (
     <div
       className={`relative w-full overflow-hidden bg-neutral-100 ${className}`}
       style={GRID}
     >
-      {!missing && (
+      {showImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
@@ -98,7 +108,7 @@ function Chip({ text }: { text: string }) {
 }
 
 // Phones and tablets: a plain list. Each card fades up once.
-function MobileCard({ c }: { c: (typeof CASES)[number] }) {
+function MobileCard({ c }: { c: CaseItem }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 30 }}

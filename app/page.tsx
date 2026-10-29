@@ -13,6 +13,7 @@ import Customers from "@/components/Customers";
 import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import FloatingPills from "@/components/FloatingPills";
 
 export default function Home() {
   return (
@@ -21,7 +22,7 @@ export default function Home() {
       <main>
         <Hero />
         <LaptopSection />
-        <LogoStrip />
+        <FloatingPills />
         <HowItWorks />
         <WholeTeam />
         <Features />
