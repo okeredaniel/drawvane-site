@@ -19,7 +19,13 @@ import {
 // Put the images in /public/features/ (feature-1.jpg, feature-2.jpg, feature-3.jpg).
 // If yours are .png or .webp, change the extension in the `image` path.
 // The descriptions for items 2 and 3 are placeholders: replace with your own copy.
-const ITEMS = [
+type FeatureItem = {
+  title: string;
+  text: string;
+  image?: string;
+};
+
+const ITEMS: FeatureItem[] = [
   {
     title: "Flag conflicts",
     text: "Plans checked against specs, in context.",
@@ -39,7 +45,12 @@ const ITEMS = [
 
 // ILLUSTRATIVE EXAMPLE: the sheet numbers and dollar amounts below are made up.
 // Replace them with a real example from your product before publishing.
-const STEPS = [
+type Step = {
+  title: string;
+  text: string;
+};
+
+const STEPS: Step[] = [
   {
     title: "A revision is issued",
     text: "Sheet A-301 lowers the corridor ceiling from 9'-0\" to 8'-6\".",
@@ -299,23 +310,24 @@ export default function Features() {
                 style={{ transformPerspective: 1000 }}
                 className="absolute inset-0"
               >
-                {!failed[ITEMS[active].image] && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={ITEMS[active].image}
-                    alt={ITEMS[active].title}
-                    className="h-full w-full object-cover"
-                    draggable={false}
-                    onError={() =>
-                      setFailed((f) => ({ ...f, [ITEMS[active].image]: true }))
-                    }
-                  />
-                )}
+                {(() => {
+                  const item = ITEMS[active];
+                  const src = item.image;
+                  const showImage = !!src && !failed[src];
+                  return showImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={src}
+                      alt={item.title}
+                      className="h-full w-full object-cover"
+                      draggable={false}
+                      onError={() => src && setFailed((f) => ({ ...f, [src]: true }))}
+                    />
+                  ) : null;
+                })()}
               </motion.div>
             </AnimatePresence>
           </div>
-
-
         </Tilt3D>
       </div>
 

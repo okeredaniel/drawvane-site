@@ -14,10 +14,17 @@ import {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+type Step = {
+  n: string;
+  title: string;
+  text: string;
+  image?: string;
+};
+
 // The three cards. Put the images in /public/how-it-works/ and make sure
 // each `image` path matches your file. Until the file exists, a light
 // panel is shown instead. `n` is the number shown on the floating chip.
-const STEPS = [
+const STEPS: Step[] = [
   {
     n: "01",
     title: "Upload the set",
@@ -91,7 +98,7 @@ function Word({ children, delay = 0 }: { children: React.ReactNode; delay?: numb
   );
 }
 
-function StepImage({ src, y }: { src: string; y?: MotionValue<string> }) {
+function StepImage({ src, y }: { src?: string; y?: MotionValue<string> }) {
   const img = useRef<HTMLImageElement>(null);
   const [missing, setMissing] = useState(false);
 
@@ -101,9 +108,11 @@ function StepImage({ src, y }: { src: string; y?: MotionValue<string> }) {
     if (el && el.complete && el.naturalWidth === 0) setMissing(true);
   }, []);
 
+  const showImage = !!src && !missing;
+
   return (
     <div className="aspect-[3/2] w-full overflow-hidden bg-gradient-to-b from-neutral-100 to-neutral-200">
-      {!missing && (
+      {showImage && (
         // The image is scaled up a little and slides inside its frame as you
         // scroll, so it looks like it sits deeper than the card.
         <motion.div className="size-full" style={{ y, scale: y ? 1.14 : 1 }}>
@@ -130,7 +139,7 @@ function StepCard({
   desktop,
   still,
 }: {
-  step: (typeof STEPS)[number];
+  step: Step;
   index: number;
   reveal: MotionValue<number>; // 0 -> 1 while the cards fan out
   float: MotionValue<number>; // 0 -> 1 while the row passes through the screen

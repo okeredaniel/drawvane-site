@@ -7,9 +7,16 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+type TeamCard = {
+  title: string;
+  text: string;
+  image?: string;
+  chips: { label: string; className: string; depth: number }[];
+};
+
 // Put the images in /public/whole-team/. Until a file exists, a light panel
 // is shown instead. `chips` are small labels that float above the image in 3D.
-const CARDS = [
+const CARDS: TeamCard[] = [
   {
     title: "Ask in plain language",
     text: "Cited answers in seconds.",
@@ -31,7 +38,7 @@ const CARDS = [
   },
 ];
 
-function CardImage({ src }: { src: string }) {
+function CardImage({ src }: { src?: string }) {
   const img = useRef<HTMLImageElement>(null);
   const [missing, setMissing] = useState(false);
 
@@ -41,9 +48,11 @@ function CardImage({ src }: { src: string }) {
     if (el && el.complete && el.naturalWidth === 0) setMissing(true);
   }, []);
 
+  const showImage = !!src && !missing;
+
   return (
     <div className="aspect-[3/2] w-full overflow-hidden rounded-t-[32px] bg-gradient-to-b from-neutral-100 to-neutral-200 md:aspect-[4/3]">
-      {!missing && (
+      {showImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           ref={img}

@@ -12,14 +12,21 @@ import {
   useTransform,
 } from "motion/react";
 
+type PanelImage = {
+  src?: string;
+  alt: string;
+};
+
 // Put the two images in /public/scattered/ as before.jpg and after.jpg.
 // If yours are .png or .webp, change the extension in the paths below.
-const BEFORE = { 
-  // src: "/scattered/card-2.avif", 
-  alt: "A pile of scattered paper drawings" };
-const AFTER = { 
-  // src: "/scattered/card-1.avif", 
-  alt: "Drawings linked into one project set" };
+const BEFORE: PanelImage = {
+  // src: "/scattered/card-2.avif",
+  alt: "A pile of scattered paper drawings",
+};
+const AFTER: PanelImage = {
+  // src: "/scattered/card-1.avif",
+  alt: "Drawings linked into one project set",
+};
 const CAPTION = "Every sheet, spec and RFI, linked.";
 
 // What goes into the linked set. Only list document types your product
@@ -31,20 +38,27 @@ const RECORD = [
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+type ScatteredCard = {
+  title: string;
+  text: string;
+  image?: string;
+  from: "left" | "right";
+};
+
 // The two cards under the container. Put the images in /public/scattered/
 // as card-3.avif and card-4.avif (change the extension here if yours differ).
-const CARDS = [
+const CARDS: ScatteredCard[] = [
   {
     title: "RFIs, ready to send",
     text: "References and markups included.",
     // image: "/scattered/card-3.avif",
-    from: "left" as const,
+    from: "left",
   },
   {
     title: "Fits your stack",
     text: "Works with the tools your team already uses.",
     // image: "/scattered/card-4.avif",
-    from: "right" as const,
+    from: "right",
   },
 ];
 
@@ -59,7 +73,7 @@ function Panel({
   rotateZ,
   scale,
 }: {
-  src: string;
+  src?: string;
   alt: string;
   from: "left" | "right";
   delay: number;
@@ -68,6 +82,8 @@ function Panel({
   scale: MotionValue<number> | number;
 }) {
   const [missing, setMissing] = useState(false);
+  const showImage = !!src && !missing;
+
   return (
     <motion.div
       initial={{ opacity: 0, x: from === "left" ? -60 : 60 }}
@@ -86,7 +102,7 @@ function Panel({
           : "shadow-[0_28px_50px_-26px_rgba(15,23,42,0.4)]"
       }`}
     >
-      {!missing && (
+      {showImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
@@ -135,7 +151,7 @@ function InfoCard({
 }: {
   title: string;
   text: string;
-  image: string;
+  image?: string;
   from: "left" | "right";
   reduce: boolean;
 }) {
@@ -152,6 +168,7 @@ function InfoCard({
   const shadowY = useTransform(sy, [-0.5, 0.5], [30, 14]);
   const glare = useMotionTemplate`radial-gradient(320px circle at ${gx}% ${gy}%, rgba(255,255,255,0.32), transparent 65%)`;
   const shadow = useMotionTemplate`${shadowX}px ${shadowY}px 40px -20px rgba(15,23,42,0.3)`;
+  const showImage = !!image && !missing;
 
   return (
     <motion.article
@@ -176,7 +193,7 @@ function InfoCard({
         className="group relative h-full overflow-hidden rounded-[28px] border border-neutral-200 bg-white"
       >
         <div className="aspect-[1.77/1] w-full overflow-hidden bg-neutral-100">
-          {!missing && (
+          {showImage && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={image}

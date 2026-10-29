@@ -8,12 +8,18 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+type ShareImage = {
+  src?: string;
+  alt: string;
+};
+
 // Put the image in /public/share/ as share.avif.
 // If yours is .png, .jpg or .webp, change the extension here.
 // Change the alt text to describe your own image.
-const IMAGE = { 
-  // src: "/share/share.avif", 
-  alt: "A shared answer with its source sheet attached" };
+const IMAGE: ShareImage = {
+  // src: "/share/share.avif",
+  alt: "A shared answer with its source sheet attached",
+};
 
 // PLACEHOLDER CONTENT: replace the link, people and benefit copy with your own.
 const SHARE_LINK = "app.example.com/a/7f3k2";
@@ -190,7 +196,7 @@ export default function Share() {
           >
             <div className="relative aspect-[1.9/1] overflow-hidden rounded-[22px] bg-gradient-to-b from-neutral-100 to-neutral-200">
               <div ref={img} className="absolute inset-0 will-change-transform">
-                {!missing && (
+                {!missing && IMAGE.src ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={IMAGE.src}
@@ -199,7 +205,7 @@ export default function Share() {
                     draggable={false}
                     onError={() => setMissing(true)}
                   />
-                )}
+                ) : null}
               </div>
             </div>
 
