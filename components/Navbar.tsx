@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ const LINKS = [
   { label: "Features", href: "/#features" },
   { label: "Results", href: "/#team" },
   { label: "FAQ", href: "/#faq" },
+  { label: "Adapt", href: "/adapt" },
   { label: "Pricing", href: "/pricing" },
   { label: "Book a demo", href: "/contact" },
 ];
