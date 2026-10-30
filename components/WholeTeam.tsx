@@ -1,4 +1,5 @@
 "use client";
+import { useSiteMotion } from "./SiteMotion";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import gsap from "gsap";
@@ -19,8 +20,8 @@ type TeamCard = {
 const CARDS: TeamCard[] = [
   {
     title: "Ask in plain language",
-    text: "Cited answers in seconds.",
-    // image: "/whole-team/card-1.avif",
+    text: "Explore answers with source references.",
+    image: "/illustrations/drawing.svg",
     chips: [
       { label: "Slab thickness at Level 2?", className: "left-5 top-5", depth: 70 },
       { label: "200 mm · S-301, Note 4", className: "bottom-5 right-5", depth: 110 },
@@ -29,7 +30,7 @@ const CARDS: TeamCard[] = [
   {
     title: "Check the source",
     text: "Drawings, specs and RFIs in one drop.",
-    // image: "/whole-team/card-2.avif",
+    image: "/illustrations/drawing.svg",
     chips: [
       { label: "A-102 · Rev C", className: "left-5 top-5", depth: 70 },
       { label: "Spec 03 30 00", className: "right-5 top-1/2", depth: 100 },
@@ -97,9 +98,11 @@ function Chip({
 // it and feeds --px / --py to the floating chips. Skipped on touch devices
 // and for people who prefer reduced motion.
 function Tilt({ children }: { children: ReactNode }) {
+  const { paused } = useSiteMotion();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (paused) return;
     const el = ref.current;
     if (!el) return;
     const ok = window.matchMedia(
@@ -135,11 +138,12 @@ function Tilt({ children }: { children: ReactNode }) {
     el.addEventListener("pointerenter", enter);
     el.addEventListener("pointerleave", leave);
     return () => {
+      rx.tween.kill(); ry.tween.kill(); gsap.set(el, { rotationX: 0, rotationY: 0 });
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerenter", enter);
       el.removeEventListener("pointerleave", leave);
     };
-  }, []);
+  }, [paused]);
 
   return (
     <div
@@ -161,11 +165,13 @@ function Tilt({ children }: { children: ReactNode }) {
 }
 
 export default function WholeTeam() {
+  const { paused } = useSiteMotion();
   const root = useRef<HTMLElement>(null);
   const grid = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
+      if (paused) return;
       const cards = gsap.utils.toArray<HTMLElement>(".team-card", grid.current);
       const mm = gsap.matchMedia();
 
@@ -241,7 +247,7 @@ export default function WholeTeam() {
         }
       );
     },
-    { scope: root }
+    { scope: root, dependencies: [paused], revertOnUpdate: true }
   );
 
   return (

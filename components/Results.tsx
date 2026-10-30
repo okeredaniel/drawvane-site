@@ -1,4 +1,5 @@
 "use client";
+import { useSiteMotion } from "./SiteMotion";
 
 import { useEffect, useRef } from "react";
 import {
@@ -7,7 +8,6 @@ import {
   useInView,
   useMotionTemplate,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -29,12 +29,12 @@ type Stat = {
   icon: IconName;
 };
 
-const HEADING = "What you can count on.";
+const HEADING = "What to evaluate in your pilot.";
 const STATS: Stat[] = [
-  { icon: "cited", headline: "Cited", text: "Every answer links back to the sheet or spec it came from." },
-  { icon: "traced", headline: "Traced", text: "A change is followed across drawings, specs and RFIs." },
-  { icon: "reviewed", headline: "Reviewed", text: "People approve the numbers before anyone relies on them." },
-  { icon: "private", headline: "Private", text: "Your documents are never used to train models." },
+  { icon: "cited", headline: "Cited", text: "Check answers against the cited sheet or specification." },
+  { icon: "traced", headline: "Traced", text: "Test a revision against related project documents." },
+  { icon: "reviewed", headline: "Reviewed", text: "Have a qualified person verify quantities before use." },
+  { icon: "private", headline: "Private", text: "Agree document access and data-handling terms first." },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -250,7 +250,7 @@ function Sheet({ stat, i, reduce }: { stat: Stat; i: number; reduce: boolean }) 
 /* ---------- section ---------- */
 
 export default function Results() {
-  const reduce = !!useReducedMotion();
+  const { paused: reduce } = useSiteMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -263,8 +263,8 @@ export default function Results() {
     <section
       ref={sectionRef}
       id="results"
-      aria-label="What you can count on"
-      className="relative overflow-hidden border-y border-neutral-200 bg-neutral-50 px-6 py-[120px] md:px-24 md:py-[190px]"
+      aria-label="Pilot evaluation criteria"
+      className="relative overflow-hidden border-y border-neutral-200 bg-neutral-50 px-6 py-20 md:px-24 md:py-28"
     >
       <motion.div
         aria-hidden="true"

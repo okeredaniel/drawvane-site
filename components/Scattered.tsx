@@ -1,4 +1,5 @@
 "use client";
+import { useSiteMotion } from "./SiteMotion";
 
 import { useRef, useState } from "react";
 import {
@@ -6,7 +7,6 @@ import {
   type MotionValue,
   useMotionTemplate,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -20,14 +20,14 @@ type PanelImage = {
 // Put the two images in /public/scattered/ as before.jpg and after.jpg.
 // If yours are .png or .webp, change the extension in the paths below.
 const BEFORE: PanelImage = {
-  // src: "/scattered/card-2.avif",
+  src: "/illustrations/drawing.svg",
   alt: "A pile of scattered paper drawings",
 };
 const AFTER: PanelImage = {
-  // src: "/scattered/card-1.avif",
+  src: "/illustrations/drawing.svg",
   alt: "Drawings linked into one project set",
 };
-const CAPTION = "Every sheet, spec and RFI, linked.";
+const CAPTION = "Explore a connected document-review workflow.";
 
 // What goes into the linked set. Only list document types your product
 // really reads.
@@ -49,15 +49,15 @@ type ScatteredCard = {
 // as card-3.avif and card-4.avif (change the extension here if yours differ).
 const CARDS: ScatteredCard[] = [
   {
-    title: "RFIs, ready to send",
+    title: "Prepare an RFI for review",
     text: "References and markups included.",
-    // image: "/scattered/card-3.avif",
+    image: "/illustrations/evidence.svg",
     from: "left",
   },
   {
     title: "Fits your stack",
-    text: "Works with the tools your team already uses.",
-    // image: "/scattered/card-4.avif",
+    text: "Discuss how the workflow fits your existing tools.",
+    image: "/illustrations/evidence.svg",
     from: "right",
   },
 ];
@@ -221,7 +221,7 @@ function InfoCard({
 /* ---------- section ---------- */
 
 export default function Scattered() {
-  const reduce = !!useReducedMotion();
+  const { paused: reduce } = useSiteMotion();
   const boxRef = useRef<HTMLDivElement>(null);
 
   // 0 when the container enters the screen, 1 once it is about mid-screen.
@@ -242,7 +242,7 @@ export default function Scattered() {
   return (
     <section
       id="scattered"
-      className="overflow-x-clip bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
+      className="overflow-x-clip bg-background px-6 py-20 md:px-24 md:py-28"
     >
       {/* Heading */}
       <motion.div

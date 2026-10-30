@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import SiteMotion from "@/components/SiteMotion";
+import { SITE_URL, DESCRIPTION, pageMetadata } from "@/lib/site";
 import "./globals.css";
 import "./theme.css";
-
+import "./site.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const interTight = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-inter-tight",
 });
-
 export const metadata: Metadata = {
-  title: "Stratora | Document intelligence for AEC teams",
-  description:
-    "Ask the plan set. Get the sheet number. Cited answers from your drawings, specs and RFIs." ,
+  ...pageMetadata("Construction intelligence", DESCRIPTION, "/"),
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Stratora | Construction intelligence",
+    template: "%s | Stratora",
+  },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -25,19 +28,16 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="light"
-      suppressHydrationWarning
       className={`${inter.variable} ${interTight.variable}`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `if(location.hash.length>1){var d=document.documentElement;d.classList.add("hash-pending");setTimeout(function(){d.classList.remove("hash-pending")},3000)}`,
-          }}
-        />
-      </head>
       <body>
-        <Navbar />
-        {children}
+        <SiteMotion>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
+          <Navbar />
+          {children}
+        </SiteMotion>
       </body>
     </html>
   );

@@ -1,24 +1,21 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
+import { useSiteMotion } from "./SiteMotion";
 import {
   animate,
   motion,
   useMotionValue,
-  useReducedMotion,
   useTransform,
 } from "motion/react";
 
-// Same switch as your Hero cards: your laptop has "reduce motion" turned on,
-// so this is true to let you see the animation. Set it to false before launch
-// so people with that system setting get a still headline.
-const IGNORE_REDUCED_MOTION = true;
+
 
 // Yellow text with a soft, narrow glint that passes through it.
 // To make the gloss stronger: widen the band (for example 44% and 56%),
-// or change #FFF4C2 to #FFFFFF.
+// or change #b28620 to #FFFFFF.
 const SHINE =
-  "linear-gradient(100deg, #F5C93C 0%, #F5C93C 46%, #FFF4C2 50%, #F5C93C 54%, #F5C93C 100%)";
+  "linear-gradient(100deg, #927015 0%, #927015 46%, #b28620 50%, #927015 54%, #927015 100%)";
 
 const REVEAL_SECONDS = 1.1;
 const GLINT_SECONDS = 1.4; // how long one pass takes
@@ -122,8 +119,7 @@ function PlotReveal({
 }
 
 export default function AnimatedHeadline() {
-  const systemReduce = !!useReducedMotion();
-  const still = systemReduce && !IGNORE_REDUCED_MOTION;
+  const { paused: still } = useSiteMotion();
 
   return (
     <>

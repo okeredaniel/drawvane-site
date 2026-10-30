@@ -1,4 +1,5 @@
 "use client";
+import { useSiteMotion } from "./SiteMotion";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -8,7 +9,6 @@ import {
   useInView,
   useMotionTemplate,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -16,9 +16,6 @@ import {
 } from "motion/react";
 
 // Each item: title, one-line description, and the image shown on the stage.
-// Put the images in /public/features/ (feature-1.jpg, feature-2.jpg, feature-3.jpg).
-// If yours are .png or .webp, change the extension in the `image` path.
-// The descriptions for items 2 and 3 are placeholders: replace with your own copy.
 type FeatureItem = {
   title: string;
   text: string;
@@ -29,17 +26,17 @@ const ITEMS: FeatureItem[] = [
   {
     title: "Flag conflicts",
     text: "Plans checked against specs, in context.",
-    // image: "/features/feature-1.avif",
+    image: "/illustrations/revision.svg",
   },
   {
     title: "Compare revisions",
     text: "See exactly what changed between two sets.",
-    // image: "/features/feature-2.avif",
+    image: "/illustrations/revision.svg",
   },
   {
     title: "Measure takeoffs",
-    text: "Quantities pulled straight from the drawings.",
-    // image: "/features/feature-3.avif",
+    text: "Explore quantities alongside their source drawings.",
+    image: "/illustrations/revision.svg",
   },
 ];
 
@@ -104,7 +101,7 @@ function Tilt3D({
   baseOpacity?: MotionValue<number>;
   glareRadius?: string;
 }) {
-  const reduce = useReducedMotion();
+  const { paused: reduce } = useSiteMotion();
   const [hover, setHover] = useState(false);
 
   const mx = useMotionValue(0);
@@ -139,7 +136,7 @@ function Tilt3D({
         my.set(0);
       }}
       style={{
-        rotateX,
+        rotateX: reduce ? 0 : rotateX,
         rotateY: reduce ? 0 : rotateY,
         scale: baseScale,
         opacity: baseOpacity,
@@ -163,7 +160,7 @@ function Tilt3D({
 function CountUp({ to }: { to: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const reduce = useReducedMotion() ?? false;
+  const { paused: reduce } = useSiteMotion();
   const n = useMotionValue(reduce ? to : 0);
   const text = useTransform(n, (v) => money(Math.round(v)));
 
@@ -183,7 +180,7 @@ function CountUp({ to }: { to: number }) {
 export default function Features() {
   const [active, setActive] = useState(0);
   const [failed, setFailed] = useState<Record<string, boolean>>({});
-  const reduce = useReducedMotion();
+  const { paused: reduce } = useSiteMotion();
 
   // The stage starts tipped back and shrunk, then rises to face you as the
   // section scrolls into view.
@@ -200,7 +197,7 @@ export default function Features() {
   return (
     <section
       id="features"
-      className="overflow-x-clip bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
+      className="overflow-x-clip bg-background px-6 py-20 md:px-24 md:py-28"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -213,7 +210,7 @@ export default function Features() {
           Precision search
         </h2>
         <p className="text-[clamp(2.5rem,4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-400">
-          Every clause, every sheet
+          Review the detail in context
         </p>
       </motion.div>
 
@@ -236,6 +233,16 @@ export default function Features() {
               role="tab"
               id={`feature-tab-${i}`}
               aria-selected={open}
+              tabIndex={open ? 0 : -1}
+              onKeyDown={e => {
+                let next = i;
+                if (e.key === "ArrowRight") next = (i + 1) % ITEMS.length;
+                else if (e.key === "ArrowLeft") next = (i + ITEMS.length - 1) % ITEMS.length;
+                else if (e.key === "Home") next = 0;
+                else if (e.key === "End") next = ITEMS.length - 1;
+                else return;
+                e.preventDefault(); setActive(next); document.getElementById(`feature-tab-${next}`)?.focus();
+              }}
               aria-controls="feature-stage"
               onClick={() => setActive(i)}
               className="relative rounded-2xl border border-transparent p-5 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-neutral-900/30"
@@ -344,7 +351,7 @@ export default function Features() {
             One revision, traced end to end
           </h3>
           <p className="mt-4 text-lg text-neutral-500">
-            See what changed, where it shows up, and what it costs.
+            Illustrative workflow with example amounts in CAD. Actual scope and costs require professional review.
           </p>
         </motion.div>
 

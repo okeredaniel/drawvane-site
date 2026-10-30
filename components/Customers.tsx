@@ -1,4 +1,5 @@
 "use client";
+import { useSiteMotion } from "./SiteMotion";
 
 import { useRef, useState } from "react";
 import {
@@ -6,7 +7,6 @@ import {
   useAnimationFrame,
   useInView,
   useMotionValue,
-  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
@@ -19,8 +19,8 @@ import {
 // (change the extension here if yours differ).
 // `chip` is the small label that floats in front of each image. The sheet and
 // spec references are made up: replace them with your own or delete the chip.
-const HEADING = "Where project teams use it.";
-const SUBHEAD = "From preconstruction to the field.";
+const HEADING = "Explore a workflow for your team.";
+const SUBHEAD = "Illustrative use cases, not customer results.";
 type CaseItem = {
   label: string;
   title: string;
@@ -34,21 +34,21 @@ const CASES: CaseItem[] = [
     label: "Multifamily · Developer",
     title: "Takeoffs tied to their source sheets",
     text: "Quantities and scope checks that link back to the sheet they came from.",
-    // image: "/customers/case-1.avif",
+    image: "/illustrations/evidence.svg",
     chip: "Linked to sheet A-201",
   },
   {
     label: "Data center · MEP contractor",
-    title: "Conflicts caught before submittals",
-    text: "Spec and drawing conflicts surfaced before the first submittal.",
-    // image: "/customers/case-2.avif",
+    title: "Review conflicts before submittals",
+    text: "Compare a specification and drawing before preparing a submittal.",
+    image: "/illustrations/evidence.svg",
     chip: "Spec 23 05 00 vs M-401",
   },
   {
     label: "Healthcare · General contractor",
-    title: "Issues found in preconstruction",
-    text: "Conflicts surfaced early instead of turning into field RFIs.",
-    // image: "/customers/case-3.avif",
+    title: "Review issues in preconstruction",
+    text: "Explore how a source review could inform an RFI.",
+    image: "/illustrations/evidence.svg",
     chip: "Found before the field",
   },
 ];
@@ -322,13 +322,13 @@ function Showcase({ reduce }: { reduce: boolean }) {
 }
 
 export default function Customers() {
-  const reduce = !!useReducedMotion();
+  const { paused: reduce } = useSiteMotion();
 
   return (
     <section
       id="customers"
-      aria-label="Customers"
-      className="overflow-x-clip border-t border-neutral-200 bg-background px-5 py-[80px] md:px-24 md:py-[130px]"
+      aria-label="Illustrative use cases"
+      className="overflow-x-clip border-t border-neutral-200 bg-background px-5 py-[80px] md:px-24 md:py-28"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}

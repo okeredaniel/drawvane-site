@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useSiteMotion } from "./SiteMotion";
 
 const LINKS = [
   { label: "Home", href: "/#home" },
   { label: "Features", href: "/#features" },
-  { label: "Results", href: "/#team" },
+  { label: "ADAPT", href: "/adapt" },
   { label: "FAQ", href: "/#faq" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Book a demo", href: "/contact" },
+  { label: "Book a demo", href: "/contact?topic=demo" },
 ];
 
 // The full link row needs about 1280px to fit next to the logo and buttons,
@@ -32,7 +34,6 @@ function NavLink({
   // Section links use a plain <a>: the browser loads the homepage straight at
   // the section, so there is no flash of the top of the page.
   if (href.startsWith("/#")) {
-    // eslint-disable-next-line @next/next/no-html-link-for-pages
     return (
       <a href={href} className={className} onClick={onClick}>
         {children}
@@ -49,21 +50,9 @@ function NavLink({
 function PilotButton({ className = "" }: { className?: string }) {
   return (
     <Link
-      href="/contact"
+      href="/contact?topic=pilot"
       className={`relative isolate inline-flex overflow-hidden rounded-full p-[1.5px] transition-opacity hover:opacity-90 ${className}`}
     >
-      <motion.span
-        aria-hidden
-        className="absolute left-1/2 top-1/2 aspect-square w-[300%]"
-        style={{
-          x: "-50%",
-          y: "-50%",
-          background:
-            "conic-gradient(from 0deg, transparent 0deg, transparent 280deg, #F5C93C 330deg, #0b0f14 350deg, transparent 360deg)",
-        }}
-        animate={{ rotate: 360 }}
-        transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-      />
       <span className="relative w-full whitespace-nowrap rounded-full bg-accent px-4 py-2 text-center text-[14px] font-semibold text-black sm:px-5 sm:py-2.5 sm:text-[15px]">
         Request a pilot
       </span>
@@ -73,11 +62,13 @@ function PilotButton({ className = "" }: { className?: string }) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { paused, systemReduced, toggle } = useSiteMotion();
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   // Close the menu with Escape, and when the screen grows into the full nav
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape" && open) { setOpen(false); menuButton.current?.focus(); }
     };
     const mq = window.matchMedia("(min-width: 1280px)");
     const onChange = () => {
@@ -89,13 +80,13 @@ export default function Navbar() {
       window.removeEventListener("keydown", onKey);
       mq.removeEventListener("change", onChange);
     };
-  }, []);
+  }, [open]);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-neutral-200 bg-white">
       <div className="mx-auto flex h-[66px] max-w-[1900px] items-center justify-between gap-3 px-4 sm:px-6 md:px-10 2xl:px-[96px]">
         <NavLink href="/#home" className="flex shrink-0 items-center gap-2.5">
-         <img src="/stratora-logo.png" alt="Stratora" className="h-7 w-auto" />
+         <Image src="/stratora-logo.png" width={182} height={28} alt="Stratora" className="h-7 w-auto" />
         </NavLink>
 
         <nav className="hidden items-center gap-6 xl:flex 2xl:gap-8" aria-label="Main">
@@ -103,7 +94,7 @@ export default function Navbar() {
            <NavLink
               key={l.href}
               href={l.href}
-              className="whitespace-nowrap text-[15px] text-slate-300 transition-colors hover:text-white"
+              className="whitespace-nowrap text-[15px] text-neutral-700 transition-colors hover:text-neutral-950"
             >
               {l.label}
            </NavLink>
@@ -111,6 +102,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <button type="button" onClick={toggle} disabled={systemReduced} aria-pressed={paused} className="motion-control">{systemReduced ? "Reduced motion" : paused ? "Motion off" : "Pause motion"}</button>
           {/* On very small phones the button lives in the menu instead */}
           <div className="hidden sm:block">
             <PilotButton />
@@ -118,7 +110,8 @@ export default function Navbar() {
           <button
             type="button"
             className="grid size-10 place-items-center rounded-lg xl:hidden"
-            aria-label="Toggle menu"
+            ref={menuButton}
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
@@ -151,7 +144,7 @@ export default function Navbar() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block border-b border-neutral-100 py-3.5 text-[16px] text-slate-200 last:border-b-0"
+                className="block border-b border-neutral-100 py-3.5 text-[16px] text-neutral-700 last:border-b-0"
               >
                 {l.label}
               </NavLink>

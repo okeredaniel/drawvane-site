@@ -43,7 +43,7 @@
 .hero-field:hover .hero-orbit {
   animation-play-state: paused;
 }
-/* Only used when IGNORE_REDUCED_MOTION is false in Hero.tsx */
+/* CSS-driven decorative motion follows the system preference. */
 @media (prefers-reduced-motion: reduce) {
   .hero-orbit-respect {
     animation: none;
