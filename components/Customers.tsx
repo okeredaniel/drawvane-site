@@ -31,23 +31,23 @@ type CaseItem = {
 
 const CASES: CaseItem[] = [
   {
-    label: "Multifamily · Developer",
-    title: "Takeoffs tied to their source sheets",
-    text: "Quantities and scope checks that link back to the sheet they came from.",
+    label: "Estimators & Quantity Surveyors",
+    title: "Trace quantities back to the drawings",
+    text: "Review takeoffs alongside their source sheets so quantities and scope can be checked.",
     // image: "/customers/case-1.avif",
     chip: "Linked to sheet A-201",
   },
   {
-    label: "Data center · MEP contractor",
-    title: "Conflicts caught before submittals",
-    text: "Spec and drawing conflicts surfaced before the first submittal.",
+    label: "Engineers & Trade Contractors",
+    title: "Review coordination issues before work begins",
+    text: "Compare drawings and specifications to identify discrepancies that need clarification.",
     // image: "/customers/case-2.avif",
     chip: "Spec 23 05 00 vs M-401",
   },
   {
-    label: "Healthcare · General contractor",
-    title: "Issues found in preconstruction",
-    text: "Conflicts surfaced early instead of turning into field RFIs.",
+    label: "Project Managers & General Contractors",
+    title: "Keep project decisions grounded in evidence",
+    text: "Review revisions, clarify scope and bring the relevant documents into project discussions.",
     // image: "/customers/case-3.avif",
     chip: "Found before the field",
   },
