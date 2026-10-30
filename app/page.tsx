@@ -1,7 +1,6 @@
 import HashScroll from "@/components/HashScroll";
 import Hero from "@/components/Hero";
 import LaptopSection from "@/components/LaptopSection";
-import LogoStrip from "@/components/LogoStrip";
 import HowItWorks from "@/components/HowItWorks";
 import WholeTeam from "@/components/WholeTeam";
 import Features from "@/components/Features";
@@ -11,18 +10,15 @@ import Results from "@/components/Results";
 import Security from "@/components/Security";
 import Customers from "@/components/Customers";
 import Faq from "@/components/Faq";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import FloatingPills from "@/components/FloatingPills";
 
 export default function Home() {
   return (
     <>
       <HashScroll />
-      <main>
+      <main id="main-content">
         <Hero />
         <LaptopSection />
-        <FloatingPills />
         <HowItWorks />
         <WholeTeam />
         <Features />
@@ -32,8 +28,8 @@ export default function Home() {
         <Security />
         <Customers />
         <Faq />
-        <Footer />
       </main>
+      <Footer />
     </>
   );
 }

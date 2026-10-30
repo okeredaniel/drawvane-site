@@ -1,10 +1,11 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import AnimatedHeadline from "./AnimatedHeadline";
+import { useSiteMotion } from "./SiteMotion";
 
 type CardData = {
   src: string;
@@ -18,20 +19,20 @@ type CardData = {
 
 // Layout copied from the reference. Put your images in /public/blueprints/
 const CARDS: CardData[] = [
-  { src: "/blueprints/plan-1.avif", x: 22.3, y: 23, w: 12.7, r: -2, p: 0, o: 150 },
-  { src: "/blueprints/plan-2.avif", x: 43.5, y: 17, w: 12, r: 1, p: 2.1, o: 110 },
-  { src: "/blueprints/plan-3.avif", x: 59.3, y: 7, w: 12, r: 2, p: 4.0, o: 135 },
-  { src: "/blueprints/plan-4.avif", x: 57, y: 71, w: 14.3, r: 1, p: 5.6, o: 95 },
-  { src: "/blueprints/plan-5.avif", x: 1.7, y: 170, w: 9.3, r: -2, p: 1.2, o: 140 },
-  { src: "/blueprints/plan-6.avif", x: 14, y: 160, w: 8.7, r: 2, p: 3.3, o: 100 },
-  { src: "/blueprints/plan-7.avif", x: 41, y: 112, w: 10.7, r: -1, p: 0.7, o: 120 },
-  { src: "/blueprints/plan-8.avif", x: 78.5, y: 116, w: 8.7, r: 2, p: 4.8, o: 90 },
-  { src: "/blueprints/plan-9.avif", x: 88.7, y: 198, w: 9.2, r: 3, p: 2.7, o: 150 },
-  { src: "/blueprints/plan-10.avif", x: 8.6, y: 325, w: 9.3, r: -2, p: 5.1, o: 115 },
-  { src: "/blueprints/plan-1.avif", x: 26, y: 388, w: 13.3, r: 1, p: 3.9, o: 100 },
-  { src: "/blueprints/plan-2.avif", x: 43, y: 392, w: 13.3, r: -1, p: 1.7, o: 135 },
-  { src: "/blueprints/plan-3.avif", x: 66, y: 320, w: 13.3, r: -2, p: 0.3, o: 105 },
-  { src: "/blueprints/plan-4.avif", x: 78, y: 317, w: 7.3, r: 2, p: 4.4, o: 125 },
+  { src: "/illustrations/revision.svg", x: 22.3, y: 23, w: 12.7, r: -2, p: 0, o: 150 },
+  { src: "/illustrations/evidence.svg", x: 43.5, y: 17, w: 12, r: 1, p: 2.1, o: 110 },
+  { src: "/illustrations/drawing.svg", x: 59.3, y: 7, w: 12, r: 2, p: 4.0, o: 135 },
+  { src: "/illustrations/revision.svg", x: 57, y: 71, w: 14.3, r: 1, p: 5.6, o: 95 },
+  { src: "/illustrations/evidence.svg", x: 1.7, y: 170, w: 9.3, r: -2, p: 1.2, o: 140 },
+  { src: "/illustrations/drawing.svg", x: 14, y: 160, w: 8.7, r: 2, p: 3.3, o: 100 },
+  { src: "/illustrations/revision.svg", x: 41, y: 112, w: 10.7, r: -1, p: 0.7, o: 120 },
+  { src: "/illustrations/evidence.svg", x: 78.5, y: 116, w: 8.7, r: 2, p: 4.8, o: 90 },
+  { src: "/illustrations/drawing.svg", x: 88.7, y: 198, w: 9.2, r: 3, p: 2.7, o: 150 },
+  { src: "/illustrations/revision.svg", x: 8.6, y: 325, w: 9.3, r: -2, p: 5.1, o: 115 },
+  { src: "/illustrations/revision.svg", x: 26, y: 388, w: 13.3, r: 1, p: 3.9, o: 100 },
+  { src: "/illustrations/evidence.svg", x: 43, y: 392, w: 13.3, r: -1, p: 1.7, o: 135 },
+  { src: "/illustrations/drawing.svg", x: 66, y: 320, w: 13.3, r: -2, p: 0.3, o: 105 },
+  { src: "/illustrations/revision.svg", x: 78, y: 317, w: 7.3, r: 2, p: 4.4, o: 125 },
 ];
 
 // The card field is designed at this size. On smaller laptops it is scaled
@@ -39,7 +40,7 @@ const CARDS: CardData[] = [
 const DESIGN_W = 1500;
 const DESIGN_H = 560;
 const BOX_TOP = 177; // prompt box top, at full size
-const BOX_ROOM = 340; // space kept free for the prompt box under its top (was 300, the new box is a bit taller)
+const BOX_ROOM = 460; // space kept free for the prompt box under its top (was 300, the new box is a bit taller)
 
 // ---- Card motion settings -------------------------------------------------
 // Every card travels around its own full circle in 3D: sideways, back behind
@@ -49,10 +50,7 @@ const CIRCLE_SIZE = 0.85; // 1 = full circles, lower = tighter circles
 const CYCLE_SECONDS = 8; // time for one full loop: lower = faster
 const DIRECTION = 1; // 1 = one way round, -1 = the other way
 const PERSPECTIVE = 1100; // px, lower = stronger 3D
-// Your laptop has "reduce motion" turned on, so this is true to let you see it.
-// Set to false to respect that system setting for everyone (the cards then
-// stay still for anyone who has it on).
-const IGNORE_REDUCED_MOTION = true;
+
 
 // Resting spot of each card after pulling the layout toward the centre
 const FIELD_CX = DESIGN_W / 2;
@@ -80,7 +78,6 @@ const FAN = [
   { src: UNIQUE_SRCS[8], r: 6, y: 10 },
 ];
 
-// PLACEHOLDER DEMO CONTENT. Swap the answers and sheet references for real
 // examples from your product before launch.
 const DEMO = [
   {
@@ -118,7 +115,8 @@ function BlueprintCard({
     <div
       ref={register}
       tabIndex={0}
-      aria-label="View drawing sheet"
+      aria-label="Preview illustrative drawing sheet"
+      onKeyDown={e => { if (e.key === "Escape") onActive(null); }}
       className="absolute aspect-[4/3] cursor-zoom-in overflow-hidden rounded-lg shadow-[0_0_40px_rgba(37,70,255,0.35)] ring-1 ring-blue-400/30 outline-none focus-visible:ring-2 focus-visible:ring-white"
       style={{
         left: spot.left,
@@ -134,7 +132,7 @@ function BlueprintCard({
     >
       <Image
         src={card.src}
-        alt="Architectural drawing sheet"
+        alt="Illustrative drawing, not for construction"
         fill
         sizes="300px"
         className="object-cover"
@@ -236,119 +234,20 @@ function Preview({ src }: { src: string | null }) {
 // re-renders the Hero (and never touches the card animation).
 function PromptDemo() {
   const [qi, setQi] = useState(0);
-  const [typed, setTyped] = useState(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [run, setRun] = useState(0); // bump to replay the current question
-
-  useEffect(() => {
-    const q = DEMO[qi].q;
-    const reduce =
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches && !IGNORE_REDUCED_MOTION;
-    if (reduce) {
-      setTyped(q.length);
-      setShowAnswer(true);
-      return;
-    }
-    setTyped(0);
-    setShowAnswer(false);
-    let i = 0;
-    const timers: number[] = [];
-    const type = () => {
-      i += 1;
-      setTyped(i);
-      if (i < q.length) {
-        timers.push(window.setTimeout(type, 28));
-      } else {
-        timers.push(window.setTimeout(() => setShowAnswer(true), 450));
-        timers.push(window.setTimeout(() => setQi((v) => (v + 1) % DEMO.length), 6500));
-      }
-    };
-    timers.push(window.setTimeout(type, 400));
-    return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [qi, run]);
-
+  const [revealed, setRevealed] = useState(true);
   const current = DEMO[qi];
-
-  return (
-    <div className="relative z-20 mx-auto w-full max-w-[620px] rounded-[28px] border border-white/15 bg-slate-800/15 p-4 backdrop-blur-xl sm:p-5 lg:absolute lg:left-1/2 lg:top-[var(--box-top)] lg:w-[min(620px,52%)] lg:max-w-none lg:-translate-x-1/2">
-      {/* the question being typed */}
-      <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/5 py-2.5 pl-4 pr-2.5">
-        <p className="min-h-[44px] flex-1 content-center text-[15px] leading-snug text-white sm:text-[16px]">
-          <span aria-live="off">{current.q.slice(0, typed)}</span>
-          <span
-            aria-hidden
-            className="ml-0.5 inline-block h-[1.05em] w-px translate-y-[3px] animate-pulse bg-white/80"
-          />
-        </p>
-        <button
-          type="button"
-          aria-label="Ask"
-          className="keep-white grid size-10 shrink-0 place-items-center rounded-full bg-accent text-white transition-transform hover:scale-105"
-        >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 19V5M5 12l7-7 7 7" />
-          </svg>
-        </button>
-      </div>
-
-      {/* the cited answer */}
-      <div className="mt-3 min-h-[108px] px-1">
-        <AnimatePresence mode="wait">
-          {showAnswer && (
-            <motion.div
-              key={qi}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="flex gap-3"
-            >
-              <span aria-hidden className="mt-1 w-0.5 shrink-0 self-stretch rounded-full bg-blue-400/70" />
-              <div>
-                <p className="text-[15px] leading-relaxed text-white/90">{current.a}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {current.refs.map((r) => (
-                    <span
-                      key={r}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-blue-400/30 bg-blue-500/10 px-2 py-1 text-xs text-blue-100"
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-                        <path d="M14 3v5h5" />
-                      </svg>
-                      {r}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* switch questions */}
-      <div className="mt-3 flex flex-wrap gap-2">
-        {DEMO.map((d, i) => (
-          <button
-            key={d.short}
-            type="button"
-            aria-pressed={i === qi}
-            onClick={() => (i === qi ? setRun((r) => r + 1) : setQi(i))}
-            className={`rounded-full border px-3 py-1.5 text-[13px] transition-colors ${
-              i === qi
-                ? "border-white/70 bg-white/10 text-white"
-                : "border-white/30 text-white/80 hover:bg-white/10"
-            }`}
-          >
-            {d.short}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="relative z-20 mx-auto w-full max-w-[620px] rounded-[24px] border border-neutral-300 bg-white/95 p-5 shadow-[0_20px_70px_-35px_rgba(0,0,0,.35)] sm:p-6 lg:absolute lg:left-1/2 lg:top-[var(--box-top)] lg:w-[min(620px,52%)] lg:-translate-x-1/2">
+    <p className="eyebrow">Prepared example</p>
+    <p className="mt-2 text-xs leading-relaxed text-neutral-600">Illustrative answers and references. Not a live project analysis.</p>
+    <div className="mt-4 flex flex-wrap gap-2" aria-label="Choose an example">{DEMO.map((d,i)=><button key={d.short} type="button" aria-pressed={i===qi} onClick={()=>{setQi(i);setRevealed(false);}} className={`rounded-full border px-3 py-2 text-xs font-medium ${i===qi ? "border-neutral-900 bg-neutral-900 text-white keep-white" : "border-neutral-300 text-neutral-700"}`}>{d.short}</button>)}</div>
+    <p className="mt-5 text-base font-medium leading-relaxed text-neutral-900">{current.q}</p>
+    <button type="button" onClick={()=>setRevealed(v=>!v)} aria-expanded={revealed} aria-controls="prepared-answer" className="mt-4 text-sm font-semibold text-neutral-900 underline underline-offset-4">{revealed ? "Hide prepared answer" : "Show prepared answer"}</button>
+    <div id="prepared-answer" hidden={!revealed} className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4"><p className="text-sm leading-relaxed text-neutral-700">{current.a}</p><p className="mt-3 text-xs text-neutral-600">Example references: {current.refs.join(" · ")}</p></div>
+  </div>;
 }
 
 export default function Hero() {
+  const { paused } = useSiteMotion();
   const [active, setActive] = useState<string | null>(null);
   const [scale, setScale] = useState(1);
   const [wide, setWide] = useState(false); // 1024px and up
@@ -382,9 +281,7 @@ export default function Hero() {
   // circle get smaller (perspective), dimmer and blurred; cards at the front
   // are bigger and sharp. Layout and the container stay put.
   useEffect(() => {
-    if (!wide) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce && !IGNORE_REDUCED_MOTION) return;
+    if (!wide || paused || active) return;
     let raf = 0;
     const tick = (now: number) => {
       const phase = DIRECTION * ((now / 1000) * 2 * Math.PI) / CYCLE_SECONDS;
@@ -406,7 +303,7 @@ export default function Hero() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [wide]);
+  }, [wide, paused, active]);
 
   const fieldH = Math.max(DESIGN_H * scale, (BOX_TOP) * scale + BOX_ROOM);
   const vars = {
@@ -417,7 +314,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative overflow-x-clip bg-background pb-40 pt-[66px] lg:pb-64"
+      className="relative overflow-x-clip bg-background pb-16 pt-[66px] lg:pb-20"
     >
       {/* fades the hero into the next section's background (dark mode only, see theme.css) */}
       <div className="hero-fade pointer-events-none absolute inset-x-0 bottom-0 z-0 h-64 bg-gradient-to-b from-transparent to-[#0d1117]" />
@@ -425,8 +322,9 @@ export default function Hero() {
       {/* NEW: headline block */}
       <div className="mx-auto max-w-[1500px] px-5 pt-12 text-center sm:px-6 md:pt-16">
         <p className="mx-auto inline-flex items-center gap-2.5 rounded-full bg-white/5 py-1.5 pl-3 pr-4 text-sm text-slate-300">
-          <span>Built for a Greener and Cleaner Canada</span>
-          <img
+          <span>For construction teams in Canada</span>
+          <Image
+            width={20} height={16}
             src="/canada.png"
             alt="Canada"
             className="h-4 w-5 shrink-0 rounded-[3px] border border-white/10 object-cover"
@@ -441,10 +339,10 @@ export default function Hero() {
         </h1>
 
         <p className="mx-auto mt-7 max-w-[520px] text-lg leading-relaxed text-slate-300">
-          $52B is lost to construction rework every year. Stratora gives you answers before mistakes happen.
+          Bring drawings, questions and source review into the same conversation. Explore a workflow your project team can check.
         </p>
 
-        {/* <FloatingPills /> */}
+        <div className="mt-7 flex flex-wrap justify-center gap-3"><Link href="/contact?topic=pilot" className="button-primary">Discuss a pilot <span aria-hidden="true">↗</span></Link><a href="#demo" className="button-secondary">Explore an example</a></div>
       </div>
 
       <div
@@ -488,7 +386,7 @@ export default function Hero() {
         <PromptDemo />
       </div>
       {wide && <PreloadPreviews />}
-      <MotionConfig reducedMotion="user">
+      <MotionConfig reducedMotion={paused ? "always" : "user"}>
         <Preview src={wide ? active : null} />
       </MotionConfig>
     </section>

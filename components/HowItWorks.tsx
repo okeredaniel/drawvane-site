@@ -1,11 +1,11 @@
 "use client";
+import { useSiteMotion } from "./SiteMotion";
 
 import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useMotionTemplate,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -29,19 +29,19 @@ const STEPS: Step[] = [
     n: "01",
     title: "Upload the set",
     text: "Drawings and specs in one drop.",
-    // image: "/how-it-works/step-1.avif",
+    image: "/illustrations/evidence.svg",
   },
   {
     n: "02",
     title: "Ask anything",
     text: "Plain language, cited answers.",
-    // image: "/how-it-works/step-2.avif",
+    image: "/illustrations/evidence.svg",
   },
   {
     n: "03",
     title: "Share the answer",
     text: "Send it with the sheet attached.",
-    // image: "/how-it-works/step-3.avif",
+    image: "/illustrations/evidence.svg",
   },
 ];
 
@@ -82,7 +82,7 @@ function useIsDesktop() {
 
 // One heading word that slides up out of a mask
 function Word({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const still = useReducedMotion();
+  const { paused: still } = useSiteMotion();
   return (
     <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
       <motion.span
@@ -283,7 +283,7 @@ export default function HowItWorks() {
   const grid = useRef<HTMLDivElement>(null);
   const chain = useRef<HTMLDivElement>(null);
   const desktop = useIsDesktop();
-  const still = !!useReducedMotion();
+  const { paused: still } = useSiteMotion();
 
   // Cards fan out as the row scrolls into view (and fold back if you scroll up)
   const { scrollYProgress: revealRaw } = useScroll({
@@ -389,7 +389,7 @@ export default function HowItWorks() {
             From question to decision
           </h3>
           <p className="mt-3 text-lg text-neutral-500">
-            Every answer stays tied to the sheet it came from.
+            Keep the source beside the answer during review.
           </p>
         </div>
 
