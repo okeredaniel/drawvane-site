@@ -1,10 +1,11 @@
 "use client";
-import { useSiteMotion } from "./SiteMotion";
 
+import { useRef } from "react";
 import {
   motion,
   useMotionTemplate,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
@@ -13,14 +14,14 @@ import {
 // Change the wording of any card here, for example if you don't have an audit yet.
 type IconName = "audited" | "privacy" | "access" | "encryption" | "sources" | "review";
 
-const HEADING = "Review the safeguards first.";
+const HEADING = "Your drawings stay yours.";
 const CARDS: { icon: IconName; label: string; title: string }[] = [
-  { icon: "audited", label: "Assurance", title: "Request security evidence" },
-  { icon: "privacy", label: "Privacy", title: "Confirm model-data terms" },
-  { icon: "access", label: "Access", title: "Agree access requirements" },
-  { icon: "encryption", label: "Storage", title: "Review storage and retention" },
-  { icon: "sources", label: "Sources", title: "Check the cited document" },
-  { icon: "review", label: "Review", title: "Keep professional review" },
+  { icon: "audited", label: "Audited", title: "Independent security audit" },
+  { icon: "privacy", label: "Privacy", title: "Never trained on" },
+  { icon: "access", label: "Access", title: "SSO and roles" },
+  { icon: "encryption", label: "Encryption", title: "Encrypted always" },
+  { icon: "sources", label: "Sources", title: "Every answer cites its source" },
+  { icon: "review", label: "Review", title: "People approve the numbers" },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -99,8 +100,8 @@ function Ring({
     >
       <motion.div
         className="size-full"
-        animate={{ rotate: reduce ? 0 : spin > 0 ? 360 : -360 }}
-        transition={reduce ? { duration: 0 } : { duration: Math.abs(spin), ease: "linear", repeat: Infinity }}
+        animate={reduce ? undefined : { rotate: spin > 0 ? 360 : -360 }}
+        transition={{ duration: Math.abs(spin), ease: "linear", repeat: Infinity }}
       >
         {children}
       </motion.div>
@@ -259,13 +260,13 @@ function Tile({
 /* ---------- section ---------- */
 
 export default function Security() {
-  const { paused: reduce } = useSiteMotion();
+  const reduce = !!useReducedMotion();
 
   return (
     <section
       id="security"
       aria-label="Security"
-      className="bg-background px-6 py-20 md:px-24 md:py-28"
+      className="bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
     >
       <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-[5fr_6fr] lg:gap-20">
         <div className="lg:sticky lg:top-28">

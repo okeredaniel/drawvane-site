@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "motion/react";
 
 const BRAND = "Stratora";
-const TAGLINE = "Construction intelligence, grounded in the drawing set.";
+const TAGLINE = "AI that reads the drawing set, with the receipts.";
 const YEAR = new Date().getFullYear();
 
 // Optional "what's coming" line. Leave it empty to hide it. Only mention
@@ -14,15 +13,14 @@ const YEAR = new Date().getFullYear();
 const ROADMAP_NOTE = "";
 
 const LINKS = [
-  { label: "ADAPT", href: "/adapt" },
   { label: "Product", href: "/#features" },
-  { label: "How it works", href: "/#how-it-works" },
-  { label: "Evaluation", href: "/#results" },
+  { label: "Roles", href: "/#how-it-works" },
+  { label: "Results", href: "/#results" },
   { label: "Security", href: "/#security" },
   { label: "FAQ", href: "/#faq" },
-  { label: "Contact", href: "/contact?topic=question" },
 ];
 
+// PLACEHOLDERS: there are no privacy or terms pages yet, so these links do
 // nothing. When you have the pages, give each one a real href (for example
 // "/privacy") and remove `placeholder: true`.
 const LEGAL = [
@@ -60,7 +58,7 @@ function FooterLink({
 export default function Footer() {
   return (
     <motion.footer
-      initial={false}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.8, ease: EASE }}
@@ -69,7 +67,7 @@ export default function Footer() {
       <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <Image src="/stratora-logo.png" width={182} height={28} alt="Stratora" className="h-7 w-auto" />
+            <img src="/stratora-logo.png" alt="Stratora" className="h-7 w-auto" />
           </div>
           <p className="mt-4 text-base text-neutral-500">{TAGLINE}</p>
           {ROADMAP_NOTE && (

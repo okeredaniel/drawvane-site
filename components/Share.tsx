@@ -1,6 +1,4 @@
 "use client";
-import Link from "next/link";
-import { useSiteMotion } from "./SiteMotion";
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -19,45 +17,43 @@ type ShareImage = {
 // If yours is .png, .jpg or .webp, change the extension here.
 // Change the alt text to describe your own image.
 const IMAGE: ShareImage = {
-  src: "/illustrations/revision.svg",
+  // src: "/share/share.avif",
   alt: "A shared answer with its source sheet attached",
 };
 
-const SHARE_LINK = "This prepared example";
+// PLACEHOLDER CONTENT: replace the link, people and benefit copy with your own.
+const SHARE_LINK = "app.example.com/a/7f3k2";
 const PEOPLE = ["PM", "ES", "SU", "SC"];
 const SOURCE_CHIP = "A-301 · page 4";
 const BENEFITS = [
   {
     title: "Source attached",
-    text: "Keep the source reference beside the answer when reviewing it.",
+    text: "Every shared answer links to the exact sheet or clause it came from.",
   },
   {
     title: "One answer for everyone",
-    text: "Agree which reviewed answer the estimator, superintendent and subcontractor should use.",
+    text: "The estimator, the super and the sub all open the same thing, not a copy.",
   },
   {
     title: "You choose who sees it",
-    text: "Confirm sharing permissions and document access before distributing project information.",
+    text: "Send a link to the whole team or to one person, and change it any time.",
   },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Share() {
-  const { paused } = useSiteMotion();
   const root = useRef<HTMLElement>(null);
   const card = useRef<HTMLDivElement>(null);
   const tilt = useRef<HTMLDivElement>(null);
   const img = useRef<HTMLDivElement>(null);
   const [missing, setMissing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [copyError, setCopyError] = useState("");
 
   // Scroll: the card starts tipped back and small, then rises to face you
   // while the picture inside slowly zooms.
   useGSAP(
     () => {
-      if (paused) return;
       const mm = gsap.matchMedia();
 
       mm.add(
@@ -99,13 +95,12 @@ export default function Share() {
 
       return () => mm.revert();
     },
-    { scope: root, dependencies: [paused], revertOnUpdate: true }
+    { scope: root }
   );
 
   // Hover: pointer tilts the frame, moves a light across it, and feeds
   // --px / --py to the floating layers so they slide against the image.
   useEffect(() => {
-    if (paused) return;
     const el = tilt.current;
     if (!el) return;
     const ok = window.matchMedia(
@@ -141,12 +136,11 @@ export default function Share() {
     el.addEventListener("pointerenter", enter);
     el.addEventListener("pointerleave", leave);
     return () => {
-      rx.tween.kill(); ry.tween.kill(); gsap.set(el, { rotationX: 0, rotationY: 0 });
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerenter", enter);
       el.removeEventListener("pointerleave", leave);
     };
-  }, [paused]);
+  }, []);
 
   useEffect(() => {
     if (!copied) return;
@@ -156,18 +150,18 @@ export default function Share() {
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(new URL("/#share", window.location.origin).href);
-      setCopied(true); setCopyError("");
+      await navigator.clipboard.writeText(SHARE_LINK);
     } catch {
-      setCopied(false); setCopyError("Copy is unavailable. Use the example link below.");
+      // clipboard can be blocked; the button still confirms below
     }
+    setCopied(true);
   };
 
   return (
     <section
       ref={root}
       id="share"
-      className="overflow-x-clip bg-background px-6 py-20 md:px-24 md:py-28"
+      className="overflow-x-clip bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -185,7 +179,7 @@ export default function Share() {
       </motion.div>
 
       {/* Stage */}
-      <div className="mt-14 md:mt-14">
+      <div className="mt-14 md:mt-[100px]">
         <div
           ref={card}
           className="relative mx-auto w-full max-w-[1200px] [transform-style:preserve-3d] will-change-transform"
@@ -227,7 +221,7 @@ export default function Share() {
             {/* share sheet: floats over the image on desktop, sits under it on phones */}
             <div className="relative mt-2 rounded-2xl border border-neutral-200 bg-white p-5 shadow-[0_24px_50px_-20px_rgba(15,23,42,0.35)] md:absolute md:-bottom-10 md:right-8 md:mt-0 md:w-[360px] md:[transform:translate3d(calc(var(--px,0)*-20px),calc(var(--py,0)*-14px),100px)]">
               <p className="text-[18px] font-medium tracking-tight text-neutral-900">
-                Share this example
+                Share this answer
               </p>
 
               <div className="mt-4 flex items-center gap-2 rounded-xl border border-neutral-200 bg-neutral-50 p-1.5 pl-3.5">
@@ -248,14 +242,12 @@ export default function Share() {
                       transition={{ duration: 0.18 }}
                       aria-live="polite"
                     >
-                      {copied ? "Copied" : "Copy example"}
+                      {copied ? "Copied" : "Copy link"}
                     </motion.span>
                   </AnimatePresence>
                 </button>
               </div>
 
-              <p role="status" className="mt-3 text-sm text-neutral-600">{copyError}</p>
-              <Link href="/#share" className="mt-2 inline-block text-sm underline">Open example link</Link>
               <div className="mt-4 flex items-center justify-between gap-3">
                 <div className="flex items-center">
                   {PEOPLE.map((p, i) => (
@@ -270,7 +262,7 @@ export default function Share() {
                     </span>
                   ))}
                 </div>
-                <p className="text-[14px] text-neutral-500">Illustrative team roles</p>
+                <p className="text-[14px] text-neutral-500">Shared with 4 people</p>
               </div>
             </div>
 

@@ -1,5 +1,4 @@
 "use client";
-import { useSiteMotion } from "./SiteMotion";
 
 import Link from "next/link";
 import { useRef, useState } from "react";
@@ -7,48 +6,50 @@ import {
   motion,
   useMotionTemplate,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
 import type { ReactNode } from "react";
 
+// PLACEHOLDER ANSWERS. Replace each answer with your real wording,
 // especially the storage, onboarding, training and approval ones.
 const HEADING = "Questions teams ask first.";
 const FAQS: { q: string; a: ReactNode }[] = [
   {
     q: "Does it replace our design software or document control?",
-    a: "Stratora is intended to support document review alongside your existing tools. Confirm supported document types, storage and integrations when scoping an engagement.",
+    a: "No. It works alongside the tools your team already uses and reads the documents they produce. Your drawings and specs stay where they are.",
   },
   {
     q: "Where do our documents live?",
-    a: "Storage location, retention and access arrangements should be confirmed for your engagement before you share project documents. Ask the team for the applicable data-handling terms.",
+    a: "Your documents are stored securely in your own workspace and are only available to the people you give access to. Replace this with your real storage details.",
   },
   {
     q: "How long does onboarding take?",
-    a: "Timing depends on the agreed workflow and document set. We will scope onboarding with you before work begins.",
+    a: "Replace this with your real onboarding timeline, for example how long it takes to upload a first project set and start asking questions.",
   },
   {
     q: "What if the answer is not in the documents?",
-    a: "Treat an answer without supporting source material as unverified. Your evaluation should test missing information, conflicting documents and incorrect citations as well as successful answers.",
+    a: "You're told that the documents don't contain it, instead of getting a guess. Every answer links back to the sheet or spec it came from, so your team can check it.",
   },
   {
     q: "Who approves the numbers?",
-    a: "A qualified person on your team should verify quantities and impact figures against the issued documents before relying on them. Agree how this review is recorded in your workflow.",
+    a: "Your team does. Quantities and impact figures are suggestions that an estimator reviews and approves before anyone relies on them. Only keep this answer if your product has that review step.",
   },
   {
     q: "Are our documents used to train AI models?",
-    a: "Request the model-data policy and provider terms for your engagement before uploading confidential documents. The prepared examples on this website do not process your documents.",
+    a: "No. Your drawings and specs are never used to train models. Replace this with your exact policy before publishing.",
   },
   {
     q: "How is pricing structured?",
     a: (
       <>
-        We scope pilots and wider engagements around your requirements. Currency, pricing and deliverables are confirmed in writing. See the{" "}
+        There are plans for a single pilot project, for whole teams, and for organizations rolling it out across every project. See the{" "}
         <Link href="/pricing" className="font-medium text-neutral-900 underline underline-offset-4">
           Pricing page
         </Link>{" "}
         for details, or{" "}
-        <Link href="/contact?topic=question" className="font-medium text-neutral-900 underline underline-offset-4">
+        <Link href="/contact" className="font-medium text-neutral-900 underline underline-offset-4">
           get in touch
         </Link>{" "}
         and we will help you pick one.
@@ -201,13 +202,13 @@ function FaqCard({
 
 export default function Faq() {
   const [open, setOpen] = useState<number | null>(0);
-  const { paused: reduce } = useSiteMotion();
+  const reduce = !!useReducedMotion();
 
   return (
     <section
       id="faq"
       aria-label="Frequently asked questions"
-      className="relative overflow-hidden bg-background px-6 py-20 md:px-24 md:py-28"
+      className="relative overflow-hidden bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
     >
       {/* faint drawing-sheet grid that fades out toward the edges */}
       <div
@@ -236,11 +237,11 @@ export default function Faq() {
           </motion.h2>
 
           <p className="mt-6 max-w-[360px] text-lg leading-relaxed text-neutral-500">
-            Have a different question? Tell us about your workflow.
+            Can&apos;t find yours? Ask us directly and we&apos;ll answer within a working day.
           </p>
 
           <Link
-            href="/contact?topic=question"
+            href="/contact"
             className="group mt-8 inline-flex items-center gap-3 rounded-full bg-neutral-900 px-6 py-3.5 text-base font-medium text-white keep-white transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
           >
             Ask a question
