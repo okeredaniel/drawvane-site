@@ -21,7 +21,7 @@ This is an isolated candidate. It is prepared for publication to a task branch a
 
 ## Validation
 
-Final checks passed: production build, TypeScript, ESLint, nine API tests and six component tests, with no skipped tests. Generated HTML checks passed on all five pages for one primary heading, canonical and social-image metadata, unique IDs, no empty link targets and image alt attributes. Existing production dependency versions and integrity values were unchanged. Delivery tests exercise validation, cross-origin requests, malformed/oversized input, missing configuration, provider errors, missing receipts and retry idempotence. Component tests exercise enquiry intent, retained input on failure, pending duplicate prevention, receipt-dependent success and clipboard failure. All delivery calls in tests are mocked.
+Final checks passed: production build, TypeScript, ESLint, nine API tests and seven component tests, with no skipped tests. Generated HTML checks passed on all five pages for one primary heading, canonical and social-image metadata, unique IDs, no empty link targets and image alt attributes. Existing production dependency versions and integrity values were unchanged. Delivery tests exercise validation, cross-origin requests, malformed/oversized input, missing configuration, provider errors, missing receipts and retry idempotence. Component tests exercise enquiry intent, retained input on failure, pending duplicate prevention, receipt-dependent success and clipboard failure. All delivery calls in tests are mocked.
 
 Interactive browser verification could not run in this environment: the browser connector was unavailable and the local browser failed under the environment's socket restrictions. Static HTML and jsdom checks are not substitutes for mobile, keyboard, screen-reader or visual acceptance. Required real-browser scenarios remain open.
 
@@ -34,3 +34,7 @@ Interactive browser verification could not run in this environment: the browser 
 5. Publication preflight must recheck the remote head, destination, repository controls and deployment behavior. No release, merge or production deployment is authorized by these fixes alone.
 
 The Mac bridge was unavailable during this run. No incumbent session, retained ownership, running job or protected coordination file was changed. No Claude acknowledgment is claimed. The existing persistent controller was left unchanged.
+
+## Independent review correction
+
+The correctness review found three missing mobile hero image sources in candidate 02b34a39a96aac20b3b25328db3da9da0295f90e. The successor uses valid illustration entries and distinct keys. A rendered-component regression checks all four mobile sources exist and produces no console errors; generated homepage HTML has no missing image sources. Browser acceptance remains open.

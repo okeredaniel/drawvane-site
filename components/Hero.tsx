@@ -73,9 +73,9 @@ const UNIQUE_SRCS = Array.from(new Set(CARDS.map((c) => c.src)));
 // Small screens (under 1024px): a compact fanned stack above the prompt box
 const FAN = [
   { src: UNIQUE_SRCS[0], r: -6, y: 10 },
-  { src: UNIQUE_SRCS[3], r: 3, y: 0 },
-  { src: UNIQUE_SRCS[5], r: -3, y: 0 },
-  { src: UNIQUE_SRCS[8], r: 6, y: 10 },
+  { src: UNIQUE_SRCS[1], r: 3, y: 0 },
+  { src: UNIQUE_SRCS[2], r: -3, y: 0 },
+  { src: UNIQUE_SRCS[0], r: 6, y: 10 },
 ];
 
 // examples from your product before launch.
@@ -142,12 +142,12 @@ function BlueprintCard({
 }
 
 // Compact fanned stack for phones and tablets (no hover there).
-function MobileCards() {
+export function MobileCards() {
   return (
     <div aria-hidden className="mx-auto mb-8 flex max-w-[640px] justify-center lg:hidden">
       {FAN.map((c, i) => (
         <div
-          key={c.src}
+          key={`${c.src}-${i}`}
           className="relative aspect-[4/3] w-[29%] overflow-hidden rounded-lg shadow-[0_0_30px_rgba(37,70,255,0.35)] ring-1 ring-blue-400/30"
           style={{
             marginLeft: i === 0 ? 0 : "-5%",
