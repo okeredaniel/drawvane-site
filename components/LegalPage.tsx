@@ -35,7 +35,7 @@ function Contents({ sections }: { sections: LegalSection[] }) {
 
 export default function LegalPage({ title, updated, intro, summary, sections, other }: Props) {
   return (
-    <main id="main-content" className="bg-background px-6 pb-[120px] pt-32 md:px-24 md:pb-[160px] md:pt-44">
+    <main className="bg-background px-6 pb-[120px] pt-32 md:px-24 md:pb-[160px] md:pt-44">
       <div className="mx-auto max-w-[1100px]">
         <Link
           href="/"
