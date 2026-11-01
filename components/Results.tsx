@@ -102,7 +102,11 @@ export default function Results() {
         // 3. Rows
         // ---------------------------------------------------------------
         const rows = q<HTMLElement>("[data-row]");
-        const states = new Map<HTMLElement, { active: boolean; hover: boolean }>();
+        // ScrollTrigger can invoke callbacks during setup at a restored scroll position.
+        // Initialize every row before any callback reads the shared state.
+        const states = new Map<HTMLElement, { active: boolean; hover: boolean }>(
+          rows.map((row) => [row, { active: false, hover: false }])
+        );
 
         const setDash = (row: HTMLElement) => {
           const s = states.get(row)!;
@@ -137,8 +141,6 @@ export default function Results() {
         };
 
         rows.forEach((row, i) => {
-          states.set(row, { active: false, hover: false });
-
           const line = row.querySelector("[data-line]");
           const stub = row.querySelector("[data-stub]");
           const chars = q("[data-char]", row);
