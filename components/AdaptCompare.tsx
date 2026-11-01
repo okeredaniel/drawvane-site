@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 const INK = "#0E1A2B";
 const MARKUP = "#D9402B";
 const YELLOW = "#F5C93C";
+
+// Where the handle rests on load. Rev B only shows a thin strip of plain wall
+// there, so the drawing looks clean until someone drags.
+const REST = 93;
 
 // Scalloped "revision cloud" outline, the way drafters circle a change.
 function cloudPath(x: number, y: number, w: number, h: number, bump = 16) {
@@ -114,37 +118,18 @@ function Plan({ rev }: { rev: "A" | "B" }) {
 }
 
 export default function AdaptCompare() {
-  const [pos, setPos] = useState(100);
+  const [pos, setPos] = useState(REST);
+  const [dragged, setDragged] = useState(false);
   const touched = useRef(false);
-
-  // One page-load moment: the sheet sweeps from Rev A to Rev B and stops
-  // where the change is visible. Stops the instant the person takes over.
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      setPos(38);
-      return;
-    }
-    let raf = 0;
-    const start = performance.now() + 700;
-    const dur = 1800;
-    const tick = (t: number) => {
-      if (touched.current) return;
-      const k = Math.min(1, Math.max(0, (t - start) / dur));
-      setPos(100 - 62 * (1 - Math.pow(1 - k, 3)));
-      if (k < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
 
   const take = () => {
     touched.current = true;
+    setDragged(true);
   };
 
   return (
     <figure>
-      <div className="relative aspect-[640/390] select-none overflow-hidden bg-white shadow-[0_24px_50px_-24px_rgba(14,26,43,0.4)] ring-1 ring-[#0E1A2B]/10">
+      <div className="relative aspect-[640/390] select-none overflow-hidden rounded-[14px] bg-white shadow-[0_24px_50px_-24px_rgba(14,26,43,0.4)] ring-1 ring-[#0E1A2B]/10">
         <div className="absolute inset-0">
           <Plan rev="A" />
         </div>
@@ -177,7 +162,7 @@ export default function AdaptCompare() {
           }}
           onPointerDown={take}
           onKeyDown={take}
-          aria-label="Compare Rev A and Rev B of the drawing"
+          aria-label="Drag to compare Rev A and Rev B of the drawing"
           className="peer absolute inset-0 z-30 m-0 h-full w-full cursor-ew-resize opacity-0"
           style={{ touchAction: "pan-y" }}
         />
@@ -192,22 +177,42 @@ export default function AdaptCompare() {
               <path d="M8 7l-5 5 5 5M16 7l5 5-5 5" />
             </svg>
           </div>
+          {/* plain label until the first drag */}
+          {!dragged && (
+            <span
+              style={{ color: "#fff" }}
+              className="absolute right-[34px] top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#0E1A2B] px-3 py-1.5 text-[13px] font-semibold"
+            >
+              Drag to compare
+            </span>
+          )}
         </div>
       </div>
 
-      <figcaption className="mt-8 max-w-[40rem]">
-        <p className="text-[14px] font-medium text-[#5A677A]">One question, a defined outcome.</p>
-        <h2 className="mt-1.5 text-[26px] font-semibold leading-tight tracking-[-0.02em] text-[#0E1A2B]">
-          What changed in this drawing revision?
-        </h2>
-        <p className="mt-3 text-[16px] leading-relaxed text-[#3F4C5F]">
-          Agree a drawing set, identify the evidence to compare and have a qualified reviewer check
-          the findings. Measure the review effort and traceability before considering a wider
-          rollout.
-        </p>
-        <p className="mt-4 text-[13px] text-[#5A677A]">
-          Illustrative drawing, not for construction. Drag the sheet to compare.
-        </p>
+      <figcaption className="mt-10 grid gap-6 md:mt-14 md:grid-cols-[1.1fr_1fr] md:gap-14">
+        <div>
+          <p
+            style={{ color: INK }}
+          >
+            One question, a defined outcome
+          </p>
+          <h2
+            style={{ color: INK }}
+            className="mt-4 text-[clamp(1.75rem,2.8vw,2.6rem)] font-semibold leading-[1.05] tracking-[-0.035em]"
+          >
+            What changed in this drawing revision?
+          </h2>
+        </div>
+        <div>
+          <p className="text-[16px] leading-relaxed text-[#3F4C5F]">
+            Agree a drawing set, identify the evidence to compare and have a qualified reviewer check
+            the findings. Measure the review effort and traceability before considering a wider
+            rollout.
+          </p>
+          <p className="mt-4 text-[13px] text-[#5A677A]">
+            Illustrative drawing, not for construction. Drag the sheet to compare.
+          </p>
+        </div>
       </figcaption>
     </figure>
   );

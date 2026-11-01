@@ -1,293 +1,458 @@
 "use client";
 
 import { useRef } from "react";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import { Bricolage_Grotesque } from "next/font/google";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+
+// Real display font for the big type (the site's `font-display` was falling
+// back to Arial). To use your own site font instead, delete this and the
+// `${display.className}` bits below.
+const display = Bricolage_Grotesque({ subsets: ["latin"], weight: ["500", "600"], display: "swap" });
 
 // Only publish claims that are true for your product.
-// Change the wording of any card here, for example if you don't have an audit yet.
-type IconName = "audited" | "privacy" | "access" | "encryption" | "sources" | "review";
-
-const HEADING = "Your drawings stay yours.";
-const CARDS: { icon: IconName; label: string; title: string }[] = [
-  { icon: "audited", label: "Audited", title: "Independent security audit" },
-  { icon: "privacy", label: "Privacy", title: "Never trained on" },
-  { icon: "access", label: "Access", title: "SSO and roles" },
-  { icon: "encryption", label: "Encryption", title: "Encrypted always" },
-  { icon: "sources", label: "Sources", title: "Every answer cites its source" },
-  { icon: "review", label: "Review", title: "People approve the numbers" },
+// Change the wording of any line here, for example if you don't have an audit yet.
+// Claims land on the sheet in this order, alternating left and right.
+const HEADING = [
+  { w: "Your", grey: false },
+  { w: "drawings", grey: false },
+  { w: "stay", grey: true },
+  { w: "yours.", grey: true },
+];
+const CLAIMS: { label: string; title: string }[] = [
+  { label: "Audited", title: "Independent security audit" },
+  { label: "Privacy", title: "Never trained on" },
+  { label: "Access", title: "SSO and roles" },
+  { label: "Encryption", title: "Encrypted always" },
+  { label: "Sources", title: "Every answer cites its source" },
+  { label: "Review", title: "People approve the numbers" },
 ];
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+// Where each claim "lands" on the sheet (800 x 560 drawing space), same order
+// as CLAIMS.
+const REGIONS = [
+  { x: 516, y: 484, w: 248, h: 44 }, // title block
+  { x: 34, y: 488, w: 214, h: 52 }, // notes
+  { x: 104, y: 28, w: 612, h: 40 }, // grid bubbles
+  { x: 96, y: 240, w: 648, h: 34 }, // level 2 slab
+  { x: 504, y: 232, w: 140, h: 46 }, // dimension note
+  { x: 96, y: 86, w: 648, h: 34 }, // roof slab
+];
 
-const ICON_PATHS: Record<IconName, string[]> = {
-  audited: ["M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z", "M8.5 12l2.5 2.5 4.5-5"],
-  privacy: ["M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", "M5.6 5.6l12.8 12.8"],
-  access: ["M8 11a4 4 0 1 0 0 8 4 4 0 0 0 0-8z", "M11 12.5L20 3.5", "M17 6.5l3 3"],
-  encryption: ["M5 11h14v9H5z", "M8 11V8a4 4 0 0 1 8 0v3"],
-  sources: ["M7 3h8l4 4v14H7z", "M10 12h6", "M10 16h4"],
-  review: ["M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z", "M8 12.5l2.7 2.7L16 9.5"],
-};
+// Which grid cell each claim sits in on desktop: left, right, left, ...
+const PLACE = [
+  "md:col-start-1 md:row-start-1",
+  "md:col-start-3 md:row-start-1",
+  "md:col-start-1 md:row-start-2",
+  "md:col-start-3 md:row-start-2",
+  "md:col-start-1 md:row-start-3",
+  "md:col-start-3 md:row-start-3",
+];
 
-function TileIcon({ name }: { name: IconName }) {
+const ACCENT = "#F5C93C";
+const W = 800;
+const H = 560;
+
+// ---- Tune the motion here -------------------------------------------------
+const SCROLL_LENGTH = "+=360%"; // how long the section stays pinned (desktop)
+const BEAT = 0.75; // timeline length given to each claim
+const HEAD_SCALE = 2.3; // how big the heading starts, as a multiple of its final size
+// ---------------------------------------------------------------------------
+
+/* ---------- the drawing sheet ---------- */
+
+function Sheet() {
+  const columns = [140, 330, 520, 710];
+  const slabs = [
+    { y: 96, h: 14 },
+    { y: 250, h: 18 },
+    { y: 396, h: 18 },
+  ];
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="size-6 text-accent"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {ICON_PATHS[name].map((d) => (
-        <path key={d} d={d} />
+    <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full" aria-hidden>
+      <defs>
+        <pattern
+          id="sec-hatch"
+          width="7"
+          height="7"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)"
+        >
+          <line x1="0" y1="0" x2="0" y2="7" stroke="#a3a3a3" strokeWidth="1.2" />
+        </pattern>
+      </defs>
+
+      <rect x="18" y="18" width="764" height="524" fill="none" stroke="#d4d4d4" />
+
+      {columns.map((x, i) => (
+        <g key={x}>
+          <line x1={x} y1="68" x2={x} y2="480" stroke="#e5e5e5" strokeDasharray="6 5" />
+          <circle cx={x} cy="48" r="13" fill="#fff" stroke="#a3a3a3" />
+          <text x={x} y="52" textAnchor="middle" fontSize="12" fill="#737373">
+            {"ABCD"[i]}
+          </text>
+        </g>
       ))}
-    </svg>
-  );
-}
 
-/* ---------- pointer tilt shared by the vault and the tiles ---------- */
-
-function useTilt(maxX: number, maxY: number, reduce: boolean) {
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const sx = useSpring(px, { stiffness: 170, damping: 18, mass: 0.6 });
-  const sy = useSpring(py, { stiffness: 170, damping: 18, mass: 0.6 });
-  const rotateX = useTransform(sy, [-0.5, 0.5], [maxX, -maxX]);
-  const rotateY = useTransform(sx, [-0.5, 0.5], [-maxY, maxY]);
-
-  const handlers = {
-    onPointerMove: (e: React.PointerEvent<HTMLElement>) => {
-      if (reduce || e.pointerType !== "mouse") return;
-      const r = e.currentTarget.getBoundingClientRect();
-      px.set((e.clientX - r.left) / r.width - 0.5);
-      py.set((e.clientY - r.top) / r.height - 0.5);
-    },
-    onPointerLeave: () => {
-      px.set(0);
-      py.set(0);
-    },
-  };
-
-  return { sx, sy, rotateX: reduce ? 0 : rotateX, rotateY: reduce ? 0 : rotateY, handlers };
-}
-
-/* ---------- the vault: concentric rings stacked in depth ---------- */
-
-function Ring({
-  z,
-  spin,
-  reduce,
-  children,
-}: {
-  z: number;
-  spin: number; // seconds per turn, negative = counter-clockwise
-  reduce: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      className="absolute inset-0"
-      style={{ transform: `translateZ(${z}px)`, transformStyle: "preserve-3d" }}
-    >
-      <motion.div
-        className="size-full"
-        animate={reduce ? undefined : { rotate: spin > 0 ? 360 : -360 }}
-        transition={{ duration: Math.abs(spin), ease: "linear", repeat: Infinity }}
-      >
-        {children}
-      </motion.div>
-    </div>
-  );
-}
-
-function Vault({ reduce }: { reduce: boolean }) {
-  const { rotateX, rotateY, handlers } = useTilt(14, 16, reduce);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.85 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 1.1, ease: EASE }}
-      style={{ perspective: 1200 }}
-      className="relative mx-auto aspect-square w-full max-w-[400px]"
-      {...handlers}
-    >
-      <motion.div
-        className="absolute inset-0"
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        aria-hidden="true"
-      >
-        {/* back plate */}
-        <div
-          className="absolute inset-[5%] rounded-full border border-neutral-200 bg-gradient-to-br from-white to-neutral-100 shadow-[0_40px_70px_-30px_rgba(15,23,42,0.35)]"
-          style={{ transform: "translateZ(-40px)" }}
+      {columns.map((x) => (
+        <rect key={x} x={x - 6} y="110" width="12" height="360" fill="#fff" stroke="#171717" strokeWidth="1.5" />
+      ))}
+      {slabs.map((s) => (
+        <rect
+          key={s.y}
+          x="100"
+          y={s.y}
+          width="640"
+          height={s.h}
+          fill="url(#sec-hatch)"
+          stroke="#171717"
+          strokeWidth="1.5"
         />
+      ))}
+      <line x1="60" y1="470" x2="760" y2="470" stroke="#171717" strokeWidth="2" />
 
-        {/* outer ring: 60 tick marks */}
-        <Ring z={0} spin={120} reduce={reduce}>
-          <svg viewBox="0 0 340 340" className="size-full">
-            <circle
-              cx="170"
-              cy="170"
-              r="156"
-              fill="none"
-              stroke="#a3a3a3"
-              strokeWidth="9"
-              pathLength={360}
-              strokeDasharray="0.6 5.4"
-            />
-          </svg>
-        </Ring>
+      <text x="40" y="504" fontSize="9" letterSpacing="1.5" fill="#a3a3a3">
+        NOTES
+      </text>
+      {[120, 170, 140].map((w, i) => (
+        <rect key={i} x="40" y={511 + i * 8} width={w} height="3" rx="1.5" fill="#e5e5e5" />
+      ))}
 
-        {/* middle ring: broken line, the bolt track */}
-        <Ring z={30} spin={-80} reduce={reduce}>
-          <svg viewBox="0 0 340 340" className="size-full text-neutral-900">
-            <circle
-              cx="170"
-              cy="170"
-              r="124"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              pathLength={100}
-              strokeDasharray="60 4 30 6"
-            />
-          </svg>
-        </Ring>
+      <line x1="612" y1="250" x2="612" y2="268" stroke="#171717" strokeWidth="1.2" />
+      <line x1="606" y1="250" x2="618" y2="250" stroke="#171717" strokeWidth="1.2" />
+      <line x1="606" y1="268" x2="618" y2="268" stroke="#171717" strokeWidth="1.2" />
+      <text x="626" y="263" fontSize="11" fontWeight="600" fill="#171717">
+        200
+      </text>
 
-        {/* inner ring: accent bolts */}
-        <Ring z={60} spin={50} reduce={reduce}>
-          <svg viewBox="0 0 340 340" className="size-full text-accent">
-            <circle
-              cx="170"
-              cy="170"
-              r="92"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="round"
-              pathLength={100}
-              strokeDasharray="18 7"
-            />
-          </svg>
-        </Ring>
+      <rect x="520" y="486" width="240" height="40" fill="none" stroke="#171717" />
+      <text x="534" y="512" fontSize="15" fontWeight="600" fill="#171717">
+        S-301
+      </text>
+      <text x="596" y="511" fontSize="9" letterSpacing="1.5" fill="#737373">
+        SLAB SECTIONS
+      </text>
 
-        {/* core */}
-        <div
-          className="absolute left-1/2 top-1/2 grid size-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-neutral-200 bg-white shadow-[0_18px_30px_-12px_rgba(15,23,42,0.35)]"
-          style={{ transform: "translate(-50%, -50%) translateZ(100px)" }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="size-1/2 text-accent"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M5 11h14v9H5z" />
-            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-          </svg>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
+      {/* the highlight that lands where each claim points */}
+      {REGIONS.map((r, i) => (
+        <rect
+          key={i}
+          data-region
+          x={r.x}
+          y={r.y}
+          width={r.w}
+          height={r.h}
+          rx="8"
+          fill={ACCENT}
+          fillOpacity="0.3"
+          stroke={ACCENT}
+          strokeWidth="2"
+          opacity="0"
+        />
+      ))}
 
-/* ---------- a claim tile ---------- */
-
-function Tile({
-  card,
-  i,
-  reduce,
-}: {
-  card: (typeof CARDS)[number];
-  i: number;
-  reduce: boolean;
-}) {
-  const { sx, sy, rotateX, rotateY, handlers } = useTilt(6, 7, reduce);
-  const shadowX = useTransform(sx, [-0.5, 0.5], [10, -10]);
-  const shadowY = useTransform(sy, [-0.5, 0.5], [22, 8]);
-  const shadow = useMotionTemplate`${shadowX}px ${shadowY}px 30px -16px rgba(15,23,42,0.25)`;
-
-  return (
-    <motion.div
-      initial={reduce ? { opacity: 0 } : { opacity: 0, x: 40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.9, ease: EASE, delay: 0.2 + i * 0.08 }}
-      style={{ perspective: 900 }}
-      {...handlers}
-    >
-      <motion.div
-        style={{ rotateX, rotateY, boxShadow: shadow, transformStyle: "preserve-3d" }}
-        className="group flex h-full min-h-[190px] flex-col rounded-[22px] border border-neutral-200 bg-neutral-50 p-6 transition-colors duration-300 hover:border-accent"
-      >
-        <div
-          className="grid size-11 place-items-center rounded-xl border border-neutral-200 bg-white shadow-sm"
-          style={{ transform: "translateZ(34px)" }}
-        >
-          <TileIcon name={card.icon} />
-        </div>
-        <p
-          className="mt-auto text-sm text-neutral-500"
-          style={{ transform: "translateZ(14px)" }}
-        >
-          {card.label}
-        </p>
-        <h3
-          className="mt-1 text-[22px] font-medium leading-tight tracking-[-0.03em] text-neutral-900"
-          style={{ transform: "translateZ(22px)" }}
-        >
-          {card.title}
-        </h3>
-      </motion.div>
-    </motion.div>
+      {/* the seal: a yellow border that closes round the sheet, one sixth per claim */}
+      <rect
+        data-frame
+        x="5"
+        y="5"
+        width="790"
+        height="550"
+        rx="26"
+        fill="none"
+        stroke={ACCENT}
+        strokeWidth="6"
+        strokeLinecap="round"
+        pathLength={1}
+        strokeDasharray="1"
+        strokeDashoffset="0"
+      />
+    </svg>
   );
 }
 
 /* ---------- section ---------- */
 
 export default function Security() {
-  const reduce = !!useReducedMotion();
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const sec = root.current;
+      if (!sec) return;
+      const one = <T extends Element>(s: string) => sec.querySelector(s) as T;
+      const all = <T extends Element>(s: string) => Array.from(sec.querySelectorAll<T>(s));
+
+      const head = one<HTMLElement>("[data-head]");
+      const h2 = one<HTMLElement>("[data-h2]");
+      const words = all("[data-hw]");
+      const sheet = one<HTMLElement>("[data-sheet]");
+      const frame = one<SVGRectElement>("[data-frame]");
+      const regions = all<SVGRectElement>("[data-region]");
+      const claims = all<HTMLElement>("[data-claim]");
+      const lines = all<HTMLElement>("[data-line]");
+      const dots = all<HTMLElement>("[data-dot]");
+      const N = claims.length;
+
+      const mm = gsap.matchMedia();
+
+      // The scene always plays. If the visitor's system is set to "reduce
+      // motion" (`calm`), the same scroll-driven story runs but with no big
+      // movement: no zoom, tilt or sliding, only fades and drawn lines.
+      mm.add(
+        {
+          desktop: "(min-width: 768px)",
+          phone: "(max-width: 767px)",
+          calm: "(prefers-reduced-motion: reduce)",
+        },
+        (ctx) => {
+          const { desktop, calm } = ctx.conditions as {
+            desktop: boolean;
+            phone: boolean;
+            calm: boolean;
+          };
+
+          // --------------------------------------------------------------
+          // Tablet and desktop: pinned.
+          // The heading starts huge in the middle, shrinks, the sheet rises,
+          // then the claims land on it one by one while a yellow seal closes
+          // round the sheet.
+          // --------------------------------------------------------------
+          if (desktop) {
+            gsap.set(frame, { strokeDashoffset: 1 });
+            gsap.set(regions, { opacity: 0 });
+            gsap.set(claims, (i: number) => ({ opacity: 0, x: calm ? 0 : i % 2 ? 44 : -44 }));
+            gsap.set(lines, { scaleX: 0 });
+            gsap.set(dots, { scale: 0 });
+
+            if (!calm) {
+              gsap.from(words, {
+                yPercent: 118,
+                duration: 1.2,
+                ease: "power4.out",
+                stagger: 0.09,
+                scrollTrigger: { trigger: sec, start: "top 80%", once: true },
+              });
+            }
+
+            const tl = gsap.timeline({
+              defaults: { ease: "none" },
+              scrollTrigger: {
+                trigger: sec,
+                start: "top top",
+                end: SCROLL_LENGTH,
+                pin: true,
+                scrub: 0.6,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+              },
+            });
+
+            // 1. heading: from huge and centred to its place above the sheet
+            if (!calm) {
+              tl.fromTo(
+                head,
+                {
+                  y: () => sec.clientHeight / 2 - (head.offsetTop + head.offsetHeight / 2),
+                  scale: () =>
+                    Math.min(HEAD_SCALE, (window.innerWidth * 0.86) / Math.max(h2.offsetWidth, 1)),
+                  transformOrigin: "50% 50%",
+                },
+                { y: 0, scale: 1, duration: 1.4, ease: "power2.inOut" },
+                0
+              );
+            }
+
+            // 2. the sheet rises and settles flat
+            tl.fromTo(
+              sheet,
+              calm
+                ? { opacity: 0 }
+                : { y: "50vh", opacity: 0, rotationX: 16, scale: 0.9, transformPerspective: 1400 },
+              calm
+                ? { opacity: 1, duration: 1.2 }
+                : { y: 0, opacity: 1, rotationX: 0, scale: 1, duration: 1.2, ease: "power3.out" },
+              0.5
+            );
+
+            // 3. one beat per claim
+            const START = 1.6;
+            claims.forEach((_, k) => {
+              const s = START + k * BEAT;
+              if (k > 0) tl.to(claims[k - 1], { opacity: 0.45, duration: 0.4 }, s);
+              tl.to(claims[k], { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, s)
+                .to(lines[k], { scaleX: 1, duration: 0.35, ease: "power2.out" }, s + 0.2)
+                .to(dots[k], { scale: 1, duration: 0.3, ease: "back.out(2.5)" }, s + 0.5)
+                .to(regions[k], { opacity: 1, duration: 0.2 }, s + 0.4)
+                .to(regions[k], { opacity: 0, duration: 0.3 }, s + 0.4 + BEAT)
+                .to(frame, { strokeDashoffset: 1 - (k + 1) / N, duration: 0.5 }, s + 0.3);
+            });
+
+            // 4. everything comes back to full strength and the sheet settles
+            const T = START + N * BEAT + 0.3;
+            tl.to(claims, { opacity: 1, duration: 0.5 }, T);
+            if (!calm) {
+              tl.to(sheet, { scale: 1.025, duration: 0.25, ease: "power2.out" }, T + 0.4).to(
+                sheet,
+                { scale: 1, duration: 0.4, ease: "power2.inOut" },
+                T + 0.65
+              );
+            }
+            // pause at the end with everything in place
+            tl.to({}, { duration: 1 }, T + 0.9);
+            return;
+          }
+
+          // --------------------------------------------------------------
+          // Phones: no pin. Claims rise in one by one; the seal closes as the
+          // list goes past.
+          // --------------------------------------------------------------
+          const list = one<HTMLElement>("[data-list]");
+          gsap.set(frame, { strokeDashoffset: 1 });
+
+          if (!calm) {
+            gsap.from(words, {
+              yPercent: 118,
+              duration: 1.1,
+              ease: "power4.out",
+              stagger: 0.09,
+              scrollTrigger: { trigger: head, start: "top 88%", once: true },
+            });
+            gsap.from(sheet, {
+              y: 50,
+              opacity: 0,
+              duration: 0.9,
+              ease: "power3.out",
+              scrollTrigger: { trigger: sheet, start: "top 88%", once: true },
+            });
+          }
+
+          claims.forEach((li) => {
+            gsap.from(li.children, {
+              y: calm ? 0 : 34,
+              opacity: 0,
+              duration: 0.9,
+              ease: "power3.out",
+              stagger: 0.1,
+              scrollTrigger: { trigger: li, start: "top 88%", once: true },
+            });
+          });
+
+          gsap.to(frame, {
+            strokeDashoffset: 0,
+            ease: "none",
+            scrollTrigger: { trigger: list, start: "top 75%", end: "bottom 65%", scrub: 0.5 },
+          });
+        }
+      );
+    },
+    { scope: root }
+  );
 
   return (
     <section
+      ref={root}
       id="security"
       aria-label="Security"
-      className="bg-background px-6 py-[120px] md:px-24 md:py-[190px]"
+      className="relative overflow-x-clip bg-background px-6 py-[110px] md:h-screen md:overflow-hidden md:px-0 md:py-0"
     >
-      <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-[5fr_6fr] lg:gap-20">
-        <div className="lg:sticky lg:top-28">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="text-[clamp(2.25rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-900"
+      {/* faint drawing-sheet grid */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgba(15,23,42,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.05) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage: "radial-gradient(ellipse 75% 65% at 50% 50%, #000 25%, transparent 85%)",
+          WebkitMaskImage: "radial-gradient(ellipse 75% 65% at 50% 50%, #000 25%, transparent 85%)",
+        }}
+      />
+
+      {/* heading and sheet sit together as one block, centred on the screen */}
+      <div className="relative md:absolute md:inset-0 md:flex md:flex-col md:items-center md:justify-center md:gap-[3.5vh] md:px-12">
+        <div data-head className="relative z-20 md:text-center">
+          <h2
+            data-h2
+            className={`${display.className} text-[clamp(2.75rem,12vw,3.5rem)] font-medium leading-[0.98] tracking-[-0.05em] md:inline-block md:text-[clamp(1.9rem,3.3vw,3.4rem)] md:leading-[1.05]`}
           >
-            {HEADING}
-          </motion.h2>
-          <div className="mt-12">
-            <Vault reduce={reduce} />
-          </div>
+            {HEADING.map((h, i) => (
+              <span
+                key={i}
+                className={`mr-[0.2em] inline-block overflow-hidden pb-[0.12em] align-bottom ${
+                  h.grey ? "text-neutral-400" : "text-neutral-900"
+                }`}
+              >
+                <span data-hw className="inline-block">
+                  {h.w}
+                </span>
+              </span>
+            ))}
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-          {CARDS.map((card, i) => (
-            <Tile key={card.label} card={card} i={i} reduce={reduce} />
-          ))}
+        {/* the claims left and right, the sheet in the middle */}
+        <div
+          data-list
+          className="mt-12 grid grid-cols-1 gap-y-8 md:mt-0 md:h-[calc(min(40vw,92vh)*0.7)] md:grid-cols-[1fr_auto_1fr] md:grid-rows-[repeat(3,1fr)] md:gap-y-0"
+        >
+          {/* the sheet */}
+          <div className="relative w-full md:col-start-2 md:row-span-3 md:row-start-1 md:w-[min(40vw,92vh)]">
+            <div
+              data-sheet
+              className="relative aspect-[800/560] w-full rounded-[26px] border border-neutral-200 bg-white shadow-[0_40px_80px_-40px_rgba(15,23,42,0.4)]"
+            >
+              <Sheet />
+            </div>
+          </div>
+
+          {/* the claims */}
+          {CLAIMS.map((c, i) => {
+            const left = i % 2 === 0;
+            return (
+              <div
+                key={c.label}
+                data-claim
+                className={`flex items-center border-t border-neutral-300 pt-5 md:border-t-0 md:pt-0 ${PLACE[i]} ${
+                  left ? "md:flex-row md:justify-end md:text-right" : "md:flex-row-reverse md:justify-end md:text-left"
+                }`}
+              >
+                <div className="md:max-w-[19rem]">
+                  <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-neutral-500 md:text-[13px]">
+                    {c.label}
+                  </p>
+                  <h3
+                    className={`${display.className} mt-2 text-[clamp(1.6rem,6vw,2rem)] font-medium leading-[1.02] tracking-[-0.04em] text-neutral-900 md:text-[clamp(1.2rem,1.95vw,2rem)]`}
+                  >
+                    {c.title}
+                  </h3>
+                </div>
+
+                {/* leader: a hairline from the claim to the sheet, ending in a yellow dot */}
+                <div
+                  aria-hidden
+                  className={`relative hidden h-px w-[clamp(36px,6vw,110px)] shrink-0 bg-transparent md:block ${
+                    left ? "ml-5" : "mr-5"
+                  }`}
+                >
+                  <span
+                    data-line
+                    className={`absolute inset-0 bg-neutral-400 ${left ? "origin-left" : "origin-right"}`}
+                  />
+                  <span
+                    data-dot
+                    className={`absolute top-1/2 size-[9px] -translate-y-1/2 rounded-full ${
+                      left ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2"
+                    }`}
+                    style={{ backgroundColor: ACCENT }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

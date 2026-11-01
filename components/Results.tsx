@@ -1,298 +1,374 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import {
-  animate,
-  motion,
-  useInView,
-  useMotionTemplate,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import { Bricolage_Grotesque } from "next/font/google";
 
-// No measured results are published here yet. Each card shows a short word
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+
+// Real display font for the big type (the site's `font-display` was falling
+// back to Arial). To use your own site font instead, delete this and the
+// `${display.className}` bits below.
+const display = Bricolage_Grotesque({ subsets: ["latin"], weight: ["500", "600"], display: "swap" });
+
+// No measured results are published here yet. Each row shows a short word
 // (`headline`) instead of a number.
-// When you have real, approved figures, give a card `value` and `suffix`
+// When you have real, approved figures, give a row a `value` and `suffix`
 // (and remove its `headline`), for example:
 //   { value: 12, suffix: " min", text: "average to draft a referenced RFI." }
-// Cards with a `value` count up when they scroll into view.
-type IconName = "cited" | "traced" | "reviewed" | "private";
-
+// Rows with a `value` count up when they scroll into view.
 type Stat = {
   value?: number;
   suffix?: string;
   headline?: string;
   text: string;
-  icon: IconName;
 };
 
-const HEADING = "What you can count on.";
+const HEADING_LINES = [["What", "you", "can"], ["count", "on."]];
 const STATS: Stat[] = [
-  { icon: "cited", headline: "Cited", text: "Every answer links back to the sheet or spec it came from." },
-  { icon: "traced", headline: "Traced", text: "A change is followed across drawings, specs and RFIs." },
-  { icon: "reviewed", headline: "Reviewed", text: "People approve the numbers before anyone relies on them." },
-  { icon: "private", headline: "Private", text: "Your documents are never used to train models." },
+  { headline: "Cited", text: "Every answer links back to the sheet or spec it came from." },
+  { headline: "Traced", text: "A change is followed across drawings, specs and RFIs." },
+  { headline: "Reviewed", text: "People approve the numbers before anyone relies on them." },
+  { headline: "Private", text: "Your documents are never used to train models." },
 ];
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const ACCENT = "#F5C93C";
 
-/* ---------- count-up (unchanged behaviour) ---------- */
-
-function CountUp({
-  value,
-  suffix,
-  delay,
-}: {
-  value: number;
-  suffix: string;
-  delay: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-
-  useEffect(() => {
-    if (!inView || !ref.current) return;
-    const el = ref.current;
-    const controls = animate(0, value, {
-      duration: 1.6,
-      delay,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => {
-        el.textContent = `${Math.round(v)}${suffix}`;
-      },
-    });
-    return () => controls.stop();
-  }, [inView, value, suffix, delay]);
-
-  return <span ref={ref}>{`${value}${suffix}`}</span>;
-}
-
-/* ---------- line icons that draw themselves ---------- */
-
-function Icon({ name, delay }: { name: IconName; delay: number }) {
-  const draw = (extra = 0) => ({
-    initial: { pathLength: 0, opacity: 0 },
-    whileInView: { pathLength: 1, opacity: 1 },
-    viewport: { once: true, margin: "-80px" },
-    transition: { duration: 1.1, ease: EASE, delay: delay + 0.5 + extra },
-  });
-  const dot = (cx: number, cy: number, extra: number) => (
-    <motion.circle
-      cx={cx}
-      cy={cy}
-      r="3.5"
-      fill="currentColor"
-      initial={{ scale: 0 }}
-      whileInView={{ scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ type: "spring", stiffness: 300, damping: 16, delay: delay + 0.7 + extra }}
-      style={{ transformBox: "fill-box", transformOrigin: "center" }}
-    />
-  );
-
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      className="size-16 text-accent"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {name === "cited" && (
-        <>
-          <motion.path d="M14 8h26l10 10v38H14z" {...draw()} />
-          <motion.path d="M20 30h22M20 38h16" {...draw(0.2)} />
-          <motion.path d="M42 46l10 10" {...draw(0.4)} />
-          {dot(42, 46, 0.4)}
-        </>
-      )}
-      {name === "traced" && (
-        <>
-          <motion.path d="M10 50L28 22l16 14 10-24" {...draw()} />
-          {dot(10, 50, 0)}
-          {dot(28, 22, 0.2)}
-          {dot(44, 36, 0.4)}
-          {dot(54, 12, 0.6)}
-        </>
-      )}
-      {name === "reviewed" && (
-        <>
-          <motion.circle cx="32" cy="32" r="23" {...draw()} />
-          <motion.path d="M20 33l9 9 16-19" {...draw(0.3)} />
-        </>
-      )}
-      {name === "private" && (
-        <>
-          <motion.path d="M22 28v-8a10 10 0 0 1 20 0v8" {...draw()} />
-          <motion.rect x="14" y="28" width="36" height="26" rx="5" {...draw(0.2)} />
-          {dot(32, 41, 0.5)}
-        </>
-      )}
-    </svg>
-  );
-}
-
-/* ---------- one drawing sheet: tilts in 3D toward the pointer ---------- */
-
-function Sheet({ stat, i, reduce }: { stat: Stat; i: number; reduce: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const sx = useSpring(px, { stiffness: 180, damping: 18, mass: 0.6 });
-  const sy = useSpring(py, { stiffness: 180, damping: 18, mass: 0.6 });
-
-  const rotateX = useTransform(sy, [-0.5, 0.5], [9, -9]);
-  const rotateY = useTransform(sx, [-0.5, 0.5], [-11, 11]);
-  const gx = useTransform(sx, [-0.5, 0.5], [0, 100]);
-  const gy = useTransform(sy, [-0.5, 0.5], [0, 100]);
-  const shadowX = useTransform(sx, [-0.5, 0.5], [18, -18]);
-  const shadowY = useTransform(sy, [-0.5, 0.5], [34, 14]);
-
-  const glare = useMotionTemplate`radial-gradient(280px circle at ${gx}% ${gy}%, rgba(255,255,255,0.95), transparent 65%)`;
-  const shadow = useMotionTemplate`${shadowX}px ${shadowY}px 44px -18px rgba(15,23,42,0.28)`;
-
-  const onMove = (e: React.PointerEvent) => {
-    if (reduce || e.pointerType !== "mouse" || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    px.set((e.clientX - r.left) / r.width - 0.5);
-    py.set((e.clientY - r.top) / r.height - 0.5);
-  };
-  const onLeave = () => {
-    px.set(0);
-    py.set(0);
-  };
-
-  // Sheets start as a pile in the middle and fan out into the row.
-  const fan = i - 1.5;
-  const delay = i * 0.1;
-
-  return (
-    <motion.div
-      initial={reduce ? { opacity: 0 } : { opacity: 0, x: -fan * 70, y: 40, rotate: -fan * 7, scale: 0.92 }}
-      whileInView={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 1.1, ease: EASE, delay }}
-      style={{ perspective: 1100 }}
-    >
-      <motion.div
-        ref={ref}
-        onPointerMove={onMove}
-        onPointerLeave={onLeave}
-        style={{
-          rotateX: reduce ? 0 : rotateX,
-          rotateY: reduce ? 0 : rotateY,
-          transformStyle: "preserve-3d",
-        }}
-        className="relative h-full"
-      >
-        {/* two sheets underneath, so each card reads as the top of a stack */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 rounded-[22px] border border-neutral-200 bg-neutral-100"
-          style={{ transform: "translateZ(-34px) translate(10px, 12px)" }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 rounded-[22px] border border-neutral-200 bg-white"
-          style={{ transform: "translateZ(-17px) translate(5px, 6px)" }}
-        />
-
-        <motion.div
-          className="relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-[22px] border border-neutral-200 bg-gradient-to-br from-white to-neutral-100 p-7"
-          style={{ boxShadow: shadow, transformStyle: "preserve-3d" }}
-        >
-          {/* light that follows the pointer */}
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{ background: glare }}
-          />
-
-          {/* title-block rule, like the strip on a drawing sheet */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-7 bottom-[88px] h-px bg-neutral-200"
-          />
-
-          <div className="relative" style={{ transform: "translateZ(56px)" }}>
-            <Icon name={stat.icon} delay={delay} />
-          </div>
-
-          <p
-            className="relative mt-auto text-[clamp(2.5rem,3.4vw,3.25rem)] font-medium leading-none tracking-[-0.045em] text-neutral-900"
-            style={{ transform: "translateZ(34px)" }}
-          >
-            {stat.value !== undefined ? (
-              <CountUp value={stat.value} suffix={stat.suffix ?? ""} delay={delay} />
-            ) : (
-              stat.headline
-            )}
-          </p>
-
-          <p
-            className="relative mt-7 text-base leading-relaxed text-neutral-500"
-            style={{ transform: "translateZ(16px)" }}
-          >
-            {stat.text}
-          </p>
-        </motion.div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-/* ---------- section ---------- */
+// ---- Tune the motion here -------------------------------------------------
+const DASH_W = 40; // width of the yellow dash when a row is active (px)
+const DASH_GAP = 16; // space between the dash and the word (px)
+const DIM = 0.35; // how faded the other rows get while one is active
+// ---------------------------------------------------------------------------
 
 export default function Results() {
-  const reduce = !!useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  // The blueprint grid drifts slower than the page, which gives the cards depth.
-  const gridY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [-60, 60]);
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const sec = root.current;
+      if (!sec) return;
+      const q = <T extends Element>(s: string, from: ParentNode = sec) =>
+        Array.from(from.querySelectorAll<T>(s));
+
+      const mm = gsap.matchMedia();
+
+      // Reduced motion: nothing is hidden by the markup, so there is nothing to do.
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const cleanups: Array<() => void> = [];
+
+        // ---------------------------------------------------------------
+        // 1. Heading: words rise out of their masks, then the grey second
+        //    line drifts sideways against the scroll.
+        // ---------------------------------------------------------------
+        const h2 = sec.querySelector("h2") as HTMLElement;
+        gsap.from(q("[data-hw]", h2), {
+          yPercent: 118,
+          duration: 1.2,
+          ease: "power4.out",
+          stagger: 0.09,
+          scrollTrigger: { trigger: h2, start: "top 82%", once: true },
+        });
+        gsap.fromTo(
+          q("[data-hline]", h2)[1],
+          { x: "-5vw" },
+          {
+            x: "5vw",
+            ease: "none",
+            scrollTrigger: { trigger: h2, start: "top 90%", end: "bottom 10%", scrub: 0.6 },
+          }
+        );
+
+        // ---------------------------------------------------------------
+        // 2. Rail: a yellow line down the left fills as you read the list.
+        // ---------------------------------------------------------------
+        const list = sec.querySelector("[data-list]") as HTMLElement;
+        const rail = sec.querySelector("[data-rail]") as HTMLElement | null;
+        if (rail) {
+          gsap.fromTo(
+            rail,
+            { scaleY: 0 },
+            {
+              scaleY: 1,
+              transformOrigin: "50% 0%",
+              ease: "none",
+              scrollTrigger: { trigger: list, start: "top 60%", end: "bottom 60%", scrub: 0.5 },
+            }
+          );
+        }
+
+        // ---------------------------------------------------------------
+        // 3. Rows
+        // ---------------------------------------------------------------
+        const rows = q<HTMLElement>("[data-row]");
+        const states = new Map<HTMLElement, { active: boolean; hover: boolean }>();
+
+        const setDash = (row: HTMLElement) => {
+          const s = states.get(row)!;
+          const open = s.active || s.hover;
+          gsap.to(row.querySelector("[data-dash]"), {
+            width: open ? DASH_W : 0,
+            marginRight: open ? DASH_GAP : 0,
+            duration: 0.55,
+            ease: "power3.out",
+            overwrite: "auto",
+          });
+        };
+
+        // dim every row except the active or hovered one
+        const refreshDim = () => {
+          const lit = rows.filter((r) => {
+            const s = states.get(r)!;
+            return s.hover;
+          });
+          const focus = lit.length
+            ? lit
+            : rows.filter((r) => states.get(r)!.active);
+          rows.forEach((r) => {
+            const keep = focus.length === 0 || focus.includes(r);
+            gsap.to(q("[data-fade]", r), {
+              opacity: keep ? 1 : DIM,
+              duration: 0.45,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          });
+        };
+
+        rows.forEach((row, i) => {
+          states.set(row, { active: false, hover: false });
+
+          const line = row.querySelector("[data-line]");
+          const stub = row.querySelector("[data-stub]");
+          const chars = q("[data-char]", row);
+          const count = row.querySelector<HTMLElement>("[data-count]");
+          const words = q("[data-sw]", row);
+          const sentence = row.querySelector<HTMLElement>("[data-sentence]");
+          const head = row.querySelector<HTMLElement>("[data-head]");
+
+          // entrance: the hairline draws, a yellow stretch follows, the word's
+          // letters rise one by one
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: row, start: "top 84%", once: true },
+          });
+          tl.fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: "power3.inOut" }, 0)
+            .fromTo(stub, { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: "power3.out" }, 0.45);
+          if (chars.length) {
+            tl.from(chars, { yPercent: 115, duration: 1, ease: "power4.out", stagger: 0.04 }, 0.15);
+          }
+          if (count) {
+            const target = Number(count.dataset.value);
+            const suffix = count.dataset.suffix ?? "";
+            const o = { n: 0 };
+            count.textContent = `0${suffix}`;
+            tl.to(
+              o,
+              {
+                n: target,
+                duration: 1.6,
+                ease: "power3.out",
+                onUpdate: () => {
+                  count.textContent = `${Math.round(o.n)}${suffix}`;
+                },
+              },
+              0.15
+            );
+          }
+
+          // the sentence lights up word by word, tied to the scrollbar
+          if (words.length && sentence) {
+            gsap.fromTo(
+              words,
+              { opacity: 0.18 },
+              {
+                opacity: 1,
+                ease: "none",
+                stagger: 0.12,
+                scrollTrigger: { trigger: sentence, start: "top 90%", end: "top 48%", scrub: 0.4 },
+              }
+            );
+          }
+
+          // the big word and its sentence drift at slightly different speeds
+          if (head && sentence) {
+            gsap.fromTo(
+              head,
+              { yPercent: 8 },
+              {
+                yPercent: -8,
+                ease: "none",
+                scrollTrigger: { trigger: row, start: "top bottom", end: "bottom top", scrub: 0.8 },
+              }
+            );
+            gsap.fromTo(
+              sentence,
+              { yPercent: -10 },
+              {
+                yPercent: 10,
+                ease: "none",
+                scrollTrigger: { trigger: row, start: "top bottom", end: "bottom top", scrub: 0.8 },
+              }
+            );
+          }
+
+          // the row the reader is on gets the yellow dash and stays bright
+          ScrollTrigger.create({
+            trigger: row,
+            start: "top 62%",
+            end: "bottom 62%",
+            onToggle: (self) => {
+              states.get(row)!.active = self.isActive;
+              setDash(row);
+              refreshDim();
+            },
+          });
+
+          // hover (mouse only)
+          const enter = (e: PointerEvent) => {
+            if (e.pointerType !== "mouse") return;
+            states.get(row)!.hover = true;
+            setDash(row);
+            refreshDim();
+          };
+          const leave = () => {
+            states.get(row)!.hover = false;
+            setDash(row);
+            refreshDim();
+          };
+          row.addEventListener("pointerenter", enter);
+          row.addEventListener("pointerleave", leave);
+          cleanups.push(() => {
+            row.removeEventListener("pointerenter", enter);
+            row.removeEventListener("pointerleave", leave);
+          });
+
+          // the word nudges toward the pointer while it is over the row
+          const wordEl = row.querySelector<HTMLElement>("[data-nudge]");
+          if (wordEl) {
+            const xTo = gsap.quickTo(wordEl, "x", { duration: 0.6, ease: "power3.out" });
+            const move = (e: PointerEvent) => {
+              if (e.pointerType !== "mouse") return;
+              const r = row.getBoundingClientRect();
+              xTo(((e.clientX - r.left) / r.width - 0.5) * 36);
+            };
+            const reset = () => xTo(0);
+            row.addEventListener("pointermove", move);
+            row.addEventListener("pointerleave", reset);
+            cleanups.push(() => {
+              row.removeEventListener("pointermove", move);
+              row.removeEventListener("pointerleave", reset);
+            });
+          }
+          void i;
+        });
+
+        return () => cleanups.forEach((fn) => fn());
+      });
+    },
+    { scope: root }
+  );
 
   return (
     <section
-      ref={sectionRef}
+      ref={root}
       id="results"
       aria-label="What you can count on"
-      className="relative overflow-hidden border-y border-neutral-200 bg-neutral-50 px-6 py-[120px] md:px-24 md:py-[190px]"
+      className="relative overflow-x-clip bg-background px-6 py-[110px] md:px-24 md:py-[170px]"
     >
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-0 -inset-y-[80px]"
-        style={{
-          y: gridY,
-          backgroundImage:
-            "linear-gradient(to right, rgba(15,23,42,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.06) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 100%)",
-        }}
-      />
-
-      <motion.h2
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.8, ease: EASE }}
-        className="relative text-center text-[clamp(2.25rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-900"
+      <h2
+        className={`${display.className} text-[clamp(2.75rem,7.6vw,8rem)] font-medium leading-[0.93] tracking-[-0.055em]`}
       >
-        {HEADING}
-      </motion.h2>
-
-      <div className="relative mt-20 grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 md:grid-cols-4">
-        {STATS.map((stat, i) => (
-          <Sheet key={stat.text} stat={stat} i={i} reduce={reduce} />
+        {HEADING_LINES.map((line, li) => (
+          <span
+            key={li}
+            data-hline
+            className={`block ${li === 1 ? "text-neutral-400" : "text-neutral-900"}`}
+          >
+            {line.map((w, wi) => (
+              <span key={wi} className="mr-[0.2em] inline-block overflow-hidden pb-[0.12em] align-bottom">
+                <span data-hw className="inline-block">
+                  {w}
+                </span>
+              </span>
+            ))}
+          </span>
         ))}
+      </h2>
+
+      <div className="relative mt-20 md:mt-28">
+        {/* yellow rail that fills as you read (desktop) */}
+        <div
+          aria-hidden
+          className="absolute -left-12 bottom-0 top-0 hidden w-[2px] bg-neutral-200 md:block"
+        >
+          <div data-rail className="size-full" style={{ backgroundColor: ACCENT }} />
+        </div>
+
+        <ul data-list>
+          {STATS.map((stat, i) => (
+            <li
+              key={stat.text}
+              data-row
+              className={`relative grid gap-5 py-10 md:grid-cols-[1fr_1.1fr] md:items-start md:gap-16 md:py-14 ${
+                i === STATS.length - 1 ? "border-b border-neutral-300" : ""
+              }`}
+            >
+              {/* hairline, with a short yellow stretch at the start */}
+              <span aria-hidden data-line className="absolute inset-x-0 top-0 h-px origin-left bg-neutral-300" />
+              <span
+                aria-hidden
+                data-stub
+                className="absolute left-0 top-[-0.5px] h-[2px] w-16 origin-left"
+                style={{ backgroundColor: ACCENT }}
+              />
+
+              <div data-head data-fade>
+                <h3
+                  data-nudge
+                  className={`${display.className} flex items-center text-[clamp(2.5rem,5.4vw,5.25rem)] font-medium leading-[0.95] tracking-[-0.055em] text-neutral-900`}
+                >
+                  <span
+                    aria-hidden
+                    data-dash
+                    className="inline-block h-[3px] w-0 shrink-0"
+                    style={{ backgroundColor: ACCENT }}
+                  />
+                  <span className="block overflow-hidden pb-[0.12em]" aria-label={stat.headline}>
+                    {stat.value !== undefined ? (
+                      <span
+                        data-count
+                        data-value={stat.value}
+                        data-suffix={stat.suffix ?? ""}
+                        className="block"
+                      >
+                        {`${stat.value}${stat.suffix ?? ""}`}
+                      </span>
+                    ) : (
+                      (stat.headline ?? "").split("").map((c, k) => (
+                        <span key={k} aria-hidden data-char className="inline-block">
+                          {c}
+                        </span>
+                      ))
+                    )}
+                  </span>
+                </h3>
+              </div>
+
+              <p
+                data-sentence
+                data-fade
+                className="max-w-[30rem] text-[clamp(1.2rem,1.8vw,1.7rem)] leading-[1.3] tracking-[-0.015em] text-neutral-900 md:pt-3"
+              >
+                {stat.text.split(" ").map((w, k) => (
+                  <span key={k} data-sw className="mr-[0.28em] inline-block">
+                    {w}
+                  </span>
+                ))}
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

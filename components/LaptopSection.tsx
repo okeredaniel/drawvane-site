@@ -4,48 +4,64 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { Bricolage_Grotesque } from "next/font/google";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+// Headline font. Delete this + the `display.className` below to use the site font.
+const display = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+});
+
 // ---- Tune the animation here -------------------------------------------
 // Laptop zoom start (desktop): ~1.8x zoom, screen filling the viewport.
-const START = { scale: 1.82, x: "-28vw", y: "-21vh" };
+// rotationY = how much the laptop is turned at the start (flattens to 0).
+const START = { scale: 1.82, x: "-28vw", y: "-21vh", rotationY: -7 };
 // Zoom happens around the laptop screen's top-left corner (% of the video).
 const ORIGIN = "14.9% 8.4%";
-// How long the section stays pinned. 1 unit = 1 screen of scrolling,
-// so this matches the timeline length below (3.6 screens).
-const SCROLL_LENGTH = "+=360%";
-// Phones: how long the section stays pinned while the texts scroll up.
+// How long the section stays pinned (1 unit = 1 screen of scrolling).
+const SCROLL_LENGTH = "+=290%";
 const SCROLL_LENGTH_PHONE = "+=300%";
-// Where the 2nd text stops when the section ends, as a fraction of the
-// screen height measured to the middle of the text (0.5 = dead centre).
-// Raise it to rest lower, lower it to rest higher.
-const REST_AT = 0.40; // desktop / tablet
-const REST_AT_PHONE = 0.62; // phones
 // Empty space under the laptop once the section ends.
-// Same dark colour as the section so it reads as part of it.
 const BOTTOM_SPACE = "h-[8vh] md:h-[14vh]";
-// The text sits over the laptop, so the laptop is faded toward the section
-// colour while the text is on screen. 0 = no dimming, 1 = laptop fully
-// hidden. (A colour overlay is used instead of a brightness filter so the
-// video's edges never show as a box against the background.)
-const DIM_OPACITY = 0.55; // tablets (768px up to DIM_BELOW)
-const DIM_OPACITY_PHONE = 0.6; // phones
-// Screens narrower than this (but still using the desktop layout) get the dim.
+// Laptop fade under the text (tablets / phones). 0 = none, 1 = fully hidden.
+const DIM_OPACITY = 0.55;
+const DIM_OPACITY_PHONE = 0.6;
+// Screens narrower than this (but still desktop layout) get the dim.
 const DIM_BELOW = 1280; // px
+// Blueprint grid parallax: how far the grid drifts up over the whole pin.
+const GRID_DRIFT = "-14vh";
 // -------------------------------------------------------------------------
 
-const TEXT = "text-[20px] leading-8 text-slate-400";
-const HIGHLIGHT = "text-[#3d5afe]";
+const HEAD = "Ask your drawing set anything. Watch the answer build.";
+const SUB =
+  "Every reply points to the exact sheet and detail it came from, so your team can check it in seconds.";
+
+// Wraps every word so it can light up on scroll.
+function Words({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(" ").map((word, i) => (
+        <span key={i}>
+          <span className="w inline-block opacity-[0.22]">{word}</span>{" "}
+        </span>
+      ))}
+    </>
+  );
+}
 
 export default function LaptopSection() {
   const section = useRef<HTMLElement>(null);
   const enter = useRef<HTMLDivElement>(null); // slides the laptop in
   const laptop = useRef<HTMLDivElement>(null); // zooms the laptop out
   const video = useRef<HTMLVideoElement>(null);
-  const copy = useRef<HTMLDivElement>(null); // both texts, scrolling up
-  const second = useRef<HTMLParagraphElement>(null); // the 2nd text
+  const copy = useRef<HTMLDivElement>(null); // headline + subtext block
+  const head = useRef<HTMLHeadingElement>(null);
+  const sub = useRef<HTMLParagraphElement>(null);
   const dim = useRef<HTMLDivElement>(null); // fades the laptop under the text
+  const grid = useRef<HTMLDivElement>(null); // blueprint grid
+  const glow = useRef<HTMLDivElement>(null); // blue light behind the laptop
 
   // Play the video only while the section is on screen
   useEffect(() => {
@@ -67,30 +83,39 @@ export default function LaptopSection() {
     () => {
       const mm = gsap.matchMedia();
 
-      // Where the copy has to end up so the 2nd text rests at `rest`
-      const restY = (rest: number) => () => {
-        const p = second.current;
-        if (!p) return 0;
-        const centre = p.offsetTop + p.offsetHeight / 2;
-        return window.innerHeight * rest - centre;
-      };
+      const words = (el: HTMLElement | null) =>
+        Array.from(el?.querySelectorAll<HTMLElement>(".w") ?? []);
 
       mm.add(
         {
           isPhone: "(max-width: 767px)",
           isDesktop: "(min-width: 768px)",
           isNarrow: `(min-width: 768px) and (max-width: ${DIM_BELOW - 1}px)`,
+          isReduced: "(prefers-reduced-motion: reduce)",
         },
         (context) => {
-          const { isPhone, isNarrow } = context.conditions as {
+          const { isPhone, isNarrow, isReduced } = context.conditions as {
             isPhone: boolean;
             isDesktop: boolean;
             isNarrow: boolean;
+            isReduced: boolean;
           };
 
+          const wHead = words(head.current);
+          const wSub = words(sub.current);
+
           // ---------------------------------------------------------------
-          // Phones: the section is pinned too. The laptop stays in place,
-          // dimmed, while the texts scroll up over it.
+          // Reduced motion: no pin, no scrub. Final state, text centered.
+          // ---------------------------------------------------------------
+          if (isReduced) {
+            gsap.set([...wHead, ...wSub], { opacity: 1 });
+            gsap.set(glow.current, { opacity: 1 });
+            return;
+          }
+
+          // ---------------------------------------------------------------
+          // Phones: pinned. Laptop stays put and dims, text sits in the
+          // middle and its words light up as you scroll.
           // ---------------------------------------------------------------
           if (isPhone) {
             const tl = gsap.timeline({
@@ -109,11 +134,13 @@ export default function LaptopSection() {
             tl.to(dim.current, { opacity: DIM_OPACITY_PHONE, duration: 0.6 }, 0)
               .fromTo(
                 copy.current,
-                { y: 0 },
-                { y: restY(REST_AT_PHONE), duration: 2.4 },
+                { autoAlpha: 0, y: 24 },
+                { autoAlpha: 1, y: 0, duration: 0.4 },
                 0
               )
-              // pause at the end with the 2nd text still over the laptop
+              .to(wHead, { opacity: 1, stagger: 0.05, duration: 0.2 }, 0.2)
+              .to(wSub, { opacity: 1, stagger: 0.03, duration: 0.2 }, 1.0)
+              .to(grid.current, { y: GRID_DRIFT, duration: 2.7 }, 0)
               .to({}, { duration: 0.3 });
             return;
           }
@@ -122,8 +149,7 @@ export default function LaptopSection() {
           // Tablet and desktop
           // ---------------------------------------------------------------
 
-          // 1. Entrance: the laptop is hidden until the section arrives,
-          //    then slides in from the right on its own (not tied to scroll).
+          // 1. Entrance: laptop slides in from the right on its own.
           gsap.fromTo(
             enter.current,
             { x: "35vw", opacity: 0 },
@@ -140,8 +166,13 @@ export default function LaptopSection() {
             }
           );
 
-          // 2. Scroll-linked part: pinned, laptop zooms out, texts scroll up.
-          gsap.set(laptop.current, { ...START, transformOrigin: ORIGIN });
+          // 2. Scroll-linked part: pinned. The text block stays centered;
+          //    it fades in once the laptop has mostly zoomed out.
+          gsap.set(laptop.current, {
+            ...START,
+            transformOrigin: ORIGIN,
+            transformPerspective: 1400,
+          });
 
           const tl = gsap.timeline({
             defaults: { ease: "none" },
@@ -157,25 +188,32 @@ export default function LaptopSection() {
           });
 
           tl
-            // laptop zooms out and settles into place
-            .to(laptop.current, { scale: 1, x: 0, y: 0, ease: "power2.inOut", duration: 1.4 }, 0)
-            // both texts scroll up at scroll speed, starting below the screen.
-            // The first text leaves above the screen, but the 2nd text stops
-            // beside the laptop and stays there until the section ends.
+            // laptop zooms out, flattens, settles
+            .to(
+              laptop.current,
+              { scale: 1, x: 0, y: 0, rotationY: 0, ease: "power2.inOut", duration: 1.4 },
+              0
+            )
+            // blue light comes up behind the laptop
+            .to(glow.current, { opacity: 1, duration: 1.4, ease: "power2.in" }, 0)
+            // grid drifts slower than the scroll = depth
+            .to(grid.current, { y: GRID_DRIFT, duration: 2.9 }, 0)
+            // text block fades up into the middle of the screen
             .fromTo(
               copy.current,
-              { y: "100vh" },
-              { y: restY(REST_AT), duration: 2.1 },
-              1.2
-            );
+              { autoAlpha: 0, y: 28 },
+              { autoAlpha: 1, y: 0, duration: 0.5 },
+              1.0
+            )
+            // headline words light up, then the subtext
+            .to(wHead, { opacity: 1, stagger: 0.05, duration: 0.2 }, 1.2)
+            .to(wSub, { opacity: 1, stagger: 0.03, duration: 0.2 }, 1.9);
 
-          // On narrower screens the text sits over the laptop, so fade the
-          // laptop down just as the text arrives and keep it dimmed after.
+          // narrower screens: text sits over the laptop, so dim it
           if (isNarrow) {
             tl.to(dim.current, { opacity: DIM_OPACITY, duration: 0.7 }, 1.0);
           }
 
-          // pause at the end with the 2nd text still beside the laptop
           tl.to({}, { duration: 0.3 });
         }
       );
@@ -191,17 +229,40 @@ export default function LaptopSection() {
         ref={section}
         className="relative h-svh overflow-hidden bg-[#0d1117] md:h-screen"
       >
-        {/* Left / top: the two texts. They scroll up past the laptop. */}
-        <div className="absolute left-0 top-0 z-10 px-6 pt-[92px] md:px-0 md:pl-24 md:pt-0">
-          <div ref={copy} className="flex max-w-[26rem] flex-col gap-[88vh]">
-            <p className={TEXT}>
-              <span className={HIGHLIGHT}>Ask your drawing set</span> anything and
-              watch the answer appear.
-            </p>
-            <p ref={second} className={TEXT}>
-              Every reply{" "}
-              <span className={HIGHLIGHT}>links back to the exact sheet</span> and
-              detail it came from, so your team can check it in seconds.
+        {/* Blueprint grid: minor + major lines, faded toward the edges */}
+        <div
+          ref={grid}
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 -top-[15vh] h-[130%] will-change-transform"
+          style={{
+            backgroundImage: [
+              "linear-gradient(to right, rgba(61,90,254,0.10) 1px, transparent 1px)",
+              "linear-gradient(to bottom, rgba(61,90,254,0.10) 1px, transparent 1px)",
+              "linear-gradient(to right, rgba(148,163,184,0.045) 1px, transparent 1px)",
+              "linear-gradient(to bottom, rgba(148,163,184,0.045) 1px, transparent 1px)",
+            ].join(","),
+            backgroundSize: "160px 160px, 160px 160px, 32px 32px, 32px 32px",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 80% 70% at 62% 50%, #000 20%, transparent 78%)",
+            maskImage:
+              "radial-gradient(ellipse 80% 70% at 62% 50%, #000 20%, transparent 78%)",
+          }}
+        />
+
+        {/* Text: vertically centered on the left (centered over the laptop on phones) */}
+        <div className="absolute inset-y-0 left-0 z-10 flex items-center px-6 md:pl-24 md:pr-0">
+          <div ref={copy} className="max-w-[34rem]">
+            <h2
+              ref={head}
+              className={`${display.className} text-[clamp(32px,3.6vw,58px)] font-medium leading-[1.05] tracking-[-0.03em] text-white`}
+            >
+              <Words text={HEAD} />
+            </h2>
+            <p
+              ref={sub}
+              className="mt-6 max-w-[26rem] text-[clamp(17px,1.3vw,20px)] leading-[1.55] text-slate-300"
+            >
+              <Words text={SUB} />
             </p>
           </div>
         </div>
@@ -209,7 +270,18 @@ export default function LaptopSection() {
         {/* The video. The laptop is part of the video, and the video's own
             background (#0d1117) matches this section, so it blends in. */}
         <div className="absolute inset-0 flex items-center px-4 pt-[10vh] md:left-auto md:right-[-2.3vw] md:w-[min(80.5vw,175vh)] md:px-0 md:pt-[18vh]">
-          <div ref={enter} className="w-full">
+          <div ref={enter} className="relative w-full">
+            {/* blue light behind the laptop */}
+            <div
+              ref={glow}
+              aria-hidden
+              className="pointer-events-none absolute -inset-[8%] opacity-0"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(61,90,254,0.28), rgba(61,90,254,0) 100%)",
+              }}
+            />
+
             <div ref={laptop} className="relative w-full will-change-transform">
               <div
                 ref={dim}
@@ -233,6 +305,7 @@ export default function LaptopSection() {
                 <source src="/laptop.mp4" type="video/mp4" />
               </video> */}
             </div>
+
           </div>
         </div>
       </section>

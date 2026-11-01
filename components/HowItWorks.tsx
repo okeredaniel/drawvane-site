@@ -5,66 +5,54 @@ import {
   motion,
   useMotionTemplate,
   useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
-  type MotionValue,
 } from "motion/react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+const YELLOW = "#F5C93C";
+const INK = "#171717";
 
 type Step = {
   n: string;
   title: string;
   text: string;
+  // Put your images in /public/how-it-works/ and uncomment the paths.
+  // Until a file exists, a plain tinted panel is shown in its place.
   image?: string;
+  tint: string; // fallback panel colour
+  dark?: boolean; // fallback panel is dark (grid lines turn white)
 };
 
-// The three cards. Put the images in /public/how-it-works/ and make sure
-// each `image` path matches your file. Until the file exists, a light
-// panel is shown instead. `n` is the number shown on the floating chip.
 const STEPS: Step[] = [
   {
     n: "01",
     title: "Upload the set",
     text: "Drawings and specs in one drop.",
     // image: "/how-it-works/step-1.avif",
+    tint: "#f3f4f6",
   },
   {
     n: "02",
     title: "Ask anything",
-    text: "Plain language, cited answers.",
+    text: "Plain language, with the sheet cited.",
     // image: "/how-it-works/step-2.avif",
+    tint: "#f3f4f6",
   },
   {
     n: "03",
     title: "Share the answer",
-    text: "Send it with the sheet attached.",
+    text: "Your team opens the exact page, not a PDF to hunt through.",
     // image: "/how-it-works/step-3.avif",
+    tint: "#f3f4f6",
   },
 ];
 
-// The strip under the cards. Only keep the last step as written if your
-// product really has a human approval step.
-const CHAIN = [
-  {
-    title: "Open the sheet",
-    text: "Start from the drawing or spec your team is looking at.",
-  },
-  {
-    title: "Find the evidence",
-    text: "Related clauses, sheets and RFIs, each linked to its page.",
-  },
-  {
-    title: "Review the scope",
-    text: "See what a change touches before anyone prices it.",
-  },
-  {
-    title: "Make the decision",
-    text: "A person approves the outcome and shares it with the sheet attached.",
-  },
-];
+// How much scrolling each step gets on desktop (in screens)
+const SCREENS_PER_STEP = 0.9;
 
 // True from the `md` breakpoint up. Starts false so the server and the
 // first browser render match, then updates.
@@ -98,7 +86,22 @@ function Word({ children, delay = 0 }: { children: React.ReactNode; delay?: numb
   );
 }
 
-function StepImage({ src, y }: { src?: string; y?: MotionValue<string> }) {
+function Heading() {
+  return (
+    <h2 className="font-display text-[44px] font-medium leading-[0.98] tracking-[-0.05em] md:text-[clamp(44px,5vw,76px)]">
+      <span className="block text-neutral-900">
+        <Word>How</Word> <Word delay={0.08}>it</Word> <Word delay={0.16}>works</Word>
+      </span>
+      <span className="block text-neutral-400">
+        <Word delay={0.24}>Upload.</Word> <Word delay={0.32}>Ask.</Word>{" "}
+        <Word delay={0.4}>Share.</Word>
+      </span>
+    </h2>
+  );
+}
+
+// The picture for one step: the real image, or a plain tinted panel with a grid
+function Media({ step }: { step: Step }) {
   const img = useRef<HTMLImageElement>(null);
   const [missing, setMissing] = useState(false);
 
@@ -108,75 +111,119 @@ function StepImage({ src, y }: { src?: string; y?: MotionValue<string> }) {
     if (el && el.complete && el.naturalWidth === 0) setMissing(true);
   }, []);
 
-  const showImage = !!src && !missing;
+  if (step.image && !missing) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        ref={img}
+        src={step.image}
+        alt=""
+        onError={() => setMissing(true)}
+        className="size-full object-cover"
+        draggable={false}
+      />
+    );
+  }
 
+  const line = step.dark ? "rgba(255,255,255,0.07)" : "rgba(15,23,42,0.06)";
   return (
-    <div className="aspect-[3/2] w-full overflow-hidden bg-gradient-to-b from-neutral-100 to-neutral-200">
-      {showImage && (
-        // The image is scaled up a little and slides inside its frame as you
-        // scroll, so it looks like it sits deeper than the card.
-        <motion.div className="size-full" style={{ y, scale: y ? 1.14 : 1 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            ref={img}
-            src={src}
-            alt=""
-            onError={() => setMissing(true)}
-            className="size-full object-cover"
-            draggable={false}
-          />
-        </motion.div>
-      )}
-    </div>
+    <div
+      className="size-full"
+      style={{
+        backgroundColor: step.tint,
+        backgroundImage: `linear-gradient(to right, ${line} 1px, transparent 1px), linear-gradient(to bottom, ${line} 1px, transparent 1px)`,
+        backgroundSize: "28px 28px",
+      }}
+    />
   );
 }
 
-function StepCard({
+/* ------------------------------------------------------------------ */
+/* Desktop: pinned story. Steps on the left, one big stage on the right */
+/* ------------------------------------------------------------------ */
+
+function StepRow({
   step,
-  index,
-  reveal,
-  float,
-  desktop,
-  still,
+  on,
+  onSelect,
 }: {
   step: Step;
-  index: number;
-  reveal: MotionValue<number>; // 0 -> 1 while the cards fan out
-  float: MotionValue<number>; // 0 -> 1 while the row passes through the screen
-  desktop: boolean;
-  still: boolean;
+  on: boolean;
+  onSelect: () => void;
 }) {
-  const side = index === 0 ? -1 : index === 2 ? 1 : 0; // left, middle, right
-  const animated = desktop && !still;
+  return (
+    <li>
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-current={on ? "step" : undefined}
+        className="block w-full text-left"
+      >
+        <div className="flex items-center gap-4">
+          <motion.span
+            animate={{
+              backgroundColor: on ? YELLOW : "#efefef",
+              color: on ? "#000" : "#a3a3a3",
+            }}
+            transition={{ duration: 0.3 }}
+            className="rounded-full px-3 py-1 text-[13px] font-bold tabular-nums"
+          >
+            {step.n}
+          </motion.span>
+          <motion.span
+            animate={{ color: on ? INK : "#c4c4c4", x: on ? 8 : 0 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            className="font-display text-[clamp(1.75rem,2.6vw,2.6rem)] font-medium leading-[1.05] tracking-[-0.04em]"
+          >
+            {step.title}
+          </motion.span>
+        </div>
+        <motion.div
+          initial={false}
+          animate={{ height: on ? "auto" : 0, opacity: on ? 1 : 0 }}
+          transition={{ duration: 0.45, ease: EASE }}
+          className="overflow-hidden"
+        >
+          <p className="max-w-sm pb-1 pl-[3.6rem] pt-3 text-lg text-neutral-500">
+            {step.text}
+          </p>
+        </motion.div>
+      </button>
+    </li>
+  );
+}
 
-  // --- Scroll: the side cards slide out from behind the middle one and
-  // fan inward, then everything drifts at slightly different speeds ---
-  const x = useTransform(reveal, [0, 1], [side === 0 ? "0%" : `${-side * 105}%`, "0%"]);
-  const opacity = useTransform(reveal, side === 0 ? [0, 0.3] : [0.1, 0.5], [0, 1]);
-  const scale = useTransform(reveal, [0, 1], [0.9, 1]);
-  const rotateX = useTransform(reveal, [0, 1], [16, 0]);
-  const revealY = useTransform(reveal, [0, 1], [70, 0]);
-  const floatY = useTransform(float, [0, 1], index === 1 ? [30, -30] : [-18, 18]);
-  const y = useTransform([revealY, floatY], (v: number[]) => v[0] + v[1]);
-  const fan = useTransform(reveal, [0, 1], [0, -side * 7]);
-  const sway = useTransform(float, [0, 1], [5, -5]);
-  const rotateY = useTransform([fan, sway], (v: number[]) => v[0] + v[1]);
-  const imgY = useTransform(float, [0, 1], ["-7%", "7%"]);
+function DesktopStory({ still }: { still: boolean }) {
+  const track = useRef<HTMLElement>(null);
+  const [active, setActive] = useState(0);
 
-  // --- Mouse: the card tilts toward the cursor and catches the light ---
+  const { scrollYProgress } = useScroll({
+    target: track,
+    offset: ["start start", "end end"],
+  });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setActive(Math.max(0, Math.min(STEPS.length - 1, Math.floor(v * STEPS.length))));
+  });
+
+  const fill = useSpring(scrollYProgress, { stiffness: 120, damping: 26 });
+  const scrollTilt = useTransform(scrollYProgress, [0, 1], [-5, 5]);
+  const gridY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+  const mediaY = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
+
+  // Mouse: the stage leans toward the cursor and catches the light
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 200, damping: 20, mass: 0.5 });
-  const sy = useSpring(my, { stiffness: 200, damping: 20, mass: 0.5 });
-  const tiltY = useTransform(sx, [-0.5, 0.5], [-9, 9]);
-  const tiltX = useTransform(sy, [-0.5, 0.5], [9, -9]);
+  const sx = useSpring(mx, { stiffness: 160, damping: 20, mass: 0.6 });
+  const sy = useSpring(my, { stiffness: 160, damping: 20, mass: 0.6 });
+  const rotateY = useTransform([scrollTilt, sx], (v: number[]) => v[0] + v[1] * 10);
+  const rotateX = useTransform(sy, [-0.5, 0.5], [6, -6]);
   const gx = useTransform(sx, [-0.5, 0.5], [0, 100]);
   const gy = useTransform(sy, [-0.5, 0.5], [0, 100]);
-  const glare = useMotionTemplate`radial-gradient(420px circle at ${gx}% ${gy}%, rgba(255,255,255,0.4), rgba(245,201,60,0.18) 40%, transparent 70%)`;
-  const glareOn = useSpring(useMotionValue(0), { stiffness: 160, damping: 22 });
+  const glare = useMotionTemplate`radial-gradient(520px circle at ${gx}% ${gy}%, rgba(255,255,255,0.28), transparent 65%)`;
+  const glareOn = useSpring(useMotionValue(0), { stiffness: 140, damping: 22 });
 
   function onMove(e: React.PointerEvent<HTMLDivElement>) {
-    if (!animated || e.pointerType !== "mouse") return;
+    if (still || e.pointerType !== "mouse") return;
     const r = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
@@ -188,246 +235,156 @@ function StepCard({
     glareOn.set(0);
   }
 
-  // Phones and reduced motion: no 3D, the card just fades up when reached
-  const simple = !desktop && !still;
-
-  return (
-    <motion.div
-      className={`relative ${index === 1 ? "z-10" : "z-0"}`}
-      style={
-        animated
-          ? { x, y, opacity, scale, rotateX, rotateY, transformStyle: "preserve-3d" }
-          : undefined
-      }
-      initial={simple ? { opacity: 0, y: 40 } : undefined}
-      whileInView={simple ? { opacity: 1, y: 0 } : undefined}
-      viewport={simple ? { once: true, margin: "-60px" } : undefined}
-      transition={simple ? { duration: 0.8, ease: EASE } : undefined}
-    >
-      <motion.div
-        className="group relative"
-        style={animated ? { rotateX: tiltX, rotateY: tiltY, transformStyle: "preserve-3d" } : undefined}
-        whileHover={animated ? { scale: 1.025 } : undefined}
-        transition={{ type: "spring", stiffness: 220, damping: 22 }}
-        onPointerMove={onMove}
-        onPointerLeave={onLeave}
-      >
-        <article className="relative overflow-hidden rounded-[32px] border border-neutral-200 bg-white shadow-[0_4px_20px_-8px_rgba(15,23,42,0.15)] transition-[border-color,box-shadow] duration-300 group-hover:border-accent group-hover:shadow-[0_24px_48px_-24px_rgba(15,23,42,0.3)]">
-          <StepImage src={step.image} y={animated ? imgY : undefined} />
-          <div className="px-7 pb-8 pt-7">
-            <h3 className="text-2xl font-medium tracking-tight text-neutral-900">
-              {step.title}
-            </h3>
-            <p className="mt-3 text-lg text-neutral-500">{step.text}</p>
-          </div>
-          {animated && (
-            <motion.div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{ background: glare, opacity: glareOn }}
-            />
-          )}
-        </article>
-
-        {/* The number chip floats in front of the card */}
-        <span
-          aria-hidden
-          className="absolute left-5 top-5 rounded-full bg-accent px-3.5 py-1.5 text-[13px] font-bold text-black shadow-[0_8px_20px_-6px_rgba(15,23,42,0.35)]"
-          style={animated ? { transform: "translateZ(60px)" } : undefined}
-        >
-          {step.n}
-        </span>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// One step in the strip. Its node turns yellow when the line reaches it.
-function ChainItem({
-  item,
-  index,
-  total,
-  progress,
-}: {
-  item: (typeof CHAIN)[number];
-  index: number;
-  total: number;
-  progress: MotionValue<number>;
-}) {
-  const t = index / total + 0.02;
-  const bg = useTransform(progress, [t - 0.04, t], ["#ffffff", "#F5C93C"]);
-  const border = useTransform(progress, [t - 0.04, t], ["#d4d4d4", "#F5C93C"]);
-  const pop = useTransform(progress, [t - 0.04, t, t + 0.06], [1, 1.18, 1]);
-
-  return (
-    <li className="relative pl-14 md:pl-0 md:pt-14">
-      <motion.span
-        aria-hidden
-        style={{ backgroundColor: bg, borderColor: border, scale: pop }}
-        className="absolute left-0 top-0 grid size-10 place-items-center rounded-full border-2 text-[14px] font-bold text-neutral-900"
-      >
-        {index + 1}
-      </motion.span>
-      <div className="h-full rounded-2xl border border-neutral-200 bg-white p-6">
-        <p className="text-[20px] font-medium leading-tight tracking-[-0.02em] text-neutral-900">
-          {item.title}
-        </p>
-        <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">{item.text}</p>
-      </div>
-    </li>
-  );
-}
-
-export default function HowItWorks() {
-  const root = useRef<HTMLElement>(null);
-  const grid = useRef<HTMLDivElement>(null);
-  const chain = useRef<HTMLDivElement>(null);
-  const desktop = useIsDesktop();
-  const still = !!useReducedMotion();
-
-  // Cards fan out as the row scrolls into view (and fold back if you scroll up)
-  const { scrollYProgress: revealRaw } = useScroll({
-    target: grid,
-    offset: ["start 92%", "start 35%"],
-  });
-  const reveal = useSpring(revealRaw, { stiffness: 110, damping: 24, mass: 0.6 });
-
-  // Slow drift while the row passes through the screen
-  const { scrollYProgress: float } = useScroll({
-    target: grid,
-    offset: ["start end", "end start"],
-  });
-
-  // Blueprint grid behind the section moves slower than the page
-  const { scrollYProgress: bgProgress } = useScroll({
-    target: root,
-    offset: ["start end", "end start"],
-  });
-  const gridY = useTransform(bgProgress, [0, 1], [-70, 70]);
-
-  // The yellow line in the strip fills as you scroll past it
-  const { scrollYProgress: chainRaw } = useScroll({
-    target: chain,
-    offset: ["start 80%", "end 55%"],
-  });
-  const chainFill = useSpring(chainRaw, { stiffness: 120, damping: 26 });
-  const full = useMotionValue(1);
-  const progress = still ? full : chainFill;
+  function goTo(i: number) {
+    const el = track.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const range = el.offsetHeight - window.innerHeight;
+    window.scrollTo({
+      top: top + (range * (i + 0.5)) / STEPS.length,
+      behavior: still ? "auto" : "smooth",
+    });
+  }
 
   const gridLines =
     "linear-gradient(to right, rgba(15,23,42,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.06) 1px, transparent 1px)";
-  const fade = "radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 80%)";
+  const fade = "radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 80%)";
 
   return (
     <section
       id="how-it-works"
-      ref={root}
-      className="relative isolate overflow-x-clip bg-background px-6 py-24 lg:px-24 lg:py-32"
+      ref={track}
+      className="relative isolate bg-background"
+      style={{ height: `${100 + STEPS.length * SCREENS_PER_STEP * 100}vh` }}
     >
-      {/* Faint drawing-sheet grid */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <motion.div
-          className="absolute inset-x-0"
-          style={{
-            top: -80,
-            bottom: -80,
-            y: still ? 0 : gridY,
-            backgroundImage: gridLines,
-            backgroundSize: "56px 56px",
-            maskImage: fade,
-            WebkitMaskImage: fade,
-          }}
-        />
-      </div>
-
-      <h2 className="text-center font-display text-[40px] font-medium leading-[0.98] tracking-[-0.05em] md:text-[56px]">
-        <span className="block text-neutral-900">
-          <Word>How</Word> <Word delay={0.08}>it</Word> <Word delay={0.16}>works</Word>
-        </span>
-        <span className="block text-neutral-400">
-          <Word delay={0.24}>Upload.</Word> <Word delay={0.32}>Ask.</Word>{" "}
-          <span className="relative inline-block">
-            <Word delay={0.4}>
-              <span className="text-neutral-900">Share.</span>
-            </Word>
-            {/* yellow highlighter drawn under the last word */}
-            <motion.span
-              aria-hidden
-              className="absolute inset-x-0 bottom-[0.06em] -z-10 h-[0.22em] origin-left bg-accent"
-              initial={still ? false : { scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.9 }}
-            />
-          </span>
-        </span>
-      </h2>
-
-      <div
-        ref={grid}
-        className="mt-14 grid grid-cols-1 gap-[18px] md:grid-cols-3"
-        style={{ perspective: desktop ? 1400 : undefined }}
-      >
-        {STEPS.map((step, i) => (
-          <StepCard
-            // remount when switching between phone and desktop mode
-            key={`${step.n}-${desktop}`}
-            step={step}
-            index={i}
-            reveal={reveal}
-            float={float}
-            desktop={desktop}
-            still={still}
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden px-12 lg:px-24">
+        {/* Faint drawing-sheet grid, drifting slower than the page */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+          <motion.div
+            className="absolute inset-x-0"
+            style={{
+              top: -80,
+              bottom: -80,
+              y: still ? 0 : gridY,
+              backgroundImage: gridLines,
+              backgroundSize: "56px 56px",
+              maskImage: fade,
+              WebkitMaskImage: fade,
+            }}
           />
-        ))}
-      </div>
-
-      {/* From question to decision */}
-      <div ref={chain} className="mx-auto mt-24 max-w-[1200px] lg:mt-32">
-        <div className="text-center">
-          <h3 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-medium leading-[1.05] tracking-[-0.04em] text-neutral-900">
-            From question to decision
-          </h3>
-          <p className="mt-3 text-lg text-neutral-500">
-            Every answer stays tied to the sheet it came from.
-          </p>
         </div>
 
-        <div className="relative mt-12">
-          {/* phones: line runs down the left */}
-          <div
-            aria-hidden
-            className="absolute bottom-5 left-[19px] top-5 w-[2px] bg-neutral-200 md:hidden"
-          >
-            <motion.div
-              className="size-full bg-accent"
-              style={{ scaleY: progress, originY: 0 }}
-            />
-          </div>
-          {/* tablets and up: line runs across the top */}
-          <div
-            aria-hidden
-            className="absolute left-5 right-5 top-[19px] hidden h-[2px] bg-neutral-200 md:block"
-          >
-            <motion.div
-              className="size-full bg-accent"
-              style={{ scaleX: progress, originX: 0 }}
-            />
+        <div className="mx-auto grid w-full max-w-[1400px] grid-cols-12 items-center gap-12">
+          {/* Left: heading + the three steps, with a line that fills as you scroll */}
+          <div className="col-span-5">
+            <Heading />
+            <div className="relative mt-14 pl-8">
+              <div
+                aria-hidden
+                className="absolute bottom-2 left-0 top-2 w-[2px] bg-neutral-200"
+              >
+                <motion.div
+                  className="size-full bg-accent"
+                  style={{ scaleY: still ? 1 : fill, originY: 0 }}
+                />
+              </div>
+              <ol className="space-y-6">
+                {STEPS.map((step, i) => (
+                  <StepRow
+                    key={step.n}
+                    step={step}
+                    on={i === active}
+                    onSelect={() => goTo(i)}
+                  />
+                ))}
+              </ol>
+            </div>
           </div>
 
-          <ol className="relative grid gap-6 md:grid-cols-4 md:gap-5">
-            {CHAIN.map((item, i) => (
-              <ChainItem
-                key={item.title}
-                item={item}
-                index={i}
-                total={CHAIN.length}
-                progress={progress}
-              />
-            ))}
-          </ol>
+          {/* Right: one big stage. Each step's picture wipes up over the last. */}
+          <div className="col-span-7" style={{ perspective: 1400 }}>
+            <motion.div
+              onPointerMove={onMove}
+              onPointerLeave={onLeave}
+              style={still ? undefined : { rotateX, rotateY }}
+              className="relative aspect-[5/4] max-h-[78vh] w-full overflow-hidden rounded-[36px] border border-neutral-200 bg-[#f3f4f6] shadow-[0_40px_70px_-40px_rgba(15,23,42,0.35)]"
+            >
+              {STEPS.map((step, i) => (
+                <motion.div
+                  key={step.n}
+                  className="absolute inset-0"
+                  style={{ zIndex: i }}
+                  initial={false}
+                  animate={{
+                    clipPath: active >= i ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
+                  }}
+                  transition={{ duration: still ? 0 : 0.9, ease: EASE }}
+                >
+                  <motion.div
+                    className="size-full"
+                    style={{ y: still ? 0 : mediaY }}
+                    initial={false}
+                    animate={{ scale: still ? 1.1 : active === i ? 1.1 : 1.25 }}
+                    transition={{ duration: 1.4, ease: EASE }}
+                  >
+                    <Media step={step} />
+                  </motion.div>
+                </motion.div>
+              ))}
+              {!still && (
+                <motion.div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                  style={{ zIndex: 10, background: glare, opacity: glareOn }}
+                />
+              )}
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
   );
+}
+
+/* ------------------------------------------------------------------ */
+/* Phones: plain stack, each step fades up when reached                */
+/* ------------------------------------------------------------------ */
+
+function MobileStack({ still }: { still: boolean }) {
+  return (
+    <section id="how-it-works" className="relative bg-background px-6 py-24">
+      <Heading />
+      <ol className="mt-12 space-y-14">
+        {STEPS.map((step) => (
+          <motion.li
+            key={step.n}
+            initial={still ? false : { opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: EASE }}
+          >
+            <motion.div
+              className="aspect-[3/2] overflow-hidden rounded-[28px] border border-neutral-200"
+              initial={still ? false : { clipPath: "inset(100% 0% 0% 0%)" }}
+              whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.9, ease: EASE }}
+            >
+              <Media step={step} />
+            </motion.div>
+            <h3 className="mt-6 font-display text-3xl font-medium tracking-[-0.03em] text-neutral-900">
+              {step.title}
+            </h3>
+            <p className="mt-2 text-lg text-neutral-500">{step.text}</p>
+          </motion.li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+export default function HowItWorks() {
+  const desktop = useIsDesktop();
+  const still = !!useReducedMotion();
+  return desktop ? <DesktopStory still={still} /> : <MobileStack still={still} />;
 }

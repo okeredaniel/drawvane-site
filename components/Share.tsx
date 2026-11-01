@@ -209,14 +209,7 @@ export default function Share() {
               </div>
             </div>
 
-            {/* the source the answer came from */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute left-6 top-6 flex items-center gap-2 rounded-full border border-neutral-200 bg-white/90 px-3.5 py-1.5 text-sm font-medium text-neutral-700 shadow-[0_10px_24px_-10px_rgba(15,23,42,0.35)] backdrop-blur [transform:translate3d(calc(var(--px,0)*-14px),calc(var(--py,0)*-10px),60px)]"
-            >
-              <span className="size-2 rounded-full bg-accent" />
-              {SOURCE_CHIP}
-            </span>
+
 
             {/* share sheet: floats over the image on desktop, sits under it on phones */}
             <div className="relative mt-2 rounded-2xl border border-neutral-200 bg-white p-5 shadow-[0_24px_50px_-20px_rgba(15,23,42,0.35)] md:absolute md:-bottom-10 md:right-8 md:mt-0 md:w-[360px] md:[transform:translate3d(calc(var(--px,0)*-20px),calc(var(--py,0)*-14px),100px)]">
@@ -248,22 +241,6 @@ export default function Share() {
                 </button>
               </div>
 
-              <div className="mt-4 flex items-center justify-between gap-3">
-                <div className="flex items-center">
-                  {PEOPLE.map((p, i) => (
-                    <span
-                      key={p}
-                      style={{ zIndex: PEOPLE.length - i }}
-                      className={`grid size-8 place-items-center rounded-full border-2 border-white bg-neutral-200 text-[11px] font-semibold text-neutral-700 ${
-                        i > 0 ? "-ml-2" : ""
-                      }`}
-                    >
-                      {p}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-[14px] text-neutral-500">Shared with 4 people</p>
-              </div>
             </div>
 
             {/* moving light */}
