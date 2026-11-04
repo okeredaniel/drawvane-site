@@ -24,8 +24,8 @@ const mono = {
 type AuthorKey = "daniel" | "maya";
 
 const AUTHORS: Record<AuthorKey, { name: string; role: string; avatar: string }> = {
-  daniel: { name: "Daniel Mercer", role: "Founder & CEO", avatar: "" },
-  maya: { name: "Maya Chen", role: "Head of Product", avatar: "" },
+  daniel: { name: "Daniel Mercer", role: "Founder & CEO", avatar: "/journal/daniel-mercer.avif" },
+  maya: { name: "Maya Chen", role: "Head of Product", avatar: "/journal/maya-chen.avif" },
 };
 
 type Post = {
@@ -46,7 +46,7 @@ const FEATURED: Post = {
     "Meet the connected planning workspace that turns goals, context, and team decisions into clear, actionable plans.",
   date: "Oct 7, 2026",
   author: "daniel",
-  image: "",
+  image: "/journal/announcing-stratora-1-0.avif",
   href: "/team-alignment",
 };
 
@@ -58,7 +58,7 @@ const POSTS: Post[] = [
       "Use AI to build a strong first draft while your team keeps ownership of estimates, tradeoffs, and final calls.",
     date: "Oct 7, 2026",
     author: "maya",
-    image: "",
+    image: "/journal/ai-planning-human-decisions.avif",
     href: "#",
   },
   {
@@ -68,7 +68,7 @@ const POSTS: Post[] = [
       "Turn product strategy into clear outcomes, milestones, and the next actions your team can start this week.",
     date: "Oct 7, 2026",
     author: "maya",
-    image: "",
+    image: "/journal/strategy-into-weekly-work.avif",
     href: "#",
   },
   {
@@ -78,7 +78,7 @@ const POSTS: Post[] = [
       "Replace status-heavy meetings with focused reviews that surface changes, blockers, owners, and next steps.",
     date: "Oct 7, 2026",
     author: "maya",
-    image: "",
+    image: "/journal/reviews-that-end-in-decisions.avif",
     href: "#",
   },
   {
@@ -88,7 +88,7 @@ const POSTS: Post[] = [
       "Make cross-team dependencies visible early enough to clarify ownership, adjust timing, and prevent blockers.",
     date: "Oct 7, 2026",
     author: "daniel",
-    image: "",
+    image: "/journal/spot-dependencies-earlier.avif",
     href: "#",
   },
   {
@@ -98,7 +98,7 @@ const POSTS: Post[] = [
       "Keep the problem, evidence, scope, and key decisions connected as an initiative moves from planning to delivery.",
     date: "Oct 7, 2026",
     author: "maya",
-    image: "",
+    image: "/journal/briefs-that-stay-useful.avif",
     href: "#",
   },
   {
@@ -108,7 +108,7 @@ const POSTS: Post[] = [
       "Create a clear path from customer feedback to product decisions without treating every request as a promise.",
     date: "Oct 7, 2026",
     author: "maya",
-    image: "",
+    image: "/journal/requests-arent-commitments.avif",
     href: "#",
   },
   {
@@ -118,7 +118,7 @@ const POSTS: Post[] = [
       "Prepare owners, dependencies, communication, and fallback decisions before release week becomes urgent.",
     date: "Oct 7, 2026",
     author: "daniel",
-    image: "",
+    image: "/journal/launch-with-less-chaos.avif",
     href: "#",
   },
   {
@@ -128,7 +128,7 @@ const POSTS: Post[] = [
       "Preserve the reasoning behind priorities and tradeoffs so growing teams can act without repeated alignment.",
     date: "Oct 7, 2026",
     author: "daniel",
-    image: "",
+    image: "/journal/keep-decision-context.avif",
     href: "#",
   },
 ];
@@ -169,7 +169,7 @@ function PostImage({
       <span className="rounded-lg border-2 border-dashed border-[#1f3dff]/30 px-3 py-2">
         Add image
         <br />
-        public/journal/{post.slug}.jpg
+        public/journal/{post.slug}.avif
       </span>
     </div>
   );
@@ -371,7 +371,7 @@ export default function Journal() {
           {POSTS.map((p, i) => (
             <Link
               key={p.slug}
-              href={p.href}
+              href={`/journal/${p.slug}`}
               className="jr-card group flex flex-col overflow-hidden rounded-[20px] bg-[#fbfcff] will-change-transform"
               onMouseEnter={(e) => hover(e, true, true)}
               onMouseLeave={(e) => hover(e, false, true)}

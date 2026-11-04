@@ -9,7 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FEATURED_IMAGE = "";
+const FEATURED_IMAGE = "/case-studies/northway.avif";
 
 const BLUE = "#1f3dff";
 const mono = {
@@ -200,7 +200,7 @@ const FEATURED = {
     { n: 12, suffix: "h", label: "Hours saved" },
     { n: 42, suffix: "", label: "Team size" },
   ],
-  href: "#",
+  href: "/case-studies/northway",
 };
 
 function CountUp({ n, suffix }: { n: number; suffix: string }) {
@@ -419,8 +419,9 @@ export default function CaseStudies() {
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2">
           {STORIES.map(({ name, text, n, suffix, label, Icon }) => (
-            <article
+            <Link
               key={name}
+              href={`/case-studies/${name.toLowerCase().replace(/\s+/g, "-")}`}
               className="cs-card flex min-h-[192px] flex-col justify-between rounded-2xl border border-transparent bg-[#fbfcff] p-4 transition-colors duration-300 hover:border-[#b9bfd6] will-change-transform"
               onMouseEnter={(e) => hover(e, true)}
               onMouseLeave={(e) => hover(e, false)}
@@ -437,7 +438,7 @@ export default function CaseStudies() {
                 </div>
                 <div className="mt-1 text-[12px] uppercase text-[#2b2d3a]">{label}</div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>

@@ -14,29 +14,29 @@ gsap.registerPlugin(ScrollTrigger);
 /* Save pictures in public/about/ and put each path below              */
 /* (e.g. "/about/story.jpg"). Empty = shows a placeholder.             */
 /* ------------------------------------------------------------------ */
-const STORY_BG = "/about/story.avif"; 
+const STORY_BG = "/about/story.avif";
 
 const PEOPLE = [
   {
     name: "Daniel Mercer",
     role: "Founder & CEO",
-    avatar: "",
+    avatar: "/about/daniel-mercer.jpg",
     text: "Product builder focused on turning complex ideas into clear plans, bringing strategy, priorities and execution together in one connected workspace.",
   },
   {
     name: "Maya Chen",
     role: "Head of Product",
-    avatar: "",
+    avatar: "/about/maya-chen.jpg",
     text: "Product leader focused on turning complex ideas into clear plans, bringing strategy, priorities and execution together in one connected workspace.",
   },
 ];
 
 const INVESTORS = [
-  { name: "Maya Ellis", photo: "" },
-  { name: "Adrian Cole", photo: "" },
-  { name: "Julian Brooks", photo: "" },
-  { name: "Nina Patel", photo: "" },
-  { name: "Elena Ross", photo: "" },
+  { name: "Maya Ellis", photo: "/about/investor-1.avif" },
+  { name: "Adrian Cole", photo: "/about/investor-2.avif" },
+  { name: "Julian Brooks", photo: "/about/investor-3.avif" },
+  { name: "Nina Patel", photo: "/about/investor-4.avif" },
+  { name: "Elena Ross", photo: "/about/investor-5.avif" },
 ];
 
 const BLUE = "#1f3dff";

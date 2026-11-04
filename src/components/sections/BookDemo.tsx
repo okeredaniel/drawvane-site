@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import Cal, { getCalApi } from "@calcom/embed-react";
 
 /* ------------------------------------------------------------------ */
 /* SETUP: things only you can fill in                                  */
@@ -18,14 +19,14 @@ const FORM_ENDPOINT = "";
 
 // 2. Your booking link for the "Book a call" tab (Calendly, Cal.com, ...).
 //    Empty = shows a placeholder.
-const CALENDAR_URL = "";
+const CAL_LINK = "daniel-okere-u2qfgp/15min";
 
 // 3. The picture behind the form card (the blue-tinted photo in the reference).
 //    It's a normal image that fills the whole card and is cropped to fit, with
 //    the white form sitting on top of it. Save it in public/contact/ and paste
 //    the path, e.g. "/contact/form-image.jpg". Any size works; a tall or square
 //    picture shows best because the card is taller than it is wide.
-const FORM_IMAGE = "";
+const FORM_IMAGE = "/contact/form-image.avif";
 
 // 4. Privacy policy page the checkbox text links to.
 const PRIVACY_HREF = "/privacy";
@@ -226,6 +227,16 @@ export default function BookDemo() {
       }
     });
   };
+
+  useEffect(() => {
+    if (tab !== "call") return;
+    getCalApi().then((cal) => {
+      cal("ui", {
+        theme: "light",
+        styles: { branding: { brandColor: "#1f3dff" } },
+      });
+    });
+  }, [tab]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -597,24 +608,11 @@ export default function BookDemo() {
                 ) : (
                   /* ---- book a call ---- */
                   <div className="min-h-[620px]">
-                    {CALENDAR_URL ? (
-                      <iframe
-                        src={CALENDAR_URL}
-                        title="Book a call with the Stratora team"
-                        className="h-[620px] w-full rounded-xl border-0"
-                      />
-                    ) : (
-                      <div
-                        className="flex h-[620px] flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-[#1f3dff]/30 p-6 text-center text-[12px] uppercase text-[#1f3dff]/80"
-                        style={mono}
-                      >
-                        Add your booking link
-                        <span className="max-w-[320px] normal-case tracking-normal text-[#55576a]">
-                          Paste your Calendly or Cal.com link into CALENDAR_URL at the top of BookDemo.tsx and it
-                          shows up here.
-                        </span>
-                      </div>
-                    )}
+                    <Cal
+                      calLink={CAL_LINK}
+                      style={{ width: "100%", height: "620px", overflow: "auto" }}
+                      config={{ layout: "month_view", theme: "light" }}
+                    />
                   </div>
                 )}
               </div>

@@ -16,8 +16,8 @@ gsap.registerPlugin(ScrollTrigger);
 const IMAGES = {
   notebook: "/contact/notebook.avif",
   texture: "/contact/texture.avif",
-  phoneLeft: "/contact/phone-left.avif",
-  phoneRight: "/contact/phone-right.avif",
+  phoneLeft: "/contact/phone-left.png",
+  phoneRight: "/contact/phone-right.png",
 };
 
 const BLUE = "#1f3dff";
@@ -247,7 +247,7 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
             Contact us
           </div>
 
-          <h2 className="mt-4 max-w-[480px] text-[38px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-[40px]">
+          <h2 className="mt-4 max-w-[500px] text-[38px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-[40px]">
             {headline.map((w, i) => (
               <span key={i} className="inline-block overflow-hidden pb-1 align-top">
                 <span className="ct-word inline-block">{w}</span>
@@ -263,21 +263,21 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
 
           <div className="ct-phones mt-[70px] flex h-[340px] items-start justify-center gap-6 overflow-hidden">
             <div className="ct-phone">
-              <div className="ct-float relative h-[420px] w-[170px] overflow-hidden rounded-t-[22px] rounded-b-[30px]">
+              <div className="ct-float relative h-[420px] w-[170px] overflow-hidden">
                 <ImageSlot
                   src={IMAGES.phoneLeft}
                   alt="Stratora app, yearly chart"
-                  label="public/contact/phone-left.avif"
+                  label="public/contact/phone-left.png"
                   fit="object-contain object-center"
                 />
               </div>
             </div>
             <div className="ct-phone">
-              <div className="ct-float relative h-[420px] w-[135px] overflow-hidden rounded-t-[20px] rounded-b-[28px]">
+              <div className="ct-float relative h-[420px] w-[135px] overflow-hidden">
                 <ImageSlot
                   src={IMAGES.phoneRight}
                   alt="Stratora app, board"
-                  label="public/contact/phone-right.avif"
+                  label="public/contact/phone-right.png"
                   fit="object-contain object-center"
                 />
               </div>
