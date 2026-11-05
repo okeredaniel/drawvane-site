@@ -20,7 +20,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, DrawSVGPlugin);
 
 const MotionLink = motion.create(Link);
 
-const BLUE = "#2f4dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const TRACK = "#c9cfe0";
 
 /* ------------------------------------------------------------------ */
@@ -104,7 +105,7 @@ const ROWS: Row[] = [
 const iconProps = {
   viewBox: "0 0 24 24",
   fill: "none",
-  stroke: "white",
+  stroke: "#0b0b12",
   strokeWidth: 1.8,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
@@ -149,9 +150,9 @@ function StatIcon({ id }: { id: string }) {
 
 function CheckIcon() {
   return (
-    <svg viewBox="0 0 20 20" className="size-5 shrink-0" fill="none" stroke={BLUE} strokeWidth="1.5" aria-hidden>
+    <svg viewBox="0 0 20 20" className="size-5 shrink-0" fill="none" stroke={ACCENT_INK} strokeWidth="1.5" aria-hidden>
       <circle
-        className="chk-circle transition-colors duration-300 group-hover/li:fill-[#2f4dff]"
+        className="chk-circle transition-colors duration-300 group-hover/li:fill-[#ffc800]"
         cx="10"
         cy="10"
         r="8.5"
@@ -187,7 +188,7 @@ function ImageSlot({ src, name, alt }: { src?: string; name: string; alt: string
       data-image-slot={name}
       className="media relative flex h-full w-full items-end bg-[linear-gradient(160deg,#8fb0fb_0%,#5f86f6_50%,#3a5df0_100%)] p-5 will-change-transform"
     >
-      <span className="rounded-md bg-white/20 px-2 py-1 font-mono text-[11px] uppercase tracking-wide text-white/90 backdrop-blur">
+      <span className="rounded-md bg-white/20 px-2 py-1 font-mono text-[11px] uppercase tracking-wide text-[#0b0b12]/90 backdrop-blur">
         Image: {name}
       </span>
     </div>
@@ -404,15 +405,15 @@ export default function Features() {
       ref={rootRef}
       id="features"
       style={{ colorScheme: "light" }}
-      className="scroll-mt-20 overflow-x-clip bg-[#eef0f5] px-3 py-16 text-[#0b0d1a] md:px-5 md:py-28"
+      className="scroll-mt-20 overflow-x-clip bg-[#f5f4ef] px-3 py-16 text-[#0b0d1a] md:px-5 md:py-28"
     >
       <div className="mx-auto max-w-[1280px]">
         {/* Heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <div className="eyebrow mb-6 inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-wide text-[#2f4dff]">
+          <div className="eyebrow mb-6 inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-wide text-[#755b00]">
             <span className="relative flex size-3 items-center justify-center">
-              <span className="absolute inline-flex size-full animate-ping rounded-full border border-[#2f4dff] opacity-50" />
-              <span className="relative inline-flex size-3 rounded-full border-2 border-[#2f4dff]" />
+              <span className="absolute inline-flex size-full animate-ping rounded-full border border-[#ffc800] opacity-50" />
+              <span className="relative inline-flex size-3 rounded-full border-2 border-[#ffc800]" />
             </span>
             {TAG}
           </div>
@@ -433,7 +434,7 @@ export default function Features() {
                 transition={{ type: "spring", stiffness: 300, damping: 18 }}
                 className="flex items-center gap-4"
               >
-                <span className="stat-ic flex size-10 shrink-0 items-center justify-center rounded-full bg-[#1f3cff] shadow-[0_8px_20px_-8px_rgba(31,60,255,0.7)]">
+                <span className="stat-ic flex size-10 shrink-0 items-center justify-center rounded-full bg-[#ffc800] shadow-[0_8px_20px_-8px_rgba(96,74,0,0.7)]">
                   <StatIcon id={s.id} />
                 </span>
                 <span className="text-[16px]">
@@ -465,7 +466,7 @@ export default function Features() {
                 <motion.span
                   key={r.imageName}
                   initial={false}
-                  animate={{ height: j === active ? 28 : 12, backgroundColor: j === active ? BLUE : TRACK }}
+                  animate={{ height: j === active ? 28 : 12, backgroundColor: j === active ? ACCENT : TRACK }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className="block w-0.5 rounded"
                   style={{ height: 12, backgroundColor: TRACK }}
@@ -494,7 +495,7 @@ export default function Features() {
                   <p className="row-text mt-4 max-w-[52ch] text-[15px] leading-relaxed text-[#555a6e]">{row.text}</p>
 
                   <div className="panel mt-8 overflow-hidden rounded-2xl bg-[#f8f9fc]">
-                    <ul className="rounded-2xl bg-[#e8ebf4] px-4">
+                    <ul className="rounded-2xl bg-[#ecebe5] px-4">
                       {row.bullets.map((b, j) => (
                         <motion.li
                           key={b}
@@ -518,9 +519,9 @@ export default function Features() {
                           whileHover={{ scale: 1.06 }}
                           whileTap={{ scale: 0.95 }}
                           transition={{ type: "spring", stiffness: 400, damping: 18 }}
-                          className="group inline-flex items-center gap-2 rounded-full bg-[#1f3cff] px-5 py-3 font-mono text-[13px] font-medium uppercase tracking-wide text-white shadow-[0_10px_24px_-10px_rgba(31,60,255,0.7)]"
+                          className="group inline-flex items-center gap-2 rounded-full bg-[#ffc800] px-5 py-3 font-mono text-[13px] font-medium uppercase tracking-wide text-[#0b0b12] shadow-[0_10px_24px_-10px_rgba(96,74,0,0.7)]"
                         >
-                          <span className="size-2.5 rounded-full border-2 border-white/90 transition-colors duration-300 group-hover:bg-white" />
+                          <span className="size-2.5 rounded-full border-2 border-[#0b0b12]/80 transition-colors duration-300 group-hover:bg-[#0b0b12]" />
                           Book a demo
                         </MotionLink>
                       </div>
@@ -530,7 +531,7 @@ export default function Features() {
                           whileHover={{ scale: 1.06 }}
                           whileTap={{ scale: 0.95 }}
                           transition={{ type: "spring", stiffness: 400, damping: 18 }}
-                          className="group inline-flex items-center gap-2 rounded-full bg-[#e8ebf4] px-5 py-3 font-mono text-[13px] font-medium uppercase tracking-wide text-[#3a3f52]"
+                          className="group inline-flex items-center gap-2 rounded-full bg-[#ecebe5] px-5 py-3 font-mono text-[13px] font-medium uppercase tracking-wide text-[#3a3f52]"
                         >
                           <span className="size-2.5 rounded-full border-2 border-[#8a8fa3] transition-colors duration-300 group-hover:bg-[#3a3f52]" />
                           Pricing

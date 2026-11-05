@@ -10,7 +10,8 @@ import ContactUs from "@/components/sections/ContactUs";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const mono = {
   fontFamily: 'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 };
@@ -23,7 +24,7 @@ const svgProps = {
   "aria-hidden": true,
 } as const;
 
-const PAPER = "#fbfcff";
+const PAPER = "#fdfcf8";
 
 function Snowflake() {
   return (
@@ -209,10 +210,10 @@ function Words({ text, cls }: { text: string; cls: string }) {
 function ImagePlaceholder({ file }: { file: string }) {
   return (
     <div
-      className="absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#1f3dff]/70"
-      style={{ ...mono, background: "linear-gradient(135deg,#e3e9ff 0%,#c3d0ff 55%,#a9bbff 100%)" }}
+      className="absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#755b00]/70"
+      style={{ ...mono, background: "linear-gradient(135deg,#fff6d6 0%,#ffe799 55%,#ffda57 100%)" }}
     >
-      <span className="rounded-lg border-2 border-dashed border-[#1f3dff]/30 px-4 py-3">
+      <span className="rounded-lg border-2 border-dashed border-[#ffc800]/30 px-4 py-3">
         Add image
         <br />
         public{file}
@@ -378,7 +379,7 @@ export default function OvoStudioCaseStudyPage() {
       <main
         ref={root}
         style={{ colorScheme: "light" }}
-        className="overflow-x-clip bg-[#eef0f5] px-6 pb-24 pt-28 text-[#0b0b12] md:pt-32"
+        className="overflow-x-clip bg-[#f5f4ef] px-6 pb-24 pt-28 text-[#0b0b12] md:pt-32"
       >
         <div className="mx-auto max-w-[1280px]">
           <header>
@@ -413,7 +414,7 @@ export default function OvoStudioCaseStudyPage() {
             </div>
           </div>
 
-          <div className="cs-stats relative mt-12 overflow-hidden rounded-2xl bg-[#2a45ff] px-8 py-9 text-white md:px-12">
+          <div className="cs-stats relative mt-12 overflow-hidden rounded-2xl bg-[#ffc800] px-8 py-9 text-[#0b0b12] md:px-12">
             <div aria-hidden className="cs-stats-bg absolute -inset-x-[6%] inset-y-0">
               {STORY.heroImage && (
                 <Image
@@ -441,26 +442,26 @@ export default function OvoStudioCaseStudyPage() {
             <aside className="cs-side self-start rounded-2xl border border-black/10 p-4 lg:sticky lg:top-28">
               <dl className="space-y-4 text-[13px]">
                 <div>
-                  <dt className="text-[11px] uppercase" style={{ ...mono, color: BLUE }}>
+                  <dt className="text-[11px] uppercase" style={{ ...mono, color: ACCENT_INK }}>
                     Industry
                   </dt>
                   <dd className="mt-1.5">{STORY.meta.industry}</dd>
                 </div>
                 <div>
-                  <dt className="text-[11px] uppercase" style={{ ...mono, color: BLUE }}>
+                  <dt className="text-[11px] uppercase" style={{ ...mono, color: ACCENT_INK }}>
                     Use case
                   </dt>
                   <dd className="mt-1.5 leading-snug">{STORY.meta.useCase}</dd>
                 </div>
                 <div>
-                  <dt className="text-[11px] uppercase" style={{ ...mono, color: BLUE }}>
+                  <dt className="text-[11px] uppercase" style={{ ...mono, color: ACCENT_INK }}>
                     Client
                   </dt>
                   <dd className="mt-1.5">{STORY.meta.client}</dd>
                 </div>
               </dl>
 
-              <div className="mt-5 text-[11px] uppercase" style={{ ...mono, color: BLUE }}>
+              <div className="mt-5 text-[11px] uppercase" style={{ ...mono, color: ACCENT_INK }}>
                 In this story
               </div>
               <ul className="relative mt-2.5 hidden lg:block">
@@ -468,7 +469,7 @@ export default function OvoStudioCaseStudyPage() {
                   ref={barRef}
                   aria-hidden
                   className="absolute left-0 top-0 w-[2px] rounded-full opacity-0"
-                  style={{ backgroundColor: BLUE, height: 20 }}
+                  style={{ backgroundColor: ACCENT, height: 20 }}
                 />
                 {STORY.sections.map((s) => (
                   <li
@@ -500,7 +501,7 @@ export default function OvoStudioCaseStudyPage() {
                   <Words text={STORY.quote.text} cls="cs-qword" />
                 </blockquote>
                 <figcaption className="cs-quote-who mt-6 flex items-center gap-3">
-                  <span className="relative size-9 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-[#8fb0fb] to-[#1f3dff]">
+                  <span className="relative size-9 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-[#ffe799] to-[#ffc800]">
                     {STORY.quote.avatar ? (
                       <Image src={STORY.quote.avatar} alt={STORY.quote.name} fill sizes="36px" className="object-cover" />
                     ) : (
@@ -532,7 +533,7 @@ export default function OvoStudioCaseStudyPage() {
                         {s.cards.map((c) => (
                           <div
                             key={c.title}
-                            className="cs-sol-card rounded-xl bg-[#fbfcff] p-4 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_-18px_rgba(31,61,255,0.35)]"
+                            className="cs-sol-card rounded-xl bg-[#fdfcf8] p-4 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_-18px_rgba(96,74,0,0.35)]"
                           >
                             <h3 className="text-[15px] font-medium">{c.title}</h3>
                             <p className="mt-4 text-[13px] leading-[1.35] text-[#4a4c5c]">{c.text}</p>
@@ -549,11 +550,11 @@ export default function OvoStudioCaseStudyPage() {
           <section className="mt-28">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
-                <div className="cs-reveal flex items-center gap-2 text-[12px] uppercase" style={{ ...mono, color: BLUE }}>
+                <div className="cs-reveal flex items-center gap-2 text-[12px] uppercase" style={{ ...mono, color: ACCENT_INK }}>
                   <span
                     aria-hidden
                     className="inline-block h-[8px] w-[8px] rounded-full border-2"
-                    style={{ borderColor: BLUE }}
+                    style={{ borderColor: ACCENT }}
                   />
                   Related stories
                 </div>
@@ -564,8 +565,8 @@ export default function OvoStudioCaseStudyPage() {
 
               <Link
                 href="/case-studies"
-                style={{ ...mono, backgroundColor: BLUE }}
-                className="cs-reveal group/btn relative inline-flex h-[40px] items-center gap-2 overflow-hidden rounded-full px-5 text-[12px] font-semibold uppercase tracking-wide text-white"
+                style={{ ...mono, backgroundColor: ACCENT }}
+                className="cs-reveal group/btn relative inline-flex h-[40px] items-center gap-2 overflow-hidden rounded-full px-5 text-[12px] font-semibold uppercase tracking-wide text-[#0b0b12] hover:text-white"
               >
                 <span
                   aria-hidden
@@ -584,7 +585,7 @@ export default function OvoStudioCaseStudyPage() {
                 <Link
                   key={slug}
                   href={`/case-studies/${slug}`}
-                  className="cs-rel group/card flex min-h-[240px] flex-col justify-between rounded-2xl border border-transparent bg-[#fbfcff] p-4 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1.5 hover:border-[#b9bfd6] hover:shadow-[0_20px_40px_-22px_rgba(31,61,255,0.35)]"
+                  className="cs-rel group/card flex min-h-[240px] flex-col justify-between rounded-2xl border border-transparent bg-[#fdfcf8] p-4 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1.5 hover:border-[#b9bfd6] hover:shadow-[0_20px_40px_-22px_rgba(96,74,0,0.35)]"
                 >
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="flex items-center gap-2">
@@ -612,3 +613,4 @@ export default function OvoStudioCaseStudyPage() {
     </>
   );
 }
+

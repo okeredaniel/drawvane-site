@@ -20,7 +20,7 @@ const IMAGES = {
   phoneRight: "/contact/phone-right.png",
 };
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -97,7 +97,7 @@ function Btn({
       onMouseLeave={leave}
       style={mono}
       className={`ct-btn group relative flex h-[38px] items-center justify-center gap-2 overflow-hidden rounded-full px-5 text-[13px] font-semibold uppercase tracking-wide ${
-        white ? "bg-white text-[#0b0b12]" : "border border-white/30 text-white"
+        white ? "bg-white text-[#0b0b12]" : "border border-black/30 text-[#0b0b12]"
       }`}
     >
       <span
@@ -108,12 +108,12 @@ function Btn({
       <span
         aria-hidden
         className={`relative inline-block h-[8px] w-[8px] rounded-full border-2 transition-transform duration-300 group-hover:scale-125 ${
-          white ? "border-[#b9bccb] group-hover:border-white" : "border-white/70 group-hover:border-[#1f3dff]"
+          white ? "border-[#b9bccb] group-hover:border-white" : "border-[#0b0b12]/70 group-hover:border-[#0b0b12]"
         }`}
       />
       <span
         className={`relative transition-colors duration-300 ${
-          white ? "group-hover:text-white" : "group-hover:text-[#1f3dff]"
+          white ? "group-hover:text-white" : "group-hover:text-[#0b0b12]"
         }`}
       >
         {label}
@@ -121,7 +121,7 @@ function Btn({
       <span
         aria-hidden
         className={`relative -ml-1 w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-0 group-hover:w-4 group-hover:translate-x-0 group-hover:opacity-100 ${
-          white ? "group-hover:text-white" : "group-hover:text-[#1f3dff]"
+          white ? "group-hover:text-white" : "group-hover:text-[#0b0b12]"
         }`}
       >
         →
@@ -130,7 +130,7 @@ function Btn({
   );
 }
 
-/** `peek` shows the notebook strip above the blue. Pass peek={false} on pages where the blue follows other content. */
+/** `peek` shows the notebook strip above the yellow section. Pass peek={false} on pages where the yellow section follows other content. */
 export default function ContactUs({ peek = true }: { peek?: boolean }) {
   const root = useRef<HTMLElement>(null);
 
@@ -192,11 +192,11 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
     <section
       id="contact-us"
       ref={root}
-      className={`relative overflow-hidden ${peek ? "bg-[#eef0f5]" : ""}`}
+      className={`relative overflow-hidden ${peek ? "bg-[#f5f4ef]" : ""}`}
     >
       {peek && (
         <div className="flex h-[220px] items-end justify-center overflow-hidden px-6 md:h-[240px]">
-          <div className="ct-notebook relative h-[220px] w-full max-w-[720px] text-[#1f3dff] md:h-[240px]">
+          <div className="ct-notebook relative h-[220px] w-full max-w-[720px] text-[#755b00] md:h-[240px]">
             <ImageSlot
               src={IMAGES.notebook}
               alt=""
@@ -208,8 +208,8 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
       )}
 
       <div
-        className={`relative overflow-hidden px-6 text-white ${peek ? "pt-[70px]" : "pt-[88px]"}`}
-        style={{ backgroundColor: BLUE }}
+        className={`relative overflow-hidden px-6 text-[#0b0b12] ${peek ? "pt-[70px]" : "pt-[88px]"}`}
+        style={{ backgroundColor: ACCENT }}
       >
         <div aria-hidden className="ct-texture pointer-events-none absolute inset-x-0 -inset-y-10">
           {IMAGES.texture && (
@@ -218,7 +218,7 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
               alt=""
               fill
               sizes="100vw"
-              className="object-cover opacity-30 mix-blend-soft-light"
+              className="object-cover grayscale opacity-20 mix-blend-multiply"
             />
           )}
           <div
@@ -240,10 +240,10 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
 
         <div className="relative mx-auto flex max-w-[1180px] flex-col items-center text-center">
           <div
-            className="ct-eyebrow flex items-center gap-2 text-[12px] uppercase text-white/85"
+            className="ct-eyebrow flex items-center gap-2 text-[12px] uppercase text-[#0b0b12]/80"
             style={mono}
           >
-            <span aria-hidden className="inline-block h-[8px] w-[8px] rounded-full border-2 border-white/80" />
+            <span aria-hidden className="inline-block h-[8px] w-[8px] rounded-full border-2 border-[#0b0b12]/80" />
             Contact us
           </div>
 
@@ -288,3 +288,4 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
     </section>
   );
 }
+

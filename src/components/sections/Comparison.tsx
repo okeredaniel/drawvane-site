@@ -8,13 +8,14 @@ import { motion } from "motion/react";
 /* ------------------------------------------------------------------ */
 
 const BRAND = "Stratora";
-const BLUE = "#1230FF";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const RED = "#D14B4B";
-const PAGE_BG = "#EDF0F5";
+const PAGE_BG = "#f5f4ef";
 const INK = "#0B0F1A";
 const LINE = "rgba(20,30,80,0.07)";
-const HIGHLIGHT_BG = "#E5E8F4";
-const HIGHLIGHT_BORDER = "#B8C1FF";
+const HIGHLIGHT_BG = "#ece9df";
+const HIGHLIGHT_BORDER = "#e8d28a";
 const MONO =
   "var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace";
 
@@ -161,7 +162,7 @@ const pop = {
 };
 
 function Mark({ ok, col }: { ok: boolean; col: number }) {
-  const color = ok ? BLUE : RED;
+  const color = ok ? ACCENT_INK : RED;
   return (
     <motion.svg
       aria-label={ok ? "Included" : "Not included"}
@@ -199,11 +200,11 @@ function BrandMark() {
       animate={{ y: [0, -2.5, 0] }}
       transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
     >
-      <rect x="1" y="1" width="20" height="20" rx="6" fill={BLUE} />
+      <rect x="1" y="1" width="20" height="20" rx="6" fill={ACCENT} />
       <rect x="1" y="1" width="20" height="8" rx="4" fill="#fff" opacity="0.35" />
       <path
         d="M6.5 14.2l2.4 2.4 5.2-5.4"
-        stroke="#fff"
+        stroke="#0b0b12"
         strokeWidth="1.6"
         fill="none"
         strokeLinecap="round"
@@ -233,7 +234,7 @@ export default function Comparison() {
         <div className="text-center">
           <motion.div
             className="inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-wide"
-            style={{ color: BLUE, fontFamily: MONO }}
+            style={{ color: ACCENT_INK, fontFamily: MONO }}
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
@@ -242,7 +243,7 @@ export default function Comparison() {
             <motion.span
               aria-hidden
               className="inline-block h-[9px] w-[9px] rounded-full"
-              style={{ border: `2px solid ${BLUE}` }}
+              style={{ border: `2px solid ${ACCENT}` }}
               animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -301,7 +302,7 @@ export default function Comparison() {
                 key={c.name}
                 className="flex flex-col items-center justify-center gap-1.5 px-1 text-center"
               >
-                <span style={{ color: BLUE }}>
+                <span style={{ color: ACCENT_INK }}>
                   {c.icon ? <Icon name={c.icon} size={18} /> : <BrandMark />}
                 </span>
                 <span
@@ -319,7 +320,7 @@ export default function Comparison() {
           {ROWS.map((row, ri) => (
             <motion.div
               key={row.label}
-              className="relative z-10 grid h-[52px] items-center transition-colors hover:bg-[rgba(18,48,255,0.035)] md:h-[51px]"
+              className="relative z-10 grid h-[52px] items-center transition-colors hover:bg-[rgba(96,74,0,0.035)] md:h-[51px]"
               style={{
                 ...gridStyle,
                 borderTop: ri === 0 ? undefined : `1px solid ${LINE}`,
@@ -330,7 +331,7 @@ export default function Comparison() {
               viewport={{ once: true, amount: 0.8 }}
             >
               <div className="flex items-center gap-2.5 pl-3 pr-1 text-[12px] md:gap-3 md:pl-2.5 md:text-[14px]">
-                <span className="shrink-0" style={{ color: BLUE }}>
+                <span className="shrink-0" style={{ color: ACCENT_INK }}>
                   <Icon name={row.icon} size={14} />
                 </span>
                 <span className="leading-tight">{row.label}</span>

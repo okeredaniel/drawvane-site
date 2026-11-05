@@ -13,8 +13,9 @@ gsap.registerPlugin(ScrollTrigger);
 /* ------------------------------------------------------------------ */
 
 const BRAND = "Stratora";
-const BLUE = "#1230FF";
-const PAGE_BG = "#EDF0F5";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
+const PAGE_BG = "#f5f4ef";
 const INK = "#0B0F1A";
 const MUTED = "#4A5163";
 const RULE = "#CBD0DC";
@@ -60,7 +61,7 @@ const drawPath = (delay = 0, duration = 0.9) => ({
 
 const strokeProps = {
   fill: "none",
-  stroke: BLUE,
+  stroke: ACCENT_INK,
   strokeWidth: 2.2,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
@@ -139,7 +140,7 @@ function StarsIcon() {
           <motion.path
             key={i}
             d={d}
-            fill={BLUE}
+            fill={ACCENT}
             style={{ transformBox: "fill-box", transformOrigin: "center" }}
             variants={{
               hidden: { scale: 0, opacity: 0 },
@@ -315,7 +316,7 @@ export default function Security() {
           <div>
             <motion.div
               className="inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-wide"
-              style={{ color: BLUE, fontFamily: MONO }}
+              style={{ color: ACCENT_INK, fontFamily: MONO }}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
@@ -324,7 +325,7 @@ export default function Security() {
               <motion.span
                 aria-hidden
                 className="inline-block h-[9px] w-[9px] rounded-full"
-                style={{ border: `2px solid ${BLUE}` }}
+                style={{ border: `2px solid ${ACCENT}` }}
                 animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }}
                 transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -397,7 +398,7 @@ export default function Security() {
                 className="pointer-events-none absolute left-0 top-0 h-[300px] w-[300px] rounded-full opacity-0"
                 style={{
                   background:
-                    "radial-gradient(closest-side, rgba(18,48,255,0.12), transparent)",
+                    "radial-gradient(closest-side, rgba(96,74,0,0.12), transparent)",
                 }}
               />
 

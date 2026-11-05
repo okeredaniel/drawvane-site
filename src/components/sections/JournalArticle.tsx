@@ -8,7 +8,8 @@ import ContactUs from "@/components/sections/ContactUs";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -49,7 +50,7 @@ function Social({ href, label, children }: { href: string; label: string; childr
     <a
       href={href}
       aria-label={label}
-      className="flex h-8 w-8 items-center justify-center text-[#0b0b12] transition-colors duration-200 hover:text-[#1f3dff]"
+      className="flex h-8 w-8 items-center justify-center text-[#0b0b12] transition-colors duration-200 hover:text-[#755b00]"
     >
       {children}
     </a>
@@ -64,14 +65,14 @@ function AuthorCard({ who }: { who: keyof typeof AUTHORS }) {
     .join("");
 
   return (
-    <div className="mt-12 flex items-center gap-4 rounded-[20px] border border-[#e0e3ee] bg-[#fbfcff] p-4">
+    <div className="mt-12 flex items-center gap-4 rounded-[20px] border border-[#e0e3ee] bg-[#fdfcf8] p-4">
       <div className="relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-[10px]">
         {a.avatar ? (
           <Image src={a.avatar} alt={a.name} fill sizes="52px" className="object-cover" />
         ) : (
           <div
-            className="flex h-full w-full items-center justify-center text-[16px] font-semibold text-white"
-            style={{ background: "linear-gradient(135deg,#6f86ff,#1f3dff)" }}
+            className="flex h-full w-full items-center justify-center text-[16px] font-semibold text-[#0b0b12]"
+            style={{ background: "linear-gradient(135deg,#ffe680,#ffc800)" }}
           >
             {initials}
           </div>
@@ -153,16 +154,16 @@ export default function JournalArticle({ article }: { article: JournalArticleDat
 
   return (
     <>
-      <article ref={root} className="bg-[#eef0f5] px-6 pb-24 pt-[128px] text-[#0b0b12]">
+      <article ref={root} className="bg-[#f5f4ef] px-6 pb-24 pt-[128px] text-[#0b0b12]">
         <header className="mx-auto flex max-w-[1160px] flex-col items-center text-center">
           <div
             className="ar-eyebrow flex items-center gap-2 text-[12px] uppercase"
-            style={{ ...mono, color: BLUE }}
+            style={{ ...mono, color: ACCENT_INK }}
           >
             <span
               aria-hidden
               className="inline-block h-[8px] w-[8px] rounded-full border-2"
-              style={{ borderColor: BLUE }}
+              style={{ borderColor: ACCENT }}
             />
             {article.category}
           </div>
@@ -193,7 +194,7 @@ export default function JournalArticle({ article }: { article: JournalArticleDat
                 className="ar-pic scale-[1.08] object-cover"
               />
             ) : (
-              <div className="ar-pic absolute inset-0 bg-[linear-gradient(125deg,#e6ebff,#a5b8ff)]" />
+              <div className="ar-pic absolute inset-0 bg-[linear-gradient(125deg,#fff6d6,#ffda57)]" />
             )}
           </div>
         </div>
@@ -224,3 +225,4 @@ export default function JournalArticle({ article }: { article: JournalArticleDat
     </>
   );
 }
+

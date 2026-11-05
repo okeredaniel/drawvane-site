@@ -273,7 +273,7 @@ function FloatingCard({
               delay: card.delay + 0.8,
             }}
           >
-            <div className="flex items-start gap-2.5 rounded-2xl bg-white/90 p-3 shadow-[0_10px_40px_-12px_rgba(40,60,160,0.25)] ring-1 ring-white/80 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_18px_48px_-12px_rgba(40,60,160,0.38)]">
+            <div className="flex items-start gap-2.5 rounded-2xl bg-white/90 p-3 shadow-[0_10px_40px_-12px_rgba(96,74,0,0.25)] ring-1 ring-white/80 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_18px_48px_-12px_rgba(96,74,0,0.38)]">
               <div className="mt-0.5 shrink-0">{card.icon}</div>
               <div className="min-w-0 flex-1">{card.body}</div>
             </div>
@@ -309,9 +309,9 @@ export default function Problem() {
       ref={ref}
       id="problem"
       style={{ colorScheme: "light" }}
-      className="bg-[#eef0f5] px-3 py-3 text-[#0b0d1a] md:px-5"
+      className="bg-[#f5f4ef] px-3 py-3 text-[#0b0d1a] md:px-5"
     >
-      <div className="mx-auto max-w-[1280px] overflow-hidden rounded-2xl bg-[#e8ebf4] px-5 pb-14 pt-12 md:px-10 md:pb-16 md:pt-16">
+      <div className="mx-auto max-w-[1280px] overflow-hidden rounded-2xl bg-[#ecebe5] px-5 pb-14 pt-12 md:px-10 md:pb-16 md:pt-16">
         {/* Heading */}
         <div className="mx-auto max-w-3xl text-center">
           <motion.div
@@ -362,7 +362,7 @@ export default function Problem() {
           {/* soft blob so the layout holds even before the image is added */}
           <div
             aria-hidden
-            className="absolute left-1/2 top-1/2 h-[75%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(150,170,235,0.35),rgba(150,170,235,0))] blur-2xl"
+            className="absolute left-1/2 top-1/2 h-[75%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(96,74,0,0.35),rgba(96,74,0,0))] blur-2xl"
           />
 
           <motion.div
@@ -404,7 +404,7 @@ export default function Problem() {
             href="#solution"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
-            className="group inline-flex items-center gap-2.5 rounded-full bg-[#1f3cff] px-6 py-3.5 font-mono text-[13px] font-medium uppercase tracking-wide text-white shadow-[0_10px_30px_-8px_rgba(31,60,255,0.6)] transition-colors hover:bg-[#1a33db]"
+            className="group inline-flex items-center gap-2.5 rounded-full bg-[#ffc800] px-6 py-3.5 font-mono text-[13px] font-medium uppercase tracking-wide text-[#0b0b12] shadow-[0_10px_30px_-8px_rgba(96,74,0,0.6)] transition-colors hover:bg-[#e6b400]"
           >
             <span className="size-2.5 rounded-full border-2 border-white/90" />
             Our Solutions

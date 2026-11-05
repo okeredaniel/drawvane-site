@@ -5,8 +5,8 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import { animate, motion, useInView } from "motion/react";
 
-const SECTION_BG = "#1D46FF";
-const CARD_BG = "#FAFBFF";
+const SECTION_BG = "#ffc800";
+const CARD_BG = "#fdfcf8";
 const INK = "#0B0F1A";
 const MONO =
   "var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace";
@@ -179,14 +179,14 @@ export default function CustomerStories() {
       <motion.div
         aria-hidden
         className="pointer-events-none absolute -left-40 -top-40 h-[560px] w-[560px] rounded-full blur-3xl"
-        style={{ background: "rgba(0,20,160,0.45)" }}
+        style={{ background: "rgba(230,180,0,0.22)" }}
         animate={{ x: [0, 80, 0], y: [0, 50, 0] }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         aria-hidden
         className="pointer-events-none absolute -bottom-52 -right-40 h-[620px] w-[620px] rounded-full blur-3xl"
-        style={{ background: "rgba(90,130,255,0.5)" }}
+        style={{ background: "rgba(255,235,150,0.5)" }}
         animate={{ x: [0, -90, 0], y: [0, -40, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -207,16 +207,16 @@ export default function CustomerStories() {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(rgba(0,10,120,0.22) 1px, transparent 1.3px)",
+            "radial-gradient(rgba(96,74,0,0.22) 1px, transparent 1.3px)",
           backgroundSize: "4px 4px",
           backgroundPosition: "2px 2px",
         }}
       />
 
       <div className="relative mx-auto max-w-[1280px] px-4 py-20 md:px-6 md:py-24">
-        <div className="text-center text-white">
+        <div className="text-center text-[#0b0b12]">
           <motion.div
-            className="inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-wide text-white/85"
+            className="inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-wide text-[#0b0b12]/80"
             style={{ fontFamily: MONO }}
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -226,7 +226,7 @@ export default function CustomerStories() {
             <motion.span
               aria-hidden
               className="inline-block h-[9px] w-[9px] rounded-full"
-              style={{ border: "2px solid rgba(255,255,255,0.9)" }}
+              style={{ border: "2px solid rgba(11,11,18,0.9)" }}
               animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -279,3 +279,4 @@ export default function CustomerStories() {
     </section>
   );
 }
+

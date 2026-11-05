@@ -11,7 +11,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 const FEATURED_IMAGE = "/case-studies/northway.avif";
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -25,7 +26,7 @@ const svgProps = {
   "aria-hidden": true,
 } as const;
 
-const PAPER = "#fbfcff";
+const PAPER = "#fdfcf8";
 
 function Snowflake() {
   return (
@@ -253,13 +254,13 @@ function FeaturedImage() {
   }
   return (
     <div
-      className="cs-feat-pic absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#1f3dff]/70"
+      className="cs-feat-pic absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#755b00]/70"
       style={{
         ...mono,
-        background: "linear-gradient(135deg,#e3e9ff 0%,#c3d0ff 55%,#a9bbff 100%)",
+        background: "linear-gradient(135deg,#fff6d6 0%,#ffe799 55%,#ffda57 100%)",
       }}
     >
-      <span className="rounded-lg border-2 border-dashed border-[#1f3dff]/30 px-4 py-3">
+      <span className="rounded-lg border-2 border-dashed border-[#ffc800]/30 px-4 py-3">
         Add image
         <br />
         public/case-studies/northway.jpg
@@ -337,18 +338,18 @@ export default function CaseStudies() {
     <section
       id="case-studies"
       ref={root}
-      className="bg-[#eef0f5] px-6 pb-24 pt-[72px] text-[#0b0b12]"
+      className="bg-[#f5f4ef] px-6 pb-24 pt-[72px] text-[#0b0b12]"
     >
       <div className="mx-auto max-w-[1024px]">
         <div className="flex flex-col items-center text-center">
           <div
             className="cs-eyebrow flex items-center gap-2 text-[12px] uppercase"
-            style={{ ...mono, color: BLUE }}
+            style={{ ...mono, color: ACCENT_INK }}
           >
             <span
               aria-hidden
               className="inline-block h-[8px] w-[8px] rounded-full border-2"
-              style={{ borderColor: BLUE }}
+              style={{ borderColor: ACCENT }}
             />
             Case study
           </div>
@@ -362,7 +363,7 @@ export default function CaseStudies() {
           </h1>
         </div>
 
-        <article className="cs-feature group mt-14 grid gap-4 rounded-[20px] bg-[#fbfcff] p-3.5 lg:grid-cols-2">
+        <article className="cs-feature group mt-14 grid gap-4 rounded-[20px] bg-[#fdfcf8] p-3.5 lg:grid-cols-2">
           <div className="flex min-h-[340px] flex-col justify-between gap-8 p-3 lg:min-h-[380px]">
             <div className="cs-feat-item">
               <div className="flex items-center gap-2 text-[#0b0b12]">
@@ -388,8 +389,8 @@ export default function CaseStudies() {
             <div className="cs-feat-item">
               <Link
                 href={FEATURED.href}
-                style={{ ...mono, backgroundColor: BLUE }}
-                className="group/btn relative inline-flex h-[34px] items-center gap-2 overflow-hidden rounded-full px-4 text-[12px] font-semibold uppercase tracking-wide text-white"
+                style={{ ...mono, backgroundColor: ACCENT }}
+                className="group/btn relative inline-flex h-[34px] items-center gap-2 overflow-hidden rounded-full px-4 text-[12px] font-semibold uppercase tracking-wide text-[#0b0b12] hover:text-white"
               >
                 <span
                   aria-hidden
@@ -422,7 +423,7 @@ export default function CaseStudies() {
             <Link
               key={name}
               href={`/case-studies/${name.toLowerCase().replace(/\s+/g, "-")}`}
-              className="cs-card flex min-h-[192px] flex-col justify-between rounded-2xl border border-transparent bg-[#fbfcff] p-4 transition-colors duration-300 hover:border-[#b9bfd6] will-change-transform"
+              className="cs-card flex min-h-[192px] flex-col justify-between rounded-2xl border border-transparent bg-[#fdfcf8] p-4 transition-colors duration-300 hover:border-[#b9bfd6] will-change-transform"
               onMouseEnter={(e) => hover(e, true)}
               onMouseLeave={(e) => hover(e, false)}
             >
@@ -445,3 +446,4 @@ export default function CaseStudies() {
     </section>
   );
 }
+

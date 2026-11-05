@@ -27,7 +27,7 @@ const TAG = "Product Features";
 const HEADING = "What Stratora gives you";
 
 /**
- * BACKGROUND IMAGE SLOT: when you have the textured blue picture, put it in
+ * BACKGROUND IMAGE SLOT: when you have the textured background picture, put it in
  * /public and set the path, e.g. "/product-features-bg.avif".
  */
 const BG_IMAGE: string | undefined = "/product-features-bg.avif";
@@ -50,7 +50,7 @@ const FEATURES: Feature[] = [
 const svgProps = {
   viewBox: "0 0 24 24",
   fill: "none",
-  stroke: "white",
+  stroke: "currentColor",
   strokeWidth: 1.5,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
@@ -294,15 +294,15 @@ export default function ProductFeatures() {
       ref={rootRef}
       id="product-features"
       style={{ colorScheme: "light" }}
-      className="relative scroll-mt-20 overflow-hidden bg-[#2a45ff] py-14 text-white md:py-24"
+      className="relative scroll-mt-20 overflow-hidden bg-[#ffc800] py-14 text-[#0b0b12] md:py-24"
     >
       <div aria-hidden className="bg absolute inset-0 will-change-transform">
         {BG_IMAGE ? (
-          <Image src={BG_IMAGE} alt="" fill sizes="100vw" className="object-cover" />
+          <Image src={BG_IMAGE} alt="" fill sizes="100vw" className="object-cover grayscale opacity-20 mix-blend-multiply" />
         ) : (
-          <div className="absolute inset-0 bg-[linear-gradient(160deg,#3a58ff_0%,#2a45ff_45%,#1f36e0_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(160deg,#ffdc57_0%,#ffc800_45%,#e0ad00_100%)]" />
         )}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,8,28,0.42),rgba(4,8,28,0.68))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,200,0,0.08),rgba(255,200,0,0.20))]" />
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.10)_1px,transparent_1px)] [background-size:5px_5px]" />
       </div>
 
@@ -313,10 +313,10 @@ export default function ProductFeatures() {
 
       <div className="relative mx-auto max-w-[1280px] px-4 md:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="eyebrow mb-6 inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-wide text-white/80">
+          <div className="eyebrow mb-6 inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-wide text-[#0b0b12]/80">
             <span className="relative flex size-3 items-center justify-center">
-              <span className="absolute inline-flex size-full animate-ping rounded-full border border-white opacity-50" />
-              <span className="relative inline-flex size-3 rounded-full border-2 border-white" />
+              <span className="absolute inline-flex size-full animate-ping rounded-full border border-[#0b0b12] opacity-50" />
+              <span className="relative inline-flex size-3 rounded-full border-2 border-[#0b0b12]" />
             </span>
             {TAG}
           </div>
@@ -330,7 +330,7 @@ export default function ProductFeatures() {
                 variants={itemVariants}
                 initial="rest"
                 whileHover="hover"
-                className="relative rounded-3xl px-5 py-7 text-center transition-colors duration-300 hover:bg-white/[0.07] hover:ring-1 hover:ring-white/15"
+                className="relative rounded-3xl px-5 py-7 text-center transition-colors duration-300 hover:bg-white/25 hover:ring-1 hover:ring-black/10"
               >
                 <motion.span variants={iconVariants} className="ico-wrap relative mx-auto flex size-12 items-center justify-center">
                   <motion.span variants={haloVariants} className="absolute inset-0 rounded-full bg-white/20 blur-md" aria-hidden />
@@ -339,7 +339,7 @@ export default function ProductFeatures() {
                   </span>
                 </motion.span>
                 <h3 className="feat-title mt-4 text-[18px] font-medium leading-snug">{f.title}</h3>
-                <p className="feat-text mx-auto mt-2.5 max-w-[34ch] text-[15px] leading-relaxed text-white/60">{f.text}</p>
+                <p className="feat-text mx-auto mt-2.5 max-w-[34ch] text-[15px] leading-relaxed text-[#0b0b12]/75">{f.text}</p>
               </motion.div>
             </div>
           ))}
@@ -353,9 +353,9 @@ export default function ProductFeatures() {
                 whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 18 }}
-                className="group inline-flex items-center gap-2.5 rounded-full bg-[#e8ebf4] px-6 py-3.5 font-mono text-[13px] font-medium uppercase tracking-wide text-[#0b0d1a] shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)]"
+                className="group inline-flex items-center gap-2.5 rounded-full bg-[#ecebe5] px-6 py-3.5 font-mono text-[13px] font-medium uppercase tracking-wide text-[#0b0d1a] shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)]"
               >
-                <span className="size-2.5 rounded-full border-2 border-[#8a8fa3] transition-colors duration-300 group-hover:bg-[#2a45ff] group-hover:border-[#2a45ff]" />
+                <span className="size-2.5 rounded-full border-2 border-[#8a8fa3] transition-colors duration-300 group-hover:bg-[#ffc800] group-hover:border-[#ffc800]" />
                 Integrations
                 <svg
                   viewBox="0 0 16 16"
@@ -377,3 +377,4 @@ export default function ProductFeatures() {
     </section>
   );
 }
+

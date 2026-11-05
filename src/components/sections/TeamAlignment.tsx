@@ -24,7 +24,8 @@ const SOCIALS = {
   linkedin: "#",
 };
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -80,7 +81,7 @@ function Social({ href, label, children }: { href: string; label: string; childr
     <Link
       href={href}
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-lg text-[#0b0b12] transition-all duration-300 hover:-translate-y-1 hover:bg-[#1f3dff]/10 hover:text-[#1f3dff]"
+      className="flex h-9 w-9 items-center justify-center rounded-lg text-[#0b0b12] transition-all duration-300 hover:-translate-y-1 hover:bg-[#ffc800]/10 hover:text-[#755b00]"
     >
       {children}
     </Link>
@@ -166,22 +167,22 @@ export default function TeamAlignment() {
   }, []);
 
   return (
-    <section ref={root} id="team-alignment" className="bg-[#eef0f5] px-6 pb-[110px] pt-[84px] text-[#0b0b12]">
+    <section ref={root} id="team-alignment" className="bg-[#f5f4ef] px-6 pb-[110px] pt-[84px] text-[#0b0b12]">
       <div
         aria-hidden
         className="ta-progress pointer-events-none fixed left-0 top-0 z-[60] h-[3px] w-full"
-        style={{ backgroundColor: BLUE, transform: "scaleX(0)", transformOrigin: "0 50%" }}
+        style={{ backgroundColor: ACCENT, transform: "scaleX(0)", transformOrigin: "0 50%" }}
       />
 
       <div className="mx-auto flex max-w-[860px] flex-col items-center text-center">
         <div
           className="ta-eyebrow flex items-center gap-2 text-[12px] uppercase"
-          style={{ ...mono, color: BLUE }}
+          style={{ ...mono, color: ACCENT_INK }}
         >
           <span
             aria-hidden
             className="inline-block h-[8px] w-[8px] rounded-full border-2"
-            style={{ borderColor: BLUE }}
+            style={{ borderColor: ACCENT }}
           />
           Team alignment
         </div>
@@ -209,13 +210,13 @@ export default function TeamAlignment() {
             />
           ) : (
             <div
-              className="ta-pic absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#1f3dff]/70"
+              className="ta-pic absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#755b00]/70"
               style={{
                 ...mono,
-                background: "linear-gradient(135deg,#e3e9ff 0%,#c3d0ff 50%,#9db3ff 100%)",
+                background: "linear-gradient(135deg,#fff6d6 0%,#ffe799 50%,#ffe799 100%)",
               }}
             >
-              <span className="rounded-lg border-2 border-dashed border-[#1f3dff]/30 px-4 py-3">
+              <span className="rounded-lg border-2 border-dashed border-[#ffc800]/30 px-4 py-3">
                 Add image
                 <br />
                 public/team-alignment/hero.jpg
@@ -241,15 +242,15 @@ export default function TeamAlignment() {
           </div>
         ))}
 
-        <div className="ta-reveal ta-author mt-12 flex items-center justify-between rounded-2xl border border-black/10 bg-[#fbfcff] p-4">
+        <div className="ta-reveal ta-author mt-12 flex items-center justify-between rounded-2xl border border-black/10 bg-[#fdfcf8] p-4">
           <div className="flex items-center gap-4">
             <div className="ta-avatar relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-xl">
               {AUTHOR_AVATAR ? (
                 <Image src={AUTHOR_AVATAR} alt="Daniel Mercer" fill sizes="52px" className="object-cover" />
               ) : (
                 <div
-                  className="flex h-full w-full items-center justify-center text-[16px] font-semibold text-white"
-                  style={{ background: "linear-gradient(135deg,#6f86ff,#1f3dff)" }}
+                  className="flex h-full w-full items-center justify-center text-[16px] font-semibold text-[#0b0b12]"
+                  style={{ background: "linear-gradient(135deg,#ffe680,#ffc800)" }}
                 >
                   DM
                 </div>
@@ -278,3 +279,4 @@ export default function TeamAlignment() {
     </section>
   );
 }
+

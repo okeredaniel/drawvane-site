@@ -8,30 +8,30 @@ const mono = {
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 };
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
 
 export default function NorthwayCaseStudy() {
   return (
-    <main className="bg-[#eef0f5] text-[#0b0b12]">
+    <main className="bg-[#f5f4ef] text-[#0b0b12]">
       <section className="px-6 pb-16 pt-20 sm:pt-24">
         <div className="mx-auto max-w-[1040px]">
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#1f3dff]"
+            className="inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#755b00]"
             style={mono}
           >
             <span aria-hidden>←</span>
             Back to case studies
           </Link>
 
-          <div className="mt-8 overflow-hidden rounded-[26px] bg-[#fbfcff] shadow-[0_30px_80px_rgba(15,23,42,0.08)] ring-1 ring-black/5">
+          <div className="mt-8 overflow-hidden rounded-[26px] bg-[#fdfcf8] shadow-[0_30px_80px_rgba(15,23,42,0.08)] ring-1 ring-black/5">
             <div className="grid gap-0 lg:grid-cols-[1.02fr_0.98fr]">
               <div className="p-6 sm:p-8 lg:p-10">
                 <div
-                  className="inline-flex items-center gap-2 rounded-full border border-[#dfe5ff] bg-[#eef3ff] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1f3dff]"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#e8dcb0] bg-[#fff9e6] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#755b00]"
                   style={mono}
                 >
-                  <span aria-hidden className="inline-block h-[8px] w-[8px] rounded-full bg-[#1f3dff]" />
+                  <span aria-hidden className="inline-block h-[8px] w-[8px] rounded-full bg-[#ffc800]" />
                   Case study
                 </div>
 
@@ -61,7 +61,7 @@ export default function NorthwayCaseStudy() {
                 </div>
               </div>
 
-              <div className="relative min-h-[260px] border-t border-black/5 bg-[#e7ebff] lg:min-h-full lg:border-l lg:border-t-0">
+              <div className="relative min-h-[260px] border-t border-black/5 bg-[#fff5d6] lg:min-h-full lg:border-l lg:border-t-0">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.7),transparent_55%)]" />
                 <div className="relative h-full min-h-[260px]">
                   <Image
@@ -97,8 +97,8 @@ export default function NorthwayCaseStudy() {
                 "The team cut weekly prep time, reduced duplicated context gathering, and made cross-team dependency decisions far earlier—before they became blockers.",
             },
           ].map((item) => (
-            <article key={item.title} className="rounded-[22px] border border-black/5 bg-[#fbfcff] p-6">
-              <div className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#1f3dff]" style={mono}>
+            <article key={item.title} className="rounded-[22px] border border-black/5 bg-[#fdfcf8] p-6">
+              <div className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#755b00]" style={mono}>
                 {item.title}
               </div>
               <p className="mt-4 text-[16px] leading-[1.55] text-[#1a1b26]">{item.copy}</p>
@@ -123,8 +123,8 @@ export default function NorthwayCaseStudy() {
             </ul>
           </div>
 
-          <div className="rounded-[26px] border border-black/5 bg-[#fbfcff] p-7 sm:p-8">
-            <div className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#1f3dff]" style={mono}>
+          <div className="rounded-[26px] border border-black/5 bg-[#fdfcf8] p-7 sm:p-8">
+            <div className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#755b00]" style={mono}>
               Quote
             </div>
             <blockquote className="mt-4 text-[24px] font-medium leading-[1.3] tracking-[-0.02em] text-[#0b0b12]">
@@ -142,8 +142,8 @@ export default function NorthwayCaseStudy() {
         <div className="mx-auto flex max-w-[1040px] justify-center">
           <Link
             href="/contact"
-            style={{ backgroundColor: BLUE }}
-            className="group relative inline-flex h-[42px] items-center gap-2 overflow-hidden rounded-full px-6 text-[12px] font-semibold uppercase tracking-[0.12em] text-white"
+            style={{ backgroundColor: ACCENT }}
+            className="group relative inline-flex h-[42px] items-center gap-2 overflow-hidden rounded-full px-6 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#0b0b12] hover:text-white"
           >
             <span
               aria-hidden
@@ -162,3 +162,4 @@ export default function NorthwayCaseStudy() {
     </main>
   );
 }
+

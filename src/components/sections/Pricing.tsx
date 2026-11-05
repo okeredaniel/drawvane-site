@@ -7,7 +7,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -39,7 +40,7 @@ const ENTERPRISE_FEATURES = [
 ];
 
 function CheckIcon({ light }: { light?: boolean }) {
-  const c = light ? "#ffffff" : BLUE;
+  const c = light ? "#0b0b12" : ACCENT_INK;
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className="shrink-0">
       <circle cx="9" cy="9" r="8" stroke={c} strokeWidth="1.3" />
@@ -64,8 +65,8 @@ function FeatureList({ items, light }: { items: string[]; light?: boolean }) {
         <li
           key={f}
           className={`pr-feature flex items-center gap-3 py-[10px] text-[15px] ${
-            i !== 0 ? (light ? "border-t border-white/20" : "border-t border-black/10") : ""
-          } ${light ? "text-white" : "text-[#1a1b26]"}`}
+            i !== 0 ? (light ? "border-t border-black/15" : "border-t border-black/10") : ""
+          } ${light ? "text-[#0b0b12]" : "text-[#1a1b26]"}`}
         >
           <CheckIcon light={light} />
           <span className={light ? "font-medium" : ""}>{f}</span>
@@ -110,7 +111,7 @@ function Price({ value, suffix, light }: { value: number; suffix: string; light?
       <span className="text-[38px] font-medium leading-none tracking-tight tabular-nums">
         ${shown.toLocaleString("en-US")}
       </span>
-      <span ref={sufRef} className={`text-[15px] ${light ? "text-white/75" : "text-[#3b3d4d]"}`}>
+      <span ref={sufRef} className={`text-[15px] ${light ? "text-[#0b0b12]/75" : "text-[#3b3d4d]"}`}>
         {suffix}
       </span>
     </div>
@@ -124,10 +125,10 @@ function Cta({
 }: {
   href: string;
   label: string;
-  variant: "blue" | "white";
+  variant: "yellow" | "white";
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
-  const isBlue = variant === "blue";
+  const isYellow = variant === "yellow";
 
   const move = (e: React.MouseEvent) => {
     const el = ref.current;
@@ -149,31 +150,31 @@ function Cta({
       href={href}
       onMouseMove={move}
       onMouseLeave={leave}
-      style={{ ...mono, backgroundColor: isBlue ? BLUE : "#ffffff" }}
+      style={{ ...mono, backgroundColor: isYellow ? ACCENT : "#ffffff" }}
       className={`pr-cta group relative flex h-[38px] w-full items-center justify-center gap-2 overflow-hidden rounded-full text-[13px] font-semibold uppercase tracking-wide ${
-        isBlue ? "text-white" : "text-[#0b0b12]"
+        isYellow ? "text-[#0b0b12]" : "text-[#0b0b12]"
       }`}
     >
       <span
         aria-hidden
         className="absolute inset-0 translate-y-full rounded-full transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:translate-y-0"
-        style={{ backgroundColor: isBlue ? "#0b0b12" : BLUE }}
+        style={{ backgroundColor: isYellow ? "#0b0b12" : ACCENT }}
       />
       <span
         aria-hidden
         className={`relative inline-block h-[8px] w-[8px] rounded-full border-2 transition-transform duration-300 group-hover:scale-125 ${
-          isBlue ? "border-white/80" : "border-[#b9bccb] group-hover:border-white"
+          isYellow ? "border-[#0b0b12]/80 group-hover:border-white" : "border-[#b9bccb] group-hover:border-[#0b0b12]"
         }`}
       />
       <span
-        className={`relative transition-colors duration-300 ${isBlue ? "" : "group-hover:text-white"}`}
+        className={`relative transition-colors duration-300 ${isYellow ? "group-hover:text-white" : "group-hover:text-[#0b0b12]"}`}
       >
         {label}
       </span>
       <span
         aria-hidden
         className={`relative -ml-1 w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-0 group-hover:w-4 group-hover:translate-x-0 group-hover:opacity-100 ${
-          isBlue ? "" : "group-hover:text-white"
+          isYellow ? "group-hover:text-white" : "group-hover:text-[#0b0b12]"
         }`}
       >
         →
@@ -239,7 +240,7 @@ function StepSlider({ index, onChange }: { index: number; onChange: (i: number) 
         <div
           ref={fillRef}
           className="absolute left-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full"
-          style={{ backgroundColor: BLUE, width: 0 }}
+          style={{ backgroundColor: ACCENT, width: 0 }}
         />
         {ENTERPRISE_MONTHLY.map((_, i) => (
           <span
@@ -248,14 +249,14 @@ function StepSlider({ index, onChange }: { index: number; onChange: (i: number) 
             className="absolute top-1/2 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors duration-300"
             style={{
               left: `${(i / (STEPS - 1)) * 100}%`,
-              backgroundColor: i <= index ? BLUE : "#ffffff",
+              backgroundColor: i <= index ? ACCENT : "#ffffff",
             }}
           />
         ))}
         <div
           ref={thumbRef}
-          className="absolute top-1/2 z-10 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-[#eef0f5]"
-          style={{ borderColor: BLUE, left: 0 }}
+          className="absolute top-1/2 z-10 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-[#f5f4ef]"
+          style={{ borderColor: ACCENT, left: 0 }}
         />
       </div>
     </div>
@@ -366,18 +367,18 @@ export default function Pricing() {
     <section
       id="pricing"
       ref={root}
-      className="relative overflow-hidden bg-[#eef0f5] px-6 py-24 text-[#0b0b12]"
+      className="relative overflow-hidden bg-[#f5f4ef] px-6 py-24 text-[#0b0b12]"
     >
       <div className="mx-auto max-w-[1180px]">
         <div className="flex flex-col items-center text-center">
           <div
             className="pr-eyebrow flex items-center gap-2 text-[13px] uppercase"
-            style={{ ...mono, color: BLUE }}
+            style={{ ...mono, color: ACCENT_INK }}
           >
             <span
               aria-hidden
               className="inline-block h-[8px] w-[8px] rounded-full border-2"
-              style={{ borderColor: BLUE }}
+              style={{ borderColor: ACCENT }}
             />
             Pricing
           </div>
@@ -392,7 +393,7 @@ export default function Pricing() {
           </h2>
 
           <div className="pr-toggle mt-10 flex items-center gap-4">
-            <div className="relative flex rounded-full bg-[#e0e3ed] p-1" style={mono}>
+            <div className="relative flex rounded-full bg-[#e4e0d5] p-1" style={mono}>
               <span
                 ref={indRef}
                 aria-hidden
@@ -417,7 +418,7 @@ export default function Pricing() {
             <span
               ref={saveRef}
               className="inline-block text-[13px] uppercase transition-colors duration-300"
-              style={{ ...mono, color: yearly ? BLUE : "#4a4c5c" }}
+              style={{ ...mono, color: yearly ? ACCENT_INK : "#4a4c5c" }}
             >
               Save 36%
             </span>
@@ -426,7 +427,7 @@ export default function Pricing() {
 
         <div className="mt-14 grid items-center gap-5 lg:grid-cols-3 lg:gap-[18px]">
           <article
-            className="pr-card rounded-[20px] bg-[#e5e8f1] p-4 will-change-transform"
+            className="pr-card rounded-[20px] bg-[#ebe8df] p-4 will-change-transform"
             onMouseEnter={(e) => lift(e, true)}
             onMouseLeave={(e) => lift(e, false)}
           >
@@ -440,15 +441,15 @@ export default function Pricing() {
             <p className="mt-8 text-[17px] font-medium">Included:</p>
             <FeatureList items={STARTER_FEATURES} />
             <div className="mt-10">
-              <Cta href="/contact" label="Start now" variant="blue" />
+              <Cta href="/contact" label="Start now" variant="yellow" />
             </div>
           </article>
 
           <article
-            className="pr-card relative z-10 overflow-hidden rounded-[20px] p-4 text-white ring-2 ring-[#8fa0ff] will-change-transform"
+            className="pr-card relative z-10 overflow-hidden rounded-[20px] p-4 text-[#0b0b12] ring-2 ring-[#e5b800] will-change-transform"
             style={{
-              background: "linear-gradient(160deg,#3b57ff 0%,#1f3dff 55%,#2b48ff 100%)",
-              boxShadow: "0 30px 60px -20px rgba(31,61,255,0.55)",
+              background: "linear-gradient(160deg,#ffdc57 0%,#ffc800 55%,#ffd333 100%)",
+              boxShadow: "0 30px 60px -20px rgba(96,74,0,0.55)",
             }}
             onMouseEnter={(e) => lift(e, true)}
             onMouseLeave={(e) => lift(e, false)}
@@ -467,11 +468,11 @@ export default function Pricing() {
             />
             <div
               aria-hidden
-              className="pr-orb pointer-events-none absolute -right-10 top-20 h-48 w-48 rounded-full bg-[#7e92ff] opacity-40 blur-3xl"
+              className="pr-orb pointer-events-none absolute -right-10 top-20 h-48 w-48 rounded-full bg-[#ffe799] opacity-40 blur-3xl"
             />
             <div
               aria-hidden
-              className="pr-orb pointer-events-none absolute -left-10 bottom-24 h-44 w-44 rounded-full bg-[#9db0ff] opacity-30 blur-3xl"
+              className="pr-orb pointer-events-none absolute -left-10 bottom-24 h-44 w-44 rounded-full bg-[#fff0b0] opacity-30 blur-3xl"
             />
             <div
               aria-hidden
@@ -484,15 +485,15 @@ export default function Pricing() {
 
             <div className="relative">
               <div className="flex items-start justify-between">
-                <h3 className="text-[16px] uppercase text-white/90">Premium</h3>
+                <h3 className="text-[16px] uppercase text-[#0b0b12]/90">Premium</h3>
                 <span
                   className="pr-badge flex items-center gap-2 rounded-full bg-white px-3 py-[7px] text-[11px] font-semibold uppercase"
-                  style={{ ...mono, color: BLUE }}
+                  style={{ ...mono, color: ACCENT_INK }}
                 >
                   <span
                     aria-hidden
                     className="pr-badge-dot inline-block h-[9px] w-[9px] rounded-full border-2"
-                    style={{ borderColor: BLUE }}
+                    style={{ borderColor: ACCENT }}
                   />
                   Most popular
                 </span>
@@ -500,7 +501,7 @@ export default function Pricing() {
               <div className="mt-5">
                 <Price value={premium} suffix={suffix} light />
               </div>
-              <p className="mt-3 max-w-[330px] text-[15px] leading-[1.35] text-white/85">
+              <p className="mt-3 max-w-[330px] text-[15px] leading-[1.35] text-[#0b0b12]/80">
                 For teams that need shared context, closer collaboration, and clear project details.
               </p>
               <p className="mt-6 text-[17px] font-medium">Included:</p>
@@ -512,7 +513,7 @@ export default function Pricing() {
           </article>
 
           <article
-            className="pr-card rounded-[20px] bg-[#e5e8f1] p-4 will-change-transform"
+            className="pr-card rounded-[20px] bg-[#ebe8df] p-4 will-change-transform"
             onMouseEnter={(e) => lift(e, true)}
             onMouseLeave={(e) => lift(e, false)}
           >
@@ -527,7 +528,7 @@ export default function Pricing() {
             <p className="mt-6 text-[17px] font-medium">Included:</p>
             <FeatureList items={ENTERPRISE_FEATURES} />
             <div className="mt-8">
-              <Cta href="/contact" label="Talk to our team" variant="blue" />
+              <Cta href="/contact" label="Talk to our team" variant="yellow" />
             </div>
           </article>
         </div>
@@ -535,3 +536,4 @@ export default function Pricing() {
     </section>
   );
 }
+

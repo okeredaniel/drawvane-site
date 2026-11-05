@@ -6,7 +6,8 @@ import { useCallback, useState } from "react";
 
 import ParticleBlob from "./ParticleBlob";
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const INK = "#0b0b12";
 const SLIDE_MS = 6000;
 
@@ -20,7 +21,7 @@ type Slide = {
   eyebrow: string;
   title: string;
   body: string;
-  /** Full-bleed background in /public (e.g. "/hero/bg-1.jpg"). Falls back to the blue gradient. */
+  /** Full-bleed background in /public (e.g. "/hero/bg-1.jpg"). Falls back to the brand gradient. */
   background?: string;
   /** Screenshot in /public (e.g. "/hero/workspace.png"). Shown at its original size. */
   screenshot?: string;
@@ -72,7 +73,7 @@ function placeholderImage(label: string) {
 
 function Ring({
   size = 10,
-  color = BLUE,
+  color = ACCENT_INK,
   className = "",
 }: {
   size?: number;
@@ -107,14 +108,14 @@ const NOISE =
 
 function Visual({ slide }: { slide: Slide }) {
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 bg-[#ffc800]">
       {slide.background ? (
         <Image
           src={slide.background}
           alt=""
           fill
           sizes="(min-width: 1024px) 742px, 100vw"
-          className="object-cover"
+          className="object-cover grayscale opacity-40 mix-blend-multiply"
         />
       ) : (
         <>
@@ -122,13 +123,13 @@ function Visual({ slide }: { slide: Slide }) {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(120% 90% at 30% 15%, #7b98ff 0%, #5a7bff 45%, #4868f2 100%)",
+                "radial-gradient(120% 90% at 30% 15%, #fff0b0 0%, #ffda4d 45%, #e6b400 100%)",
             }}
           />
           <div className="absolute left-[8%] top-[10%] h-[120px] w-[120px] rounded-full bg-white/15 ring-[10px] ring-white/10" />
           <div className="absolute left-[16%] top-[28%] h-[68%] w-[46%] -rotate-[7deg] rounded-md bg-white/10" />
           <div className="absolute right-[4%] top-[8%] h-[70%] w-[30%] rotate-[8deg] rounded-md bg-white/10" />
-          <div className="absolute right-[18%] top-[6%] h-[10px] w-[240px] -rotate-[18deg] rounded-full bg-[#2f4bff]/50" />
+          <div className="absolute right-[18%] top-[6%] h-[10px] w-[240px] -rotate-[18deg] rounded-full bg-[#b88f00]/50" />
           <div
             className="absolute inset-0 opacity-40 mix-blend-overlay"
             style={{ backgroundImage: NOISE }}
@@ -141,7 +142,7 @@ function Visual({ slide }: { slide: Slide }) {
         <img
           src={slide.screenshot ?? placeholderImage(slide.tab)}
           alt={`${slide.tab} screenshot`}
-          className="h-auto max-h-full w-auto max-w-full rounded-xl shadow-[0_24px_60px_rgba(10,20,110,0.35)] ring-1 ring-white/50"
+          className="h-auto max-h-full w-auto max-w-full rounded-xl shadow-[0_24px_60px_rgba(96,74,0,0.35)] ring-1 ring-white/50"
         />
       </div>
     </div>
@@ -156,7 +157,7 @@ export default function Hero() {
   const slide = SLIDES[index];
 
   return (
-    <section style={{ backgroundColor: "#eef0f5" }} className="pb-24 pt-14 md:pt-20">
+    <section style={{ backgroundColor: "#f5f4ef" }} className="pb-24 pt-14 md:pt-20">
       <style>{`
         @keyframes heroProgress { from { width: 0% } to { width: 100% } }
         @keyframes heroFadeUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
@@ -167,7 +168,7 @@ export default function Hero() {
           <div>
             <div
               className="mb-4 flex items-center gap-2 text-[13px] uppercase tracking-[0.04em]"
-              style={{ ...mono, color: BLUE }}
+              style={{ ...mono, color: ACCENT_INK }}
             >
               <Ring /> Understand.Coordinate.Build
             </div>
@@ -205,19 +206,19 @@ export default function Hero() {
         <div className="group mt-16 flex flex-col overflow-hidden rounded-lg lg:mt-20 lg:h-[543px] lg:flex-row">
           <div
             className="flex flex-col justify-between p-8 lg:w-[538px] lg:shrink-0"
-            style={{ backgroundColor: BLUE }}
+            style={{ backgroundColor: ACCENT }}
           >
             <div key={index} style={{ animation: "heroFadeUp 450ms ease both" }}>
               <div
-                className="flex items-center gap-2 text-[12px] font-bold uppercase text-white/80"
+                className="flex items-center gap-2 text-[12px] font-bold uppercase text-[#0b0b12]/80"
                 style={mono}
               >
-                <Ring color="rgba(255,255,255,0.9)" /> {slide.eyebrow}
+                <Ring color="rgba(11,11,18,0.9)" /> {slide.eyebrow}
               </div>
-              <h2 className="mt-[18px] max-w-[400px] text-[36px] font-semibold leading-[1.2] tracking-[-0.02em] text-white">
+              <h2 className="mt-[18px] max-w-[400px] text-[36px] font-semibold leading-[1.2] tracking-[-0.02em] text-[#0b0b12]">
                 {slide.title}
               </h2>
-              <p className="mt-[14px] max-w-[460px] text-[16px] leading-[21px] text-white/70">
+              <p className="mt-[14px] max-w-[460px] text-[16px] leading-[21px] text-[#0b0b12]/80">
                 {slide.body}
               </p>
               <Link
@@ -241,15 +242,15 @@ export default function Hero() {
                     onClick={() => go(i)}
                     style={{
                       ...mono,
-                      borderTop: `1px solid ${active ? "#fff" : "rgba(255,255,255,0.25)"}`,
+                      borderTop: `1px solid ${active ? "#0b0b12" : "rgba(11,11,18,0.25)"}`,
                     }}
                     className={`flex h-[39px] w-full items-center gap-2 text-left text-[12px] font-bold uppercase transition-colors ${
-                      active ? "text-white" : "text-white/80 hover:text-white"
+                      active ? "text-[#0b0b12]" : "text-[#0b0b12]/80 hover:text-[#0b0b12]"
                     }`}
                   >
                     {active && (
                       <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
-                        <path d="M1 5h8M5.5 1.5 9 5 5.5 8.5" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M1 5h8M5.5 1.5 9 5 5.5 8.5" stroke="#0b0b12" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     )}
                     {s.tab}
@@ -271,10 +272,10 @@ export default function Hero() {
               </div>
             ))}
 
-            <div className="absolute bottom-[22px] left-8 h-[2px] w-[90px] bg-white/25">
+            <div className="absolute bottom-[22px] left-8 h-[2px] w-[90px] bg-black/20">
               <div
                 key={index}
-                className="h-full bg-white [animation-play-state:running] group-hover:[animation-play-state:paused]"
+                className="h-full bg-[#0b0b12] [animation-play-state:running] group-hover:[animation-play-state:paused]"
                 style={{ animation: `heroProgress ${SLIDE_MS}ms linear forwards` }}
                 onAnimationEnd={() => go(index + 1)}
               />

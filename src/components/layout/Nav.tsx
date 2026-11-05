@@ -35,8 +35,8 @@ export default function Nav() {
     <>
       {/* Announcement bar (scrolls away) */}
       <div
-        style={{ ...mono, backgroundColor: "#1f3dff" }}
-        className="flex h-9 items-center justify-center px-4 text-[12px] font-bold uppercase tracking-[0.02em] text-white"
+        style={{ ...mono, backgroundColor: "#ffc800" }}
+        className="flex h-9 items-center justify-center px-4 text-[12px] font-bold uppercase tracking-[0.02em] text-[#0b0b12]"
       >
         <Link href="/team-alignment" className="flex items-center gap-2">
           <span>Discover {BRAND} · Construction intelligence, connected</span>
@@ -47,7 +47,7 @@ export default function Nav() {
       {/* Sticky nav */}
       <header
         style={{
-          backgroundColor: scrolled ? "rgba(238,240,245,0.85)" : "#eef0f5",
+          backgroundColor: scrolled ? "rgba(245,244,239,0.85)" : "#f5f4ef",
           backdropFilter: scrolled ? "blur(12px)" : "none",
           borderBottom: scrolled ? "1px solid rgba(0,0,0,0.08)" : "1px solid transparent",
         }}
@@ -74,8 +74,8 @@ export default function Nav() {
 
             <Link
               href="/contact"
-              style={{ ...mono, backgroundColor: "#1f3dff" }}
-              className="ml-12 flex h-[41px] items-center gap-2 rounded-full px-4 text-[14px] font-medium uppercase text-white transition-transform duration-200 hover:scale-[1.03]"
+              style={{ ...mono, backgroundColor: "#ffc800" }}
+              className="ml-12 flex h-[41px] items-center gap-2 rounded-full px-4 text-[14px] font-medium uppercase text-[#0b0b12] transition-transform duration-200 hover:scale-[1.03]"
             >
               <span
                 aria-hidden
@@ -83,7 +83,7 @@ export default function Nav() {
                 style={{
                   width: 10,
                   height: 10,
-                  border: "2px solid rgba(255,255,255,0.85)",
+                  border: "2px solid rgba(11,11,18,0.85)",
                 }}
               />
               Book a demo
@@ -115,7 +115,7 @@ export default function Nav() {
 
         {/* Mobile panel */}
         {open && (
-          <div className="border-t border-black/10 bg-[#eef0f5] px-6 pb-6 pt-4 md:hidden" style={mono}>
+          <div className="border-t border-black/10 bg-[#f5f4ef] px-6 pb-6 pt-4 md:hidden" style={mono}>
             <nav className="flex flex-col gap-4">
               {LINKS.map((l) => (
                 <Link
@@ -131,8 +131,8 @@ export default function Nav() {
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              style={{ backgroundColor: "#1f3dff" }}
-              className="mt-5 flex h-[44px] items-center justify-center rounded-full text-[14px] font-medium uppercase text-white"
+              style={{ backgroundColor: "#ffc800" }}
+              className="mt-5 flex h-[44px] items-center justify-center rounded-full text-[14px] font-medium uppercase text-[#0b0b12]"
             >
               Book a demo
             </Link>

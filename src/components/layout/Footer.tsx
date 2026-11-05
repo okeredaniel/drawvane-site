@@ -69,7 +69,7 @@ const SOCIALS = [
 
 export default function Footer() {
   return (
-    <footer className="overflow-hidden bg-[#eef1f6] text-[#0b1020]">
+    <footer className="overflow-hidden bg-[#f5f4ef] text-[#0b1020]">
       <div className="mx-auto max-w-[1280px] px-6 pt-20">
         <div className="grid gap-14 lg:grid-cols-2">
           <div className="flex flex-col justify-between gap-12">
@@ -88,7 +88,7 @@ export default function Footer() {
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="transition duration-200 hover:-translate-y-0.5 hover:text-[#1f3bff]"
+                  className="transition duration-200 hover:-translate-y-0.5 hover:text-[#755b00]"
                 >
                   {s.icon}
                 </a>
@@ -129,10 +129,10 @@ export default function Footer() {
               <p className="flex-1 text-[15px]">Ready to see {BRAND} in action?</p>
               <Link
                 href="/contact"
-                className="group inline-flex h-11 shrink-0 items-center gap-2.5 rounded-full bg-[#1f3bff] px-5 font-mono text-[13px] font-medium uppercase tracking-wide text-white transition duration-200 hover:bg-[#1731e6] active:scale-[0.97]"
+                className="group inline-flex h-11 shrink-0 items-center gap-2.5 rounded-full bg-[#ffc800] px-5 font-mono text-[13px] font-medium uppercase tracking-wide text-[#0b0b12] transition duration-200 hover:bg-[#e6b400] active:scale-[0.97]"
               >
-                <span className="grid size-3 place-items-center rounded-full border-2 border-white/90">
-                  <span className="size-1 rounded-full bg-white/0 transition-colors duration-200 group-hover:bg-white" />
+                <span className="grid size-3 place-items-center rounded-full border-2 border-[#0b0b12]/80">
+                  <span className="size-1 rounded-full bg-white/0 transition-colors duration-200 group-hover:bg-[#0b0b12]" />
                 </span>
                 Get demo
               </Link>
@@ -155,7 +155,7 @@ export default function Footer() {
         <motion.div
           variants={{ hidden: { y: "55%" }, visible: { y: 0 } }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="whitespace-nowrap text-center text-[12.5vw] font-semibold uppercase leading-[0.85] tracking-tighter text-[#d6d9df]"
+          className="whitespace-nowrap text-center text-[12.5vw] font-semibold uppercase leading-[0.85] tracking-tighter text-[#dad6c9]"
         >
           {BRAND}
         </motion.div>

@@ -39,8 +39,9 @@ const INVESTORS = [
   { name: "Elena Ross", photo: "/about/investor-5.avif" },
 ];
 
-const BLUE = "#1f3dff";
-const PAPER = "#fbfcff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
+const PAPER = "#fdfcf8";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -263,12 +264,12 @@ function Eyebrow({ children, light }: { children: ReactNode; light?: boolean }) 
   return (
     <div
       className="flex items-center gap-2 text-[12px] uppercase"
-      style={{ ...mono, color: light ? "rgba(255,255,255,0.85)" : BLUE }}
+      style={{ ...mono, color: light ? "rgba(11,11,18,0.85)" : ACCENT_INK }}
     >
       <span
         aria-hidden
         className="inline-block h-[8px] w-[8px] rounded-full border-2"
-        style={{ borderColor: light ? "rgba(255,255,255,0.85)" : BLUE }}
+        style={{ borderColor: light ? "rgba(11,11,18,0.85)" : ACCENT }}
       />
       {children}
     </div>
@@ -287,8 +288,8 @@ function Avatar({ name, src }: { name: string; src: string }) {
         <Image src={src} alt={name} fill sizes="36px" className="object-cover" />
       ) : (
         <div
-          className="flex h-full w-full items-center justify-center text-[12px] font-semibold text-white"
-          style={{ background: "linear-gradient(135deg,#6f86ff,#1f3dff)" }}
+          className="flex h-full w-full items-center justify-center text-[12px] font-semibold text-[#0b0b12]"
+          style={{ background: "linear-gradient(135deg,#ffe680,#ffc800)" }}
         >
           {initials}
         </div>
@@ -304,14 +305,14 @@ function InvestorCard({ name, photo, i }: { name: string; photo: string; i: numb
         <Image src={photo} alt={name} fill sizes="336px" className="object-cover" />
       ) : (
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center text-[11px] uppercase text-[#1f3dff]/70"
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center text-[11px] uppercase text-[#755b00]/70"
           style={{
             ...mono,
-            background: `linear-gradient(${130 + i * 28}deg,#e6ebff 0%,#c4d1ff 55%,#a5b8ff 100%)`,
+            background: `linear-gradient(${130 + i * 28}deg,#fff6d6 0%,#ffe799 55%,#ffda57 100%)`,
           }}
         >
-          <span className="text-[18px] normal-case tracking-tight text-[#1f3dff]">{name}</span>
-          <span className="rounded-lg border-2 border-dashed border-[#1f3dff]/30 px-3 py-2">
+          <span className="text-[18px] normal-case tracking-tight text-[#755b00]">{name}</span>
+          <span className="rounded-lg border-2 border-dashed border-[#ffc800]/30 px-3 py-2">
             Add image
             <br />
             public/about/investor-{i + 1}.jpg
@@ -471,7 +472,7 @@ export default function About() {
   const fade = "linear-gradient(to bottom, #000 62%, transparent 100%)";
 
   return (
-    <div ref={root} id="about" className="bg-[#eef0f5] text-[#0b0b12]">
+    <div ref={root} id="about" className="bg-[#f5f4ef] text-[#0b0b12]">
       <section className="ab-hero relative overflow-hidden">
         <div
           aria-hidden
@@ -489,18 +490,18 @@ export default function About() {
                   sizes="100vw"
                   className="object-cover brightness-95 contrast-105 saturate-100"
                 />
-                <div className="absolute inset-0 bg-[#eef0f5]/5" />
+                <div className="absolute inset-0 bg-[#f5f4ef]/5" />
               </>
             ) : (
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "radial-gradient(ellipse at 18% 28%, #aebfff 0%, transparent 55%), radial-gradient(ellipse at 82% 18%, #a2baff 0%, transparent 50%), linear-gradient(180deg,#bfd0ff 0%,#d8e2ff 100%)",
+                    "radial-gradient(ellipse at 18% 28%, #ffe799 0%, transparent 55%), radial-gradient(ellipse at 82% 18%, #ffe38a 0%, transparent 50%), linear-gradient(180deg,#ffecad 0%,#fff4cf 100%)",
                 }}
               >
                 <span
-                  className="absolute left-6 top-28 rounded-lg border-2 border-dashed border-[#1f3dff]/30 px-3 py-2 text-[11px] uppercase text-[#1f3dff]/70"
+                  className="absolute left-6 top-28 rounded-lg border-2 border-dashed border-[#ffc800]/30 px-3 py-2 text-[11px] uppercase text-[#755b00]/70"
                   style={mono}
                 >
                   Add image: public/about/story.jpg
@@ -549,7 +550,7 @@ export default function About() {
           {PEOPLE.map((p) => (
             <article
               key={p.name}
-              className="ab-person rounded-2xl bg-[#e6e8f1] p-4 will-change-transform"
+              className="ab-person rounded-2xl bg-[#eae8df] p-4 will-change-transform"
               onMouseEnter={(e) => lift(e, true, ".ab-avatar", 6)}
               onMouseLeave={(e) => lift(e, false, ".ab-avatar", 6)}
             >
@@ -568,7 +569,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="px-6 py-[72px] text-white" style={{ backgroundColor: BLUE }}>
+      <section className="px-6 py-[72px] text-[#0b0b12]" style={{ backgroundColor: ACCENT }}>
         <div className="mx-auto max-w-[1280px]">
           <div className="ab-why-head flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
             <div>
@@ -587,13 +588,13 @@ export default function About() {
             {WHY.map(({ title, text, bullets, Icon }) => (
               <article
                 key={title}
-                className="ab-why rounded-2xl bg-[#fbfcff] p-4 text-[#0b0b12] will-change-transform"
+                className="ab-why rounded-2xl bg-[#fdfcf8] p-4 text-[#0b0b12] will-change-transform"
                 onMouseEnter={(e) => lift(e, true, ".ab-tile", 6)}
                 onMouseLeave={(e) => lift(e, false, ".ab-tile", 6)}
               >
                 <div
-                  className="ab-tile flex h-11 w-11 items-center justify-center rounded-xl text-white"
-                  style={{ backgroundColor: BLUE }}
+                  className="ab-tile flex h-11 w-11 items-center justify-center rounded-xl text-[#0b0b12]"
+                  style={{ backgroundColor: ACCENT }}
                 >
                   <Icon />
                 </div>
@@ -636,7 +637,7 @@ export default function About() {
             {PARTNERS.map(({ name, type, Icon }, i) => (
               <div
                 key={name}
-                className={`ab-partner flex h-[96px] items-center gap-4 rounded-xl bg-[#e6e8f1] p-4 transition-colors duration-300 hover:bg-[#dde1ee] will-change-transform ${
+                className={`ab-partner flex h-[96px] items-center gap-4 rounded-xl bg-[#eae8df] p-4 transition-colors duration-300 hover:bg-[#e3dfd2] will-change-transform ${
                   i === PARTNERS.length - 1 ? "lg:col-span-2" : ""
                 }`}
                 onMouseEnter={(e) => lift(e, true, ".ab-logo", 0)}
@@ -678,8 +679,8 @@ export default function About() {
         <div className="mt-14 flex justify-center">
           <Link
             href="/contact"
-            style={{ ...mono, backgroundColor: BLUE }}
-            className="ab-cta group relative inline-flex h-[40px] items-center gap-2 overflow-hidden rounded-full px-5 text-[13px] font-semibold uppercase tracking-wide text-white"
+            style={{ ...mono, backgroundColor: ACCENT }}
+            className="ab-cta group relative inline-flex h-[40px] items-center gap-2 overflow-hidden rounded-full px-5 text-[13px] font-semibold uppercase tracking-wide text-[#0b0b12] hover:text-white"
           >
             <span
               aria-hidden
@@ -702,3 +703,4 @@ export default function About() {
     </div>
   );
 }
+

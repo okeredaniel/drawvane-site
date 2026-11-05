@@ -31,8 +31,9 @@ const FORM_IMAGE = "/contact/form-image.avif";
 // 4. Privacy policy page the checkbox text links to.
 const PRIVACY_HREF = "/privacy";
 
-const BLUE = "#1f3dff";
-const PAPER = "#fbfcff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
+const PAPER = "#fdfcf8";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -75,7 +76,7 @@ const RingMark = () => (
       </linearGradient>
     </defs>
     <circle cx="12" cy="12" r="10" fill="url(#bd-ring)" />
-    <circle cx="12" cy="12" r="5" fill="#eef0f5" />
+    <circle cx="12" cy="12" r="5" fill="#f5f4ef" />
   </svg>
 );
 const GearMark = () => (
@@ -123,7 +124,7 @@ type FieldKey = "name" | "email" | "phone" | "type" | "message" | "consent";
 type Errors = Partial<Record<FieldKey, string>>;
 
 const inputCls =
-  "w-full rounded-lg border bg-[#fbfcff] px-3 text-[14px] text-[#0b0b12] outline-none transition-all duration-200 placeholder:text-[#6b6d80] focus:border-[#1f3dff] focus:ring-4 focus:ring-[#1f3dff]/10";
+  "w-full rounded-lg border bg-[#fdfcf8] px-3 text-[14px] text-[#0b0b12] outline-none transition-all duration-200 placeholder:text-[#6b6d80] focus:border-[#ffc800] focus:ring-4 focus:ring-[#ffc800]/10";
 
 function Field({
   label,
@@ -233,7 +234,7 @@ export default function BookDemo() {
     getCalApi().then((cal) => {
       cal("ui", {
         theme: "light",
-        styles: { branding: { brandColor: "#1f3dff" } },
+        styles: { branding: { brandColor: "#ffc800" } },
       });
     });
   }, [tab]);
@@ -294,7 +295,7 @@ export default function BookDemo() {
     <section
       id="book-demo"
       ref={root}
-      className="bg-[#eef0f5] px-6 pb-[100px] pt-[88px] text-[#0b0b12]"
+      className="bg-[#f5f4ef] px-6 pb-[100px] pt-[88px] text-[#0b0b12]"
     >
       <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[minmax(0,1fr)_740px]">
         {/* ------------------------- left ------------------------- */}
@@ -302,12 +303,12 @@ export default function BookDemo() {
           <div>
             <div
               className="bd-eyebrow flex items-center gap-2 text-[12px] uppercase"
-              style={{ ...mono, color: BLUE }}
+              style={{ ...mono, color: ACCENT_INK }}
             >
               <span
                 aria-hidden
                 className="inline-block h-[8px] w-[8px] rounded-full border-2"
-                style={{ borderColor: BLUE }}
+                style={{ borderColor: ACCENT }}
               />
               Contact us
             </div>
@@ -374,21 +375,21 @@ export default function BookDemo() {
         {/* ------------------------- right ------------------------- */}
         <div className="bd-card relative overflow-hidden rounded-[24px] p-4">
           {/* photo behind (or blue placeholder) */}
-          <div aria-hidden className="bd-bg absolute inset-0">
+          <div aria-hidden className="bd-bg absolute inset-0 bg-[#ffc800]">
             {FORM_IMAGE ? (
               <Image
                 src={FORM_IMAGE}
                 alt=""
                 fill
                 sizes="(max-width: 1024px) 100vw, 740px"
-                className="object-cover object-center"
+                className="object-cover object-center grayscale opacity-35 mix-blend-multiply"
               />
             ) : (
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "radial-gradient(ellipse at 15% 10%, #8ea4ff 0%, transparent 55%), radial-gradient(ellipse at 90% 85%, #3f5cff 0%, transparent 55%), linear-gradient(160deg,#7f98ff 0%,#4c68ff 100%)",
+                    "radial-gradient(ellipse at 15% 10%, #ffe799 0%, transparent 55%), radial-gradient(ellipse at 90% 85%, #e6b400 0%, transparent 55%), linear-gradient(160deg,#ffe799 0%,#e6b400 100%)",
                 }}
               >
                 <span
@@ -435,18 +436,18 @@ export default function BookDemo() {
               ))}
             </div>
 
-            <div className="bd-form-card rounded-[18px] bg-[#fbfcff] p-4">
+            <div className="bd-form-card rounded-[18px] bg-[#fdfcf8] p-4">
               <div className="bd-panel">
                 {tab === "form" ? (
                   sentName !== null ? (
                     /* ---- success ---- */
                     <div className="flex min-h-[620px] flex-col items-center justify-center text-center">
                       <svg className="bd-ok-circle" width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden>
-                        <circle cx="36" cy="36" r="34" fill={BLUE} />
+                        <circle cx="36" cy="36" r="34" fill={ACCENT} />
                         <path
                           className="bd-ok-check"
                           d="M22 37l10 10 18-20"
-                          stroke="#fff"
+                          stroke="#0b0b12"
                           strokeWidth="4"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -467,7 +468,7 @@ export default function BookDemo() {
                           setErrors({});
                         }}
                         className="bd-ok-text mt-6 text-[13px] uppercase underline underline-offset-4"
-                        style={{ ...mono, color: BLUE }}
+                        style={{ ...mono, color: ACCENT_INK }}
                       >
                         Send another message
                       </button>
@@ -551,7 +552,7 @@ export default function BookDemo() {
                           <input type="checkbox" name="consent" id="consent" className="peer sr-only" />
                           <span
                             aria-hidden
-                            className={`mt-[2px] flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border bg-white transition-all duration-200 peer-checked:border-[#1f3dff] peer-checked:bg-[#1f3dff] peer-focus-visible:ring-4 peer-focus-visible:ring-[#1f3dff]/20 [&>svg]:scale-0 peer-checked:[&>svg]:scale-100 ${
+                            className={`mt-[2px] flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border bg-white transition-all duration-200 peer-checked:border-[#ffc800] peer-checked:bg-[#ffc800] peer-focus-visible:ring-4 peer-focus-visible:ring-[#ffc800]/20 [&>svg]:scale-0 peer-checked:[&>svg]:scale-100 ${
                               errors.consent ? "border-[#e5484d]" : "border-black/20"
                             }`}
                           >
@@ -561,7 +562,7 @@ export default function BookDemo() {
                               height="10"
                               viewBox="0 0 12 12"
                               fill="none"
-                              stroke="#fff"
+                              stroke="#0b0b12"
                               strokeWidth="2"
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -572,7 +573,7 @@ export default function BookDemo() {
                           <span className="text-[10.5px] uppercase leading-[1.35] tracking-wide text-[#2b2d3a]" style={mono}>
                             By submitting this form, you agree to the processing of your information as described
                             in our{" "}
-                            <Link href={PRIVACY_HREF} className="underline-offset-2 hover:underline" style={{ color: BLUE }}>
+                            <Link href={PRIVACY_HREF} className="underline-offset-2 hover:underline" style={{ color: ACCENT_INK }}>
                               Privacy Policy
                             </Link>
                             .
@@ -588,8 +589,8 @@ export default function BookDemo() {
                       <button
                         type="submit"
                         disabled={sending}
-                        style={{ ...mono, backgroundColor: BLUE }}
-                        className="bd-submit group relative flex h-[40px] w-full items-center justify-center gap-2 overflow-hidden rounded-full text-[13px] font-semibold uppercase tracking-wide text-white disabled:opacity-80"
+                        style={{ ...mono, backgroundColor: ACCENT }}
+                        className="bd-submit group relative flex h-[40px] w-full items-center justify-center gap-2 overflow-hidden rounded-full text-[13px] font-semibold uppercase tracking-wide text-[#0b0b12] hover:text-white disabled:opacity-80"
                       >
                         <span
                           aria-hidden
@@ -597,7 +598,7 @@ export default function BookDemo() {
                         />
                         <span
                           aria-hidden
-                          className={`relative inline-block h-[8px] w-[8px] rounded-full border-2 border-white/80 transition-transform duration-300 group-hover:scale-125 ${
+                          className={`relative inline-block h-[8px] w-[8px] rounded-full border-2 border-current/80 transition-transform duration-300 group-hover:scale-125 ${
                             sending ? "animate-spin border-t-transparent" : ""
                           }`}
                         />

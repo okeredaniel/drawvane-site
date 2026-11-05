@@ -5,7 +5,8 @@ import { useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 
 const BRAND = "Stratora";
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const INK = "#0b0b12";
 const DARK = "#02030b";
 const ICON = "#979797";
@@ -199,7 +200,7 @@ export default function OurImpact() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section style={{ backgroundColor: "#eef0f5" }} className="pb-24 pt-4 md:pt-10">
+    <section style={{ backgroundColor: "#f5f4ef" }} className="pb-24 pt-4 md:pt-10">
       <style>{`
         @keyframes impactScroll { from { transform: translateX(0) } to { transform: translateX(-50%) } }
         .impact-track { animation: impactScroll 32s linear infinite; }
@@ -250,7 +251,7 @@ export default function OurImpact() {
               style={{ color: INK }}
             >
               Use{" "}
-              <span style={{ color: BLUE }}>{BRAND}</span> to review drawings,
+              <span style={{ color: ACCENT_INK }}>{BRAND}</span> to review drawings,
               measure quantities and discuss the details, all in one workspace.
             </p>
 

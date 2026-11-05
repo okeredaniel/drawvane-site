@@ -25,7 +25,7 @@ type Pillar = {
   bullets: string[];
   /**
    * IMAGE SLOT: when you have the picture, drop it in /public and set the
-   * path here, e.g. image: "/solution-plan.png". Until then a blue
+   * path here, e.g. image: "/solution-plan.png". Until then a yellow
    * placeholder box is shown.
    */
   image?: string;
@@ -56,9 +56,9 @@ const PILLARS: Pillar[] = [
   },
 ];
 
-const BLUE = "#2f4dff";
+const ACCENT = "#ffc800";
 const TRACK = "#c9cfe0";
-const PAGE = "#eef0f5";
+const PAGE = "#f5f4ef";
 
 /* ------------------------------------------------------------------ */
 /* Image slot                                                           */
@@ -81,9 +81,9 @@ function ImageSlot({ src, name, alt }: { src?: string; name: string; alt: string
   return (
     <div
       data-image-slot={name}
-      className="media relative flex h-full w-full items-end bg-[linear-gradient(135deg,#2f4dff_0%,#4a67ff_55%,#2a45e6_100%)] p-4 will-change-transform"
+      className="media relative flex h-full w-full items-end bg-[linear-gradient(135deg,#ffc800_0%,#ffdc57_55%,#e0ad00_100%)] p-4 will-change-transform"
     >
-      <span className="rounded-md bg-white/15 px-2 py-1 font-mono text-[11px] uppercase tracking-wide text-white/80 backdrop-blur">
+      <span className="rounded-md bg-white/15 px-2 py-1 font-mono text-[11px] uppercase tracking-wide text-[#0b0b12]/80 backdrop-blur">
         Image: {name}
       </span>
     </div>
@@ -211,8 +211,8 @@ export default function Solution() {
               dots.forEach((el, i) => {
                 const on = i <= dotIdx;
                 gsap.to(el, {
-                  backgroundColor: on ? BLUE : PAGE,
-                  borderColor: on ? BLUE : TRACK,
+                  backgroundColor: on ? ACCENT : PAGE,
+                  borderColor: on ? ACCENT : TRACK,
                   scale: on ? 1.25 : 1,
                   duration: 0.4,
                   ease: "back.out(2)",
@@ -295,15 +295,15 @@ export default function Solution() {
       ref={rootRef}
       id="solution"
       style={{ colorScheme: "light" }}
-      className="scroll-mt-20 overflow-x-clip bg-[#eef0f5] px-3 py-16 text-[#0b0d1a] md:px-5 md:py-24"
+      className="scroll-mt-20 overflow-x-clip bg-[#f5f4ef] px-3 py-16 text-[#0b0d1a] md:px-5 md:py-24"
     >
       <div className="mx-auto max-w-[1280px]">
         {/* Heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <div className="eyebrow mb-6 inline-flex items-center gap-2 font-mono text-[13px] font-semibold uppercase tracking-wide text-[#2f4dff]">
+          <div className="eyebrow mb-6 inline-flex items-center gap-2 font-mono text-[13px] font-semibold uppercase tracking-wide text-[#755b00]">
             <span className="relative flex size-3 items-center justify-center">
-              <span className="absolute inline-flex size-full animate-ping rounded-full border border-[#2f4dff] opacity-50" />
-              <span className="relative inline-flex size-3 rounded-full border-2 border-[#2f4dff]" />
+              <span className="absolute inline-flex size-full animate-ping rounded-full border border-[#ffc800] opacity-50" />
+              <span className="relative inline-flex size-3 rounded-full border-2 border-[#ffc800]" />
             </span>
             Our Solution
           </div>
@@ -319,7 +319,7 @@ export default function Solution() {
           {PILLARS.map((p) => (
             <article
               key={p.title}
-              className="card overflow-hidden rounded-2xl bg-[#e8ebf4] transition-shadow duration-300 hover:shadow-[0_24px_50px_-20px_rgba(31,60,255,0.35)]"
+              className="card overflow-hidden rounded-2xl bg-[#ecebe5] transition-shadow duration-300 hover:shadow-[0_24px_50px_-20px_rgba(96,74,0,0.35)]"
             >
               <div className="card-inner flex h-full flex-col">
                 <div className="p-5 pb-6 md:p-4 md:pb-6">
@@ -329,7 +329,7 @@ export default function Solution() {
                   <ul className="mt-6 space-y-3.5">
                     {p.bullets.map((b) => (
                       <li key={b} className="group/li flex items-center gap-3 text-[15px] font-medium text-[#0b0d1a]">
-                        <span className="ring size-2.5 shrink-0 rounded-full border-2 border-[#3a3f52] transition-colors duration-300 group-hover/li:border-[#2f4dff] group-hover/li:bg-[#2f4dff]" />
+                        <span className="ring size-2.5 shrink-0 rounded-full border-2 border-[#3a3f52] transition-colors duration-300 group-hover/li:border-[#ffc800] group-hover/li:bg-[#ffc800]" />
                         <span className="btxt">{b}</span>
                       </li>
                     ))}

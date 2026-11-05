@@ -13,8 +13,9 @@ gsap.registerPlugin(ScrollTrigger);
 /* ------------------------------------------------------------------ */
 
 const BRAND = "Stratora";
-const BLUE = "#1230FF";
-const PAGE_BG = "#EDF0F5";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
+const PAGE_BG = "#f5f4ef";
 const INK = "#0B0F1A";
 const MONO =
   "var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace";
@@ -75,7 +76,7 @@ const REPEATS_PER_GROUP = 3;
 /*  Small pieces                                                       */
 /* ------------------------------------------------------------------ */
 
-function RingDot({ color = BLUE }: { color?: string }) {
+function RingDot({ color = ACCENT_INK }: { color?: string }) {
   return (
     <motion.span
       aria-hidden
@@ -118,7 +119,7 @@ function IntegrationTile({ tile, hidden }: { tile: Tile; hidden: boolean }) {
             borderRadius: 22,
             transform: "skewX(-8deg)",
             boxShadow:
-              "0 14px 26px -14px rgba(20,30,90,0.45), inset 0 1px 0 rgba(255,255,255,0.35)",
+              "0 14px 26px -14px rgba(96,74,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35)",
           }}
         >
           {/* light sweep on hover */}
@@ -365,13 +366,13 @@ export default function Integration() {
         data-blob
         aria-hidden
         className="pointer-events-none absolute -left-24 top-1/3 h-[420px] w-[420px] rounded-full blur-3xl"
-        style={{ background: "rgba(18,48,255,0.10)" }}
+        style={{ background: "rgba(96,74,0,0.10)" }}
       />
       <div
         data-blob
         aria-hidden
         className="pointer-events-none absolute -right-24 top-1/2 h-[380px] w-[380px] rounded-full blur-3xl"
-        style={{ background: "rgba(120,140,255,0.14)" }}
+        style={{ background: "rgba(96,74,0,0.14)" }}
       />
       {/* cursor spotlight */}
       <div
@@ -380,7 +381,7 @@ export default function Integration() {
         className="pointer-events-none absolute left-0 top-0 h-[520px] w-[520px] rounded-full opacity-0"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(18,48,255,0.16), transparent)",
+            "radial-gradient(closest-side, rgba(96,74,0,0.16), transparent)",
         }}
       />
 
@@ -389,7 +390,7 @@ export default function Integration() {
         <div className="mx-auto max-w-[1120px] px-6 text-center">
           <motion.div
             className="inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-wide"
-            style={{ color: BLUE, fontFamily: MONO }}
+            style={{ color: ACCENT_INK, fontFamily: MONO }}
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
@@ -495,8 +496,8 @@ export default function Integration() {
 
           <motion.a
             href="/#pricing"
-            className="mt-10 inline-flex h-10 items-center gap-2 rounded-full px-5 text-[13px] font-semibold uppercase tracking-wide text-white"
-            style={{ background: BLUE, fontFamily: MONO }}
+            className="mt-10 inline-flex h-10 items-center gap-2 rounded-full px-5 text-[13px] font-semibold uppercase tracking-wide text-[#0b0b12]"
+            style={{ background: ACCENT, fontFamily: MONO }}
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}

@@ -15,7 +15,8 @@ gsap.registerPlugin(ScrollTrigger);
 /* Author photos: fill `avatar` in AUTHORS (e.g. "/journal/daniel.jpg").*/
 /* ------------------------------------------------------------------ */
 
-const BLUE = "#1f3dff";
+const ACCENT = "#ffc800";
+const ACCENT_INK = "#755b00";
 const mono = {
   fontFamily:
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
@@ -160,13 +161,13 @@ function PostImage({
   }
   return (
     <div
-      className={`jr-pic absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#1f3dff]/70 ${className}`}
+      className={`jr-pic absolute inset-0 flex items-center justify-center p-4 text-center text-[11px] uppercase text-[#755b00]/70 ${className}`}
       style={{
         ...mono,
-        background: `linear-gradient(${125 + tint * 23}deg,#e6ebff 0%,#c4d1ff 55%,#a5b8ff 100%)`,
+        background: `linear-gradient(${125 + tint * 23}deg,#fff6d6 0%,#ffe799 55%,#ffda57 100%)`,
       }}
     >
-      <span className="rounded-lg border-2 border-dashed border-[#1f3dff]/30 px-3 py-2">
+      <span className="rounded-lg border-2 border-dashed border-[#ffc800]/30 px-3 py-2">
         Add image
         <br />
         public/journal/{post.slug}.avif
@@ -188,8 +189,8 @@ function Avatar({ who }: { who: AuthorKey }) {
         <Image src={a.avatar} alt={a.name} fill sizes="34px" className="object-cover" />
       ) : (
         <div
-          className="flex h-full w-full items-center justify-center text-[12px] font-semibold text-white"
-          style={{ background: "linear-gradient(135deg,#6f86ff,#1f3dff)" }}
+          className="flex h-full w-full items-center justify-center text-[12px] font-semibold text-[#0b0b12]"
+          style={{ background: "linear-gradient(135deg,#ffe680,#ffc800)" }}
         >
           {initials}
         </div>
@@ -299,18 +300,18 @@ export default function Journal() {
     <section
       id="journal"
       ref={root}
-      className="bg-[#eef0f5] px-6 pb-24 pt-[84px] text-[#0b0b12]"
+      className="bg-[#f5f4ef] px-6 pb-24 pt-[84px] text-[#0b0b12]"
     >
       <div className="mx-auto max-w-[1160px]">
         <div className="flex flex-col items-center text-center">
           <div
             className="jr-eyebrow flex items-center gap-2 text-[12px] uppercase"
-            style={{ ...mono, color: BLUE }}
+            style={{ ...mono, color: ACCENT_INK }}
           >
             <span
               aria-hidden
               className="inline-block h-[8px] w-[8px] rounded-full border-2"
-              style={{ borderColor: BLUE }}
+              style={{ borderColor: ACCENT }}
             />
             Our journal
           </div>
@@ -326,7 +327,7 @@ export default function Journal() {
 
         <Link
           href={FEATURED.href}
-          className="jr-feature group mt-14 grid overflow-hidden rounded-[20px] bg-[#fbfcff] lg:grid-cols-[540px_1fr]"
+          className="jr-feature group mt-14 grid overflow-hidden rounded-[20px] bg-[#fdfcf8] lg:grid-cols-[540px_1fr]"
           onMouseEnter={(e) => hover(e, true, false)}
           onMouseLeave={(e) => hover(e, false, false)}
         >
@@ -349,12 +350,12 @@ export default function Journal() {
             </div>
             <div
               className="jr-feat-item mt-10 flex items-center gap-2 text-[13px] uppercase lg:mt-auto"
-              style={{ ...mono, color: BLUE }}
+              style={{ ...mono, color: ACCENT_INK }}
             >
               <span
                 aria-hidden
                 className="inline-block h-[8px] w-[8px] rounded-full border-2 transition-transform duration-300 group-hover:scale-150"
-                style={{ borderColor: "#7d8fff" }}
+                style={{ borderColor: "#ffda57" }}
               />
               Read article
               <span
@@ -372,7 +373,7 @@ export default function Journal() {
             <Link
               key={p.slug}
               href={`/journal/${p.slug}`}
-              className="jr-card group flex flex-col overflow-hidden rounded-[20px] bg-[#fbfcff] will-change-transform"
+              className="jr-card group flex flex-col overflow-hidden rounded-[20px] bg-[#fdfcf8] will-change-transform"
               onMouseEnter={(e) => hover(e, true, true)}
               onMouseLeave={(e) => hover(e, false, true)}
             >
@@ -381,7 +382,7 @@ export default function Journal() {
                 <span
                   aria-hidden
                   className="absolute right-3 top-3 flex h-9 w-9 scale-50 items-center justify-center rounded-full bg-white text-[15px] opacity-0 shadow-sm transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
-                  style={{ color: BLUE }}
+                  style={{ color: ACCENT_INK }}
                 >
                   ↗
                 </span>
@@ -399,3 +400,4 @@ export default function Journal() {
     </section>
   );
 }
+
