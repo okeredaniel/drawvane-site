@@ -76,15 +76,18 @@ export default function ParticleBlob({
       respectReducedMotion && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    let w = 0;
+    let w = 0; // wrapper size (layout)
     let h = 0;
+    let vw = 0; // viewport size (canvas covers the whole screen)
+    let vh = 0;
     let particles: P[] = [];
     let sparkList: S[] = [];
     let start = performance.now();
     let last = start;
     let nextBurst = 6500;
     let raf = 0;
-    let visible = true;
+    let visible = false;
+    let introduced = false;
     let disposed = false;
     let img: HTMLImageElement | null = null;
     const mouse = { x: -9999, y: -9999, vx: 0, vy: 0 };
@@ -124,11 +127,14 @@ export default function ParticleBlob({
       w = wrap.clientWidth;
       h = wrap.clientHeight;
       if (!w || !h) return;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      vw = window.innerWidth;
+      vh = window.innerHeight;
+      canvas.width = Math.round(vw * dpr);
+      canvas.height = Math.round(vh * dpr);
+      canvas.style.width = `${vw}px`;
+      canvas.style.height = `${vh}px`;
+      const wr = wrap.getBoundingClientRect();
+      const far = Math.max(vw, vh);
 
       const scale = Math.min((w * fill) / img.width, (h * fill) / img.height);
       const dw = Math.max(1, Math.floor(img.width * scale));
@@ -154,12 +160,15 @@ export default function ParticleBlob({
 
           const tx = ox + x + gap / 2;
           const ty = oy + y + gap / 2;
+          // intro: start from beyond every edge of the screen (in wrapper-local coords)
           const ang = Math.random() * Math.PI * 2;
-          const r = intro ? w * 0.6 + Math.random() * w * 0.5 : 0;
+          const r = far * 0.7 + Math.random() * far * 0.4;
+          const sx0 = vw / 2 + Math.cos(ang) * r - wr.left;
+          const sy0 = vh / 2 + Math.sin(ang) * r - wr.top;
 
           next.push({
-            x: intro ? w / 2 + Math.cos(ang) * r : tx,
-            y: intro ? h / 2 + Math.sin(ang) * r : ty,
+            x: intro ? sx0 : tx,
+            y: intro ? sy0 : ty,
             vx: 0,
             vy: 0,
             tx,
@@ -168,7 +177,7 @@ export default function ParticleBlob({
             phase: Math.random() * Math.PI * 2,
             amp: reduced ? 0 : 3 + Math.random() * 4,
             speed: 0.5 + Math.random() * 1.3,
-            delay: intro ? (Math.hypot(tx - w / 2, ty - h / 2) / w) * 500 + Math.random() * 300 : 0,
+            delay: intro ? Math.random() * 900 : 0,
           });
         }
       }
@@ -180,10 +189,19 @@ export default function ParticleBlob({
 
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
-      if (!visible || !w) {
+      if (!w) {
         last = now;
         return;
       }
+      if (!visible) {
+        last = now;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, vw, vh);
+        return;
+      }
+      const rect = wrap.getBoundingClientRect();
+      const lx = mouse.x - rect.left; // cursor in wrapper-local coords
+      const ly = mouse.y - rect.top;
       const dt = Math.min(2, (now - last) / 16.667);
       last = now;
       const t = now - start;
@@ -203,11 +221,13 @@ export default function ParticleBlob({
         nextBurst = t + burstEvery * 1000;
       }
 
-      ctx.clearRect(0, 0, w, h);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, vw, vh);
+      ctx.setTransform(dpr, 0, 0, dpr, rect.left * dpr, rect.top * dpr);
 
       for (const p of particles) {
         const e = Math.min(1, Math.max(0, (t - p.delay) / 900));
-        const k = 0.004 + e * e * 0.05;
+        const k = 0.006 + e * e * 0.05;
 
         // idle life: personal wobble + a slow flowing wave + gentle breathing
         const bx =
@@ -219,8 +239,8 @@ export default function ParticleBlob({
         let ax = (bx - p.x) * k;
         let ay = (by - p.y) * k;
 
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
+        const dx = p.x - lx;
+        const dy = p.y - ly;
         const d2 = dx * dx + dy * dy;
         let near = 0;
         if (d2 < radius * radius && d2 > 0.01) {
@@ -238,8 +258,9 @@ export default function ParticleBlob({
         p.vx = (p.vx + ax * dt) * damp;
         p.vy = (p.vy + ay * dt) * damp;
         const sp2 = p.vx * p.vx + p.vy * p.vy;
-        if (sp2 > 256) {
-          const c = 16 / Math.sqrt(sp2);
+        const cap = e < 1 ? 40 : 16;
+        if (sp2 > cap * cap) {
+          const c = cap / Math.sqrt(sp2);
           p.vx *= c;
           p.vy *= c;
         }
@@ -271,8 +292,8 @@ export default function ParticleBlob({
           sp.vx += (Math.random() - 0.5) * 0.03 * dt;
           sp.x += sp.vx * dt;
           sp.y += sp.vy * dt;
-          const dx = sp.x - mouse.x;
-          const dy = sp.y - mouse.y;
+          const dx = sp.x - lx;
+          const dy = sp.y - ly;
           const d2 = dx * dx + dy * dy;
           if (d2 < radius * radius && d2 > 0.01) {
             const m = Math.sqrt(d2);
@@ -298,9 +319,8 @@ export default function ParticleBlob({
     };
 
     const setMouse = (e: PointerEvent) => {
-      const rect = wrap.getBoundingClientRect();
-      const nx = e.clientX - rect.left;
-      const ny = e.clientY - rect.top;
+      const nx = e.clientX;
+      const ny = e.clientY;
       if (mouse.x > -9000) {
         mouse.vx = Math.max(-40, Math.min(40, mouse.vx * 0.5 + (nx - mouse.x) * 0.5));
         mouse.vy = Math.max(-40, Math.min(40, mouse.vy * 0.5 + (ny - mouse.y) * 0.5));
@@ -310,7 +330,11 @@ export default function ParticleBlob({
     };
     const onDown = (e: PointerEvent) => {
       setMouse(e);
-      burst(mouse.x, mouse.y, 0.6);
+      const r = wrap.getBoundingClientRect();
+      const m = radius;
+      if (e.clientX > r.left - m && e.clientX < r.right + m && e.clientY > r.top - m && e.clientY < r.bottom + m) {
+        burst(e.clientX - r.left, e.clientY - r.top, 0.6);
+      }
     };
     const onLeave = () => {
       mouse.x = mouse.y = -9999;
@@ -319,34 +343,46 @@ export default function ParticleBlob({
       if (e.pointerType !== "mouse") onLeave();
     };
     if (!reduced) {
-      wrap.addEventListener("pointermove", setMouse);
-      wrap.addEventListener("pointerdown", onDown);
-      wrap.addEventListener("pointerup", onUp);
-      wrap.addEventListener("pointerleave", onLeave);
+      window.addEventListener("pointermove", setMouse, { passive: true });
+      window.addEventListener("pointerdown", onDown, { passive: true });
+      window.addEventListener("pointerup", onUp, { passive: true });
+      document.addEventListener("mouseleave", onLeave);
     }
+
+    // play the entrance the first time the blob is actually on screen
+    const maybeIntro = () => {
+      if (img && visible && !introduced) {
+        introduced = true;
+        build(!reduced);
+        last = performance.now();
+      }
+    };
 
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
+      maybeIntro();
     });
     io.observe(wrap);
 
     let resizeTimer: ReturnType<typeof setTimeout> | undefined;
-    const ro = new ResizeObserver(() => {
+    const schedule = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        if (!disposed && img) build(false);
+        if (!disposed && img && introduced) build(false);
       }, 150);
-    });
+    };
+    const ro = new ResizeObserver(schedule);
     ro.observe(wrap);
+    window.addEventListener("resize", schedule);
 
     const image = new window.Image();
     image.crossOrigin = "anonymous";
     image.onload = () => {
       if (disposed) return;
       img = image;
-      build(!reduced);
       last = performance.now();
       raf = requestAnimationFrame(frame);
+      maybeIntro();
     };
     image.src = src;
 
@@ -356,19 +392,17 @@ export default function ParticleBlob({
       clearTimeout(resizeTimer);
       io.disconnect();
       ro.disconnect();
-      wrap.removeEventListener("pointermove", setMouse);
-      wrap.removeEventListener("pointerdown", onDown);
-      wrap.removeEventListener("pointerup", onUp);
-      wrap.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointermove", setMouse);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
+      document.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("resize", schedule);
     };
   }, [src, gap, fill, dot, radius, burstEvery, sparks, respectReducedMotion]);
 
   return (
-    <div
-      ref={wrapRef}
-      className={`relative w-full touch-none overflow-hidden ${className}`}
-    >
-      <canvas ref={canvasRef} className="absolute inset-0" aria-hidden />
+    <div ref={wrapRef} className={`relative w-full ${className}`}>
+      <canvas ref={canvasRef} className="pointer-events-none fixed inset-0" aria-hidden />
     </div>
   );
 }
