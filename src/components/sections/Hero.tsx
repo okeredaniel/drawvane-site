@@ -177,6 +177,26 @@ export default function Hero() {
             >
               The Construction Intelligence Layer
             </h1>
+            <p className="mt-5 max-w-[570px] text-[18px] leading-[1.5] text-[#4a4c5c] sm:text-[20px]">
+              <strong className="font-semibold" style={{ color: INK }}>
+                Bad data. $89B in rework.*
+              </strong>
+              <br />
+              Stratora helps you find answers before mistakes become expensive.
+            </p>
+            <p className="mt-3 max-w-[570px] text-[12px] leading-[1.5] text-[#5b6072]">
+              *Estimated global construction rework linked to bad data in 2020.
+              {" "}
+              <a
+                href="https://constructioncloud.autodesk.com/rs/572-JSV-775/images/harnessing_the_data_advantage_in_construction_fmi_apac.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-[#0b0d1a]"
+              >
+                Autodesk/FMI, 2021
+              </a>
+              . Rounded from $88.69B.
+            </p>
           </div>
 
           <ParticleBlob className="h-[300px] lg:h-[360px]" />
