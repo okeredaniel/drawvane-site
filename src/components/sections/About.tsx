@@ -138,7 +138,7 @@ const WHY: Why[] = [
   { title: "Professional judgment", text: "Good information supports the people accountable for construction decisions.", bullets: ["Evidence before assumptions", "Human review of AI answers", "Clear limits and responsibilities"], Icon: IconShield }
 ];
 
-const PARTNERS = [{ name: "CraftFuse", type: "Development partner", Icon: IconLayers }];
+const PARTNERS = [{ name: "Kotafuz", href: "https://kotafuz.com/", type: "Development partner", Icon: IconLayers }];
 
 const STORY_HEADLINE = "Construction moves forward when the right information reaches the right people.".split(" ");
 const WHY_HEADLINE = ["Built", "around", "the", "realities", "of", "construction."];
@@ -521,13 +521,13 @@ export default function About() {
               <Words words={["Building", "Stratora", "together."]} cls="ab-partners-word" />
             </h2>
             <p className="mt-5 max-w-[500px] text-[15.5px] leading-[1.35]">
-              CraftFuse supports Stratora as a development partner, helping bring our construction
+              Kotafuz supports Stratora as a development partner, helping bring our construction
               intelligence platform to life.
             </p>
           </div>
 
           <div className="mx-auto mt-10 grid max-w-[560px] gap-3">
-            {PARTNERS.map(({ name, type, Icon }) => (
+            {PARTNERS.map(({ name, href, type, Icon }) => (
               <div
                 key={name}
                 className="ab-partner flex min-h-[108px] items-center gap-5 rounded-2xl border border-black/5 bg-[#eae8df] p-6 transition-colors duration-300 hover:bg-[#e3dfd2] will-change-transform"
@@ -538,7 +538,7 @@ export default function About() {
                   <Icon />
                 </div>
                 <div>
-                  <div className="text-[22px] leading-tight tracking-[-0.01em]">{name}</div>
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="text-[22px] leading-tight tracking-[-0.01em] underline-offset-4 hover:underline focus-visible:underline">{name}</a>
                   <div className="mt-[2px] text-[15px] text-[#55576a]">{type}</div>
                 </div>
               </div>
