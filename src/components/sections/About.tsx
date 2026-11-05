@@ -14,29 +14,44 @@ gsap.registerPlugin(ScrollTrigger);
 /* Save pictures in public/about/ and put each path below              */
 /* (e.g. "/about/story.jpg"). Empty = shows a placeholder.             */
 /* ------------------------------------------------------------------ */
-const STORY_BG = "/about/story.avif";
+const STORY_BG = "/construction/about-hero.webp";
 
 const PEOPLE = [
   {
-    name: "Daniel Mercer",
-    role: "Founder & CEO",
-    avatar: "/about/daniel-mercer.jpg",
-    text: "Product builder focused on turning complex ideas into clear plans, bringing strategy, priorities and execution together in one connected workspace.",
+    "name": "Construction expertise",
+    "role": "The work comes first",
+    "avatar": "",
+    "text": "Drawings, quantities, specifications and site questions shape the way we build. Every interaction starts with the decisions construction professionals need to make."
   },
   {
-    name: "Maya Chen",
-    role: "Head of Product",
-    avatar: "/about/maya-chen.jpg",
-    text: "Product leader focused on turning complex ideas into clear plans, bringing strategy, priorities and execution together in one connected workspace.",
-  },
+    "name": "Thoughtful engineering",
+    "role": "Clarity in every detail",
+    "avatar": "",
+    "text": "We connect project information in a focused workspace, with careful attention to readable evidence, useful conversations and the people responsible for the final decision."
+  }
 ];
 
-const INVESTORS = [
-  { name: "Maya Ellis", photo: "/about/investor-1.avif" },
-  { name: "Adrian Cole", photo: "/about/investor-2.avif" },
-  { name: "Julian Brooks", photo: "/about/investor-3.avif" },
-  { name: "Nina Patel", photo: "/about/investor-4.avif" },
-  { name: "Elena Ross", photo: "/about/investor-5.avif" },
+const FIELD_IMAGES = [
+  {
+    "name": "Drawing review at a construction site",
+    "photo": "/construction/site-review.webp"
+  },
+  {
+    "name": "Architectural drawings and project information",
+    "photo": "/construction/about-hero.webp"
+  },
+  {
+    "name": "Construction plans and marked details",
+    "photo": "/construction/problem-board.webp"
+  },
+  {
+    "name": "Coordinating project information",
+    "photo": "/construction/solution-align.webp"
+  },
+  {
+    "name": "Project drawings ready for review",
+    "photo": "/construction/hero-bg-1.webp"
+  }
 ];
 
 const ACCENT = "#ffc800";
@@ -112,140 +127,21 @@ const IconShield = () => (
   </LineIcon>
 );
 
-const lp = {
-  width: 24,
-  height: 24,
-  viewBox: "0 0 24 24",
-  fill: "currentColor",
-  "aria-hidden": true,
-} as const;
-
-const Snowflake = () => (
-  <svg {...lp}>
-    <g stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-      {[0, 60, 120].map((a) => (
-        <line key={a} x1="12" y1="2.5" x2="12" y2="21.5" transform={`rotate(${a} 12 12)`} />
-      ))}
-    </g>
-    <circle cx="12" cy="12" r="2.6" />
-  </svg>
-);
-const Pinwheel = () => (
-  <svg {...lp}>
-    <path d="M3 3h8L3 11z M21 3v8l-8-8z M21 21h-8l8-8z M3 21v-8l8 8z" />
-  </svg>
-);
-const DotBars = () => {
-  const xs = Array.from({ length: 8 }, (_, i) => 3.2 + i * 2.5);
-  return (
-    <svg {...lp}>
-      {xs.map((x) => {
-        const h = 2 * Math.sqrt(Math.max(0, 100 - (x + 0.9 - 12) ** 2));
-        return <rect key={x} x={x} y={12 - h / 2} width="1.8" height={h} rx="0.6" />;
-      })}
-    </svg>
-  );
-};
-const StripedDisc = () => (
-  <svg {...lp}>
-    <circle cx="12" cy="12" r="10" />
-    <g fill={PAPER} opacity="0.55">
-      <rect x="3" y="9" width="18" height="1" />
-      <rect x="2.5" y="12" width="19" height="1" />
-      <rect x="3" y="15" width="18" height="1" />
-    </g>
-  </svg>
-);
-const Bend = () => (
-  <svg {...lp}>
-    <path d="M13 3h8v6l-8 7v5H3v-7l6-4h4z" />
-  </svg>
-);
-const Asterisk = () => (
-  <svg {...lp}>
-    <g stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-      {[0, 45, 90, 135].map((a) => (
-        <line key={a} x1="12" y1="3" x2="12" y2="21" transform={`rotate(${a} 12 12)`} />
-      ))}
-    </g>
-  </svg>
-);
-const Ring = () => (
-  <svg {...lp}>
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="12" cy="12" r="5.2" fill={PAPER} />
-    <circle cx="12" cy="12" r="2.6" />
-  </svg>
-);
-const Diamonds = () => (
-  <svg {...lp}>
-    <g transform="rotate(45 12 12)">
-      <rect x="4.5" y="4.5" width="6" height="6" />
-      <rect x="13.5" y="4.5" width="6" height="6" />
-      <rect x="4.5" y="13.5" width="6" height="6" />
-      <rect x="13.5" y="13.5" width="6" height="6" />
-    </g>
-  </svg>
-);
-
-/* ------------------------------------------------------------------ */
-/* Content                                                             */
-/* ------------------------------------------------------------------ */
-
 type Why = { title: string; text: string; bullets: string[]; Icon: ComponentType };
 
 const WHY: Why[] = [
-  {
-    title: "AI-Native Planning",
-    text: "Turn goals and conversations into structured plans your team can act on.",
-    bullets: ["Roadmaps generated in seconds", "Milestones and priorities built in", "Every goal linked to execution"],
-    Icon: IconSparkle,
-  },
-  {
-    title: "One Shared Context",
-    text: "Keep plans, decisions, owners, and progress together in one dependable workspace.",
-    bullets: ["One source of truth", "Clear ownership and status", "Less searching across tools"],
-    Icon: IconLayers,
-  },
-  {
-    title: "Built for Change",
-    text: "Update direction without rebuilding the plan. Stratora keeps every dependency connected.",
-    bullets: ["Plans adapt as work changes", "Dependencies stay visible", "Teams see impact instantly"],
-    Icon: IconRefresh,
-  },
-  {
-    title: "Execution Clarity",
-    text: "Give every teammate a clear next step while leaders keep the full picture.",
-    bullets: ["Actionable task boards", "Live progress and risks", "Focused weekly reviews"],
-    Icon: IconChecklist,
-  },
-  {
-    title: "Decision Memory",
-    text: "Preserve the reasoning behind priorities so important context stays with the work.",
-    bullets: ["Decisions captured in context", "History stays searchable", "Faster team handoffs"],
-    Icon: IconHistory,
-  },
-  {
-    title: "Enterprise Ready",
-    text: "Scale planning across teams with reliable controls, security, and support.",
-    bullets: ["Role-based access", "Secure shared workspaces", "Priority onboarding and support"],
-    Icon: IconShield,
-  },
+  { title: "Project answers", text: "Ask focused questions about the documents your team is working with.", bullets: ["Keep sources within reach", "Review the supporting detail", "Follow up in project context"], Icon: IconSparkle },
+  { title: "Drawing review", text: "Bring the conversation back to the exact detail on the drawing.", bullets: ["Open project drawings", "Mark up the detail", "Discuss what needs attention"], Icon: IconLayers },
+  { title: "Quantity takeoff", text: "Keep measurements connected to the drawings they come from.", bullets: ["Review lengths and areas", "Count the items that matter", "Check scale and assumptions"], Icon: IconChecklist },
+  { title: "Shared project context", text: "Give the people on a project a common place to work through the information.", bullets: ["Shared project documents", "Conversations with context", "Access matched to each role"], Icon: IconRefresh },
+  { title: "Company perspective", text: "Build a clearer picture of the organization behind every project.", bullets: ["Organization workspaces", "People and project access", "A foundation for ADAPT"], Icon: IconHistory },
+  { title: "Professional judgment", text: "Good information supports the people accountable for construction decisions.", bullets: ["Evidence before assumptions", "Human review of AI answers", "Clear limits and responsibilities"], Icon: IconShield }
 ];
 
-const PARTNERS: { name: string; type: string; Icon: ComponentType }[] = [
-  { name: "Northway", type: "B2B software", Icon: Snowflake },
-  { name: "Neurova", type: "Health technology", Icon: Pinwheel },
-  { name: "Menlo", type: "Logistics technology", Icon: DotBars },
-  { name: "Ovo Studio", type: "Creative production", Icon: StripedDisc },
-  { name: "Patgency", type: "Digital agency", Icon: Bend },
-  { name: "Skullbox", type: "Product consultancy", Icon: Asterisk },
-  { name: "Aurix", type: "Engineering software", Icon: Ring },
-  { name: "Verdan", type: "Analytics software", Icon: Diamonds },
-];
+const PARTNERS = [{ name: "CraftFuse", type: "Development partner", Icon: IconLayers }];
 
-const STORY_HEADLINE = "Planning is one of the hardest parts of turning ideas into progress".split(" ");
-const WHY_HEADLINE = ["Built", "for", "enterprise.", "Trusted", "globally."];
+const STORY_HEADLINE = "Construction moves forward when the right information reaches the right people.".split(" ");
+const WHY_HEADLINE = ["Built", "around", "the", "realities", "of", "construction."];
 
 function Words({ words, cls }: { words: string[]; cls: string }) {
   return (
@@ -298,7 +194,7 @@ function Avatar({ name, src }: { name: string; src: string }) {
   );
 }
 
-function InvestorCard({ name, photo, i }: { name: string; photo: string; i: number }) {
+function FieldImageCard({ name, photo, i }: { name: string; photo: string; i: number }) {
   return (
     <div className="relative h-[238px] w-[336px] shrink-0 overflow-hidden rounded-[18px] border border-black/10">
       {photo ? (
@@ -399,11 +295,11 @@ export default function About() {
         )
       );
 
-      gsap.from(".ab-investors-copy", {
+      gsap.from(".ab-field-copy", {
         y: 30,
         opacity: 0,
         duration: 0.8,
-        scrollTrigger: { trigger: ".ab-investors-copy", start: "top 88%", once: true },
+        scrollTrigger: { trigger: ".ab-field-copy", start: "top 88%", once: true },
       });
       gsap.from(".ab-marquee", {
         y: 50,
@@ -488,9 +384,9 @@ export default function About() {
                   fill
                   priority
                   sizes="100vw"
-                  className="object-cover brightness-95 contrast-105 saturate-100"
+                  className="object-cover object-top"
                 />
-                <div className="absolute inset-0 bg-[#f5f4ef]/5" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,rgba(245,244,239,.22),rgba(245,244,239,.88) 30%,rgba(245,244,239,.88) 70%,rgba(245,244,239,.22))" }} />
               </>
             ) : (
               <div
@@ -516,22 +412,22 @@ export default function About() {
             <Words words={STORY_HEADLINE} cls="ab-hero-word" />
           </h1>
           <p className="ab-hero-p mt-10 text-[21px] leading-[1.3] sm:text-[24px]">
-            Teams rarely struggle because they lack ideas. The problem starts when those ideas become
-            scattered across documents, meetings, tasks and tools. Priorities shift, context gets lost,
-            and the original plan slowly becomes disconnected from the work actually happening.
+            A construction project carries thousands of details. Drawings change, specifications grow,
+            and critical answers get buried in documents and conversations. The people doing the work
+            deserve a clearer way to find the information behind the next decision.
           </p>
           <p className="ab-hero-p mt-8 text-[17px] leading-[1.5] text-[#45475a]">
-            Stratora is built around a different idea. Planning shouldn’t be a document you create once
-            and then maintain manually. It should be a living system that understands the goal, turns it
-            into clear objectives and milestones, and stays connected to the team as the work moves
-            forward.
+            Stratora is the construction intelligence layer. It brings drawings, documents, quantities
+            and project conversations into a connected workspace, helping teams explore the detail,
+            review the evidence and understand what needs attention before work moves forward.
           </p>
           <p className="ab-hero-p mt-6 text-[17px] leading-[1.5] text-[#45475a]">
-            Our goal is to make planning feel less like managing another tool and more like having a
-            shared understanding of what matters, what comes next, and where attention is needed.
+            We are building for contractors, quantity surveyors, designers and project teams. Our
+            direction is simple: make information easier to understand, coordination easier to follow
+            and professional judgment better informed.
           </p>
           <p className="ab-hero-p mt-6 text-[17px] font-semibold leading-[1.5] text-[#2b2d3a]">
-            The plan should move with the work. That’s what Stratora is built for.
+            Understand. Coordinate. Build. That is what Stratora is here for.
           </p>
         </div>
       </section>
@@ -540,9 +436,9 @@ export default function About() {
 
       <section className="px-6 py-[84px]">
         <div className="ab-people-head flex flex-col items-center text-center">
-          <Eyebrow>Behind product</Eyebrow>
+          <Eyebrow>Our approach</Eyebrow>
           <h2 className="mt-4 text-[40px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-[46px]">
-            <Words words={["Meet", "the", "people", "behind", "Stratora"]} cls="ab-people-word" />
+            <Words words={["Built", "around", "people", "who", "build."]} cls="ab-people-word" />
           </h2>
         </div>
 
@@ -579,8 +475,8 @@ export default function About() {
               </h2>
             </div>
             <p className="max-w-[300px] text-[15px] font-medium leading-[1.4] lg:mb-3">
-              Built with enterprise-grade security, privacy, and reliability, Stratora keeps teams
-              connected wherever work happens.
+              From the first document review to the detail on site, Stratora keeps project information
+              close to the people who need it.
             </p>
           </div>
 
@@ -620,26 +516,21 @@ export default function About() {
       <section className="overflow-hidden px-6 pb-[88px] pt-[88px]">
         <div className="mx-auto max-w-[1280px]">
           <div className="ab-partners-head flex flex-col items-center text-center">
-            <Eyebrow>Investors</Eyebrow>
+            <Eyebrow>Our partner</Eyebrow>
             <h2 className="mt-4 text-[40px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-[46px]">
-              <Words words={["Our", "Partners", "&", "Investors"]} cls="ab-partners-word" />
+              <Words words={["Building", "Stratora", "together."]} cls="ab-partners-word" />
             </h2>
             <p className="mt-5 max-w-[500px] text-[15.5px] leading-[1.35]">
-              Our company network includes <strong className="font-semibold">Northway</strong> (B2B
-              software), <strong className="font-semibold">Neurova</strong> (health technology) and{" "}
-              <strong className="font-semibold">Menlo</strong> (logistics technology), alongside teams in
-              design, engineering and analytics—all working toward calmer, more connected product
-              development.
+              CraftFuse supports Stratora as a development partner, helping bring our construction
+              intelligence platform to life.
             </p>
           </div>
 
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {PARTNERS.map(({ name, type, Icon }, i) => (
+          <div className="mx-auto mt-10 grid max-w-[560px] gap-3">
+            {PARTNERS.map(({ name, type, Icon }) => (
               <div
                 key={name}
-                className={`ab-partner flex h-[96px] items-center gap-4 rounded-xl bg-[#eae8df] p-4 transition-colors duration-300 hover:bg-[#e3dfd2] will-change-transform ${
-                  i === PARTNERS.length - 1 ? "lg:col-span-2" : ""
-                }`}
+                className="ab-partner flex min-h-[108px] items-center gap-5 rounded-2xl border border-black/5 bg-[#eae8df] p-6 transition-colors duration-300 hover:bg-[#e3dfd2] will-change-transform"
                 onMouseEnter={(e) => lift(e, true, ".ab-logo", 0)}
                 onMouseLeave={(e) => lift(e, false, ".ab-logo", 0)}
               >
@@ -654,13 +545,9 @@ export default function About() {
             ))}
           </div>
 
-          <p className="ab-investors-copy mx-auto mt-16 max-w-[500px] text-center text-[15.5px] leading-[1.35]">
-            Stratora brings together independent investors including{" "}
-            <strong className="font-semibold">Maya Ellis</strong> (Product Leader and Advisor),{" "}
-            <strong className="font-semibold">Adrian Cole</strong> (Founder and Technology Investor),{" "}
-            <strong className="font-semibold">Nina Patel</strong> (Startup Mentor),{" "}
-            <strong className="font-semibold">Julian Brooks</strong> (Software Entrepreneur), and{" "}
-            <strong className="font-semibold">Elena Ross</strong> (Early-stage Investor).
+          <p className="ab-field-copy mx-auto mt-16 max-w-[500px] text-center text-[15.5px] leading-[1.35]">
+            Drawings on the desk. Questions on site. People making decisions.
+            This is the world Stratora is built around.
           </p>
         </div>
 
@@ -668,8 +555,8 @@ export default function About() {
           <div className="ab-track flex w-max">
             {[0, 1].map((half) => (
               <div key={half} className="flex shrink-0 gap-4 pr-4" aria-hidden={half === 1}>
-                {INVESTORS.map((p, i) => (
-                  <InvestorCard key={`${half}-${p.name}`} name={p.name} photo={p.photo} i={i} />
+                {FIELD_IMAGES.map((p, i) => (
+                  <FieldImageCard key={`${half}-${p.name}`} name={p.name} photo={p.photo} i={i} />
                 ))}
               </div>
             ))}
@@ -690,7 +577,7 @@ export default function About() {
               aria-hidden
               className="relative inline-block h-[8px] w-[8px] rounded-full border-2 border-white/80 transition-transform duration-300 group-hover:scale-125"
             />
-            <span className="relative">Become investor</span>
+            <span className="relative">Talk to our team</span>
             <span
               aria-hidden
               className="relative -ml-1 w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-0 group-hover:w-4 group-hover:translate-x-0 group-hover:opacity-100"
@@ -703,4 +590,5 @@ export default function About() {
     </div>
   );
 }
+
 

@@ -20,7 +20,7 @@ const INK = "#0B0F1A";
 const MONO =
   "var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace";
 
-const HEADING_LINES = ["Bring your project context together", "where the work happens."];
+const HEADING_LINES = ["The tools your projects run on.", "The context that brings them together."];
 
 /** Tilt of the whole marquee in degrees (negative = rises to the right). */
 const TILT_DEG = -4;
@@ -28,40 +28,75 @@ const TILT_DEG = -4;
 /** Seconds for one full loop of each row (bigger = slower). */
 const ROW_DURATIONS = [42, 54, 38, 48];
 
-/**
- * 24 blank tiles, shared out over 4 rows (6 each).
- * To add a logo: save the image in public/integrations/ and set `src`,
- * e.g.  { id: "slack", ..., src: "/integrations/slack.png" }
- */
-type Tile = { id: string; bg: string; src?: string };
-
-const LIGHT = "#F7F8FC";
+// Brand references describe the customer workflow, not a claim of native connectivity.
+type Tile = { id: string; name: string; bg: string; src?: string };
 
 const TILES: Tile[] = [
-  { id: "linkedin", bg: "#0A66C2" },
-  { id: "slack", bg: LIGHT },
-  { id: "tile-3", bg: "#6D5BF6" },
-  { id: "amazon", bg: "#FFAE3A" },
-  { id: "linear", bg: "#111318" },
-  { id: "jira", bg: "#1445FF" },
-  { id: "google", bg: LIGHT },
-  { id: "x", bg: "#0A0A0C" },
-  { id: "sheets", bg: "#21A31D" },
-  { id: "docs", bg: "#4B83F0" },
-  { id: "drive", bg: LIGHT },
-  { id: "slides", bg: "#FBAB09" },
-  { id: "github", bg: "#0D1117" },
-  { id: "whatsapp", bg: "#22C75F" },
-  { id: "notion", bg: LIGHT },
-  { id: "google-g", bg: LIGHT },
-  { id: "youtube", bg: "linear-gradient(180deg,#F2133C,#FF7C93)" },
-  { id: "canva", bg: "linear-gradient(180deg,#19C4C9,#7FE6DF)" },
-  { id: "salesforce", bg: "linear-gradient(180deg,#1AA3E8,#8FD6F5)" },
-  { id: "figma", bg: "linear-gradient(180deg,#1A1A1A,#7A7A7A)" },
-  { id: "trello", bg: "linear-gradient(180deg,#0B6CC4,#58A8E6)" },
-  { id: "asana", bg: "linear-gradient(180deg,#F0505F,#F9A5AE)" },
-  { id: "dropbox", bg: "linear-gradient(180deg,#0B4DFF,#6B93FF)" },
-  { id: "zoom", bg: "linear-gradient(180deg,#1E6CFF,#7FA9FF)" },
+  {
+    "id": "googledocs",
+    "name": "Google Docs",
+    "bg": "#fff4c7",
+    "src": "/tools/googledocs.svg"
+  },
+  {
+    "id": "procore",
+    "name": "Procore",
+    "bg": "#fdfcf8"
+  },
+  {
+    "id": "googledrive",
+    "name": "Google Drive",
+    "bg": "#f0eee5",
+    "src": "/tools/googledrive.svg"
+  },
+  {
+    "id": "bluebeam",
+    "name": "Bluebeam",
+    "bg": "#ffdf66"
+  },
+  {
+    "id": "googlesheets",
+    "name": "Google Sheets",
+    "bg": "#fff4c7",
+    "src": "/tools/googlesheets.svg"
+  },
+  {
+    "id": "autodesk",
+    "name": "Autodesk",
+    "bg": "#fdfcf8",
+    "src": "/tools/autodesk.svg"
+  },
+  {
+    "id": "excel",
+    "name": "Excel",
+    "bg": "#f0eee5"
+  },
+  {
+    "id": "teams",
+    "name": "Teams",
+    "bg": "#ffdf66"
+  },
+  {
+    "id": "dropbox",
+    "name": "Dropbox",
+    "bg": "#fff4c7",
+    "src": "/tools/dropbox.svg"
+  },
+  {
+    "id": "sharepoint",
+    "name": "SharePoint",
+    "bg": "#fdfcf8"
+  },
+  {
+    "id": "acrobat",
+    "name": "Acrobat",
+    "bg": "#f0eee5"
+  },
+  {
+    "id": "outlook",
+    "name": "Outlook",
+    "bg": "#ffdf66"
+  }
 ];
 
 // every 4th tile goes in the same row, so each row has a mix of colors
@@ -96,7 +131,7 @@ function IntegrationTile({ tile, hidden }: { tile: Tile; hidden: boolean }) {
     >
       <div data-bend>
       <motion.div
-        className="relative aspect-[3/2] w-[96px] cursor-pointer md:w-[124px]"
+        className="relative aspect-[3/2] w-[124px] md:w-[148px]"
         initial="rest"
         animate="rest"
         whileHover="hover"
@@ -137,18 +172,14 @@ function IntegrationTile({ tile, hidden }: { tile: Tile; hidden: boolean }) {
           />
         </div>
 
-        {/* logo slot (empty until you add src) */}
-        {tile.src ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Image
-              src={tile.src}
-              alt={hidden ? "" : tile.id}
-              width={56}
-              height={56}
-              className="h-[46%] w-auto object-contain"
-            />
-          </div>
-        ) : null}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-2 text-[#0b0b12]">
+          {tile.src ? (
+            <Image src={tile.src} alt="" width={30} height={30} className="h-7 w-7 object-contain" />
+          ) : (
+            <span aria-hidden className="h-7 text-[20px] font-semibold leading-7 tracking-[-.04em]">{tile.name}</span>
+          )}
+          <span className="text-center text-[11px] font-medium leading-tight">{tile.name}</span>
+        </div>
       </motion.div>
       </div>
     </div>
@@ -397,7 +428,7 @@ export default function Integration() {
             transition={{ duration: 0.5 }}
           >
             <RingDot />
-            Project context
+            Your working world
           </motion.div>
 
           <h2
@@ -488,14 +519,17 @@ export default function Integration() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6 }}
           >
-            Bring project documents, drawings and conversations into {BRAND}.
-            Keep the context close to the work. Logos shown illustrate the
-            wider working environment, not available integrations. Ask us
-            about your workflow.
+            From Google Docs to Procore and Bluebeam, your team already has a toolkit.
+            Tell us where your project information lives and explore how {BRAND}
+            can fit into your workflow.
           </motion.p>
+          <p className="mx-auto mt-3 max-w-[560px] text-[12px] leading-relaxed text-[#65604f]">
+            Workflow references only. Native connections are not available for every tool shown.
+            Confirm connection availability with our team.
+          </p>
 
           <motion.a
-            href="/#pricing"
+            href="/contact"
             className="mt-10 inline-flex h-10 items-center gap-2 rounded-full px-5 text-[13px] font-semibold uppercase tracking-wide text-[#0b0b12]"
             style={{ background: ACCENT, fontFamily: MONO }}
             initial={{ opacity: 0, y: 14 }}
@@ -506,7 +540,7 @@ export default function Integration() {
             transition={{ duration: 0.4 }}
           >
             <RingDot color="#fff" />
-            Our pricing
+            Discuss your workflow
             <motion.svg
               aria-hidden
               width="14"
@@ -528,3 +562,4 @@ export default function Integration() {
     </section>
   );
 }
+

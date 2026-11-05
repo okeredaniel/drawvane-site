@@ -17,22 +17,7 @@ const mono = {
 
 /* Author photos live in public/journal/. Empty avatar = initials placeholder. */
 const AUTHORS = {
-  daniel: {
-    name: "Daniel Mercer",
-    role: "Founder & CEO",
-    avatar: "/journal/daniel-mercer.avif",
-    instagram: "#",
-    x: "#",
-    linkedin: "#",
-  },
-  maya: {
-    name: "Maya Chen",
-    role: "Head of Product",
-    avatar: "/journal/maya-chen.avif",
-    instagram: "#",
-    x: "#",
-    linkedin: "#",
-  },
+  stratora: { name: "Stratora", role: "Construction intelligence", avatar: "/logo.png" },
 };
 
 export type JournalArticleData = {
@@ -68,7 +53,7 @@ function AuthorCard({ who }: { who: keyof typeof AUTHORS }) {
     <div className="mt-12 flex items-center gap-4 rounded-[20px] border border-[#e0e3ee] bg-[#fdfcf8] p-4">
       <div className="relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-[10px]">
         {a.avatar ? (
-          <Image src={a.avatar} alt={a.name} fill sizes="52px" className="object-cover" />
+          <Image src={a.avatar} alt={a.name} fill sizes="52px" className="object-contain p-1" />
         ) : (
           <div
             className="flex h-full w-full items-center justify-center text-[16px] font-semibold text-[#0b0b12]"
@@ -86,26 +71,7 @@ function AuthorCard({ who }: { who: keyof typeof AUTHORS }) {
         </div>
       </div>
 
-      <div className="ml-auto flex items-center gap-1">
-        <Social href={a.instagram} label="Instagram">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="18" height="18" rx="5" />
-            <circle cx="12" cy="12" r="4" />
-            <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
-          </svg>
-        </Social>
-        <Social href={a.x} label="X">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-          </svg>
-        </Social>
-        <Social href={a.linkedin} label="LinkedIn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="18" height="18" rx="2.5" />
-            <path d="M8 11v5M8 8v.01M12 16v-5m0 2.5c0-1.4 1-2.5 2.4-2.5s2.1 1 2.1 2.5V16" />
-          </svg>
-        </Social>
-      </div>
+
     </div>
   );
 }
@@ -225,4 +191,5 @@ export default function JournalArticle({ article }: { article: JournalArticleDat
     </>
   );
 }
+
 

@@ -12,7 +12,7 @@ const COLUMNS = [
     links: [
       { label: "Solutions", href: "/#solution" },
       { label: "Features", href: "/#features" },
-      { label: "Integrations", href: "/#integration" },
+      { label: "Your toolkit", href: "/#integrations" },
       { label: "Pricing", href: "/#pricing" },
     ],
   },
@@ -20,7 +20,7 @@ const COLUMNS = [
     title: "Company",
     links: [
       { label: "About us", href: "/about" },
-      { label: "Case studies", href: "/case-studies" },
+      { label: "Use cases", href: "/case-studies" },
       { label: "Journal", href: "/journal" },
     ],
   },
@@ -163,3 +163,4 @@ export default function Footer() {
     </footer>
   );
 }
+
