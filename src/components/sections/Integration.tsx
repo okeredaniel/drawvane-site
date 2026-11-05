@@ -29,7 +29,7 @@ const TILT_DEG = -4;
 const ROW_DURATIONS = [42, 54, 38, 48];
 
 // Brand references describe the customer workflow, not a claim of native connectivity.
-type Tile = { id: string; name: string; bg: string; src?: string };
+type Tile = { id: string; name: string; bg: string; src?: string; category?: string };
 
 const TILES: Tile[] = [
   {
@@ -41,6 +41,7 @@ const TILES: Tile[] = [
   {
     "id": "procore",
     "name": "Procore",
+    "category": "Project delivery",
     "bg": "#fdfcf8"
   },
   {
@@ -52,6 +53,7 @@ const TILES: Tile[] = [
   {
     "id": "bluebeam",
     "name": "Bluebeam",
+    "category": "PDF review",
     "bg": "#ffdf66"
   },
   {
@@ -69,11 +71,13 @@ const TILES: Tile[] = [
   {
     "id": "excel",
     "name": "Excel",
+    "category": "Spreadsheets",
     "bg": "#f0eee5"
   },
   {
     "id": "teams",
     "name": "Teams",
+    "category": "Team communication",
     "bg": "#ffdf66"
   },
   {
@@ -85,16 +89,19 @@ const TILES: Tile[] = [
   {
     "id": "sharepoint",
     "name": "SharePoint",
+    "category": "Shared documents",
     "bg": "#fdfcf8"
   },
   {
     "id": "acrobat",
     "name": "Acrobat",
+    "category": "PDF documents",
     "bg": "#f0eee5"
   },
   {
     "id": "outlook",
     "name": "Outlook",
+    "category": "Email and calendar",
     "bg": "#ffdf66"
   }
 ];
@@ -178,7 +185,7 @@ function IntegrationTile({ tile, hidden }: { tile: Tile; hidden: boolean }) {
           ) : (
             <span aria-hidden className="h-7 text-[20px] font-semibold leading-7 tracking-[-.04em]">{tile.name}</span>
           )}
-          <span className="text-center text-[11px] font-medium leading-tight">{tile.name}</span>
+          <span className="text-center text-[11px] font-medium leading-tight">{tile.category ?? tile.name}</span>
         </div>
       </motion.div>
       </div>
