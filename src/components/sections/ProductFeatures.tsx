@@ -28,9 +28,9 @@ const HEADING = "What Stratora gives you";
 
 /**
  * BACKGROUND IMAGE SLOT: when you have the textured background picture, put it in
- * /public and set the path, e.g. "/product-features-bg.avif".
+ * /public and set the path, e.g. "/construction/hero-bg-1.webp".
  */
-const BG_IMAGE: string | undefined = "/product-features-bg.avif";
+const BG_IMAGE: string | undefined = "/construction/hero-bg-1.webp";
 
 type Feature = { id: string; title: string; text: string };
 

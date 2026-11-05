@@ -60,8 +60,8 @@ const ROWS: Row[] = [
       "Answers with relevant project context",
       "Follow-up questions as you explore",
     ],
-    image: "/features-goal.avif",
-    imageName: "features-goal.avif",
+    image: "/construction/features-goal.webp",
+    imageName: "construction/features-goal.webp",
   },
   {
     title: "Keep the drawing and the discussion together.",
@@ -71,8 +71,8 @@ const ROWS: Row[] = [
       "Drawing details always close by",
       "Markups that make observations clear",
     ],
-    image: "/features-align.avif",
-    imageName: "features-align.avif",
+    image: "/construction/features-align.webp",
+    imageName: "construction/features-align.webp",
   },
   {
     title: "Measure the detail behind your work.",
@@ -82,8 +82,8 @@ const ROWS: Row[] = [
       "Lengths, areas and counts in the same workspace",
       "Quantities ready for professional review",
     ],
-    image: "/features-adapt.avif",
-    imageName: "features-adapt.avif",
+    image: "/construction/features-adapt.webp",
+    imageName: "construction/features-adapt.webp",
   },
   {
     title: "Talk through the detail when speaking feels easier.",
@@ -93,8 +93,8 @@ const ROWS: Row[] = [
       "Follow up with more questions",
       "Explore project questions by voice",
     ],
-    image: "/features-health.avif",
-    imageName: "features-health.avif",
+    image: "/construction/features-health.webp",
+    imageName: "construction/features-health.webp",
   },
 ];
 

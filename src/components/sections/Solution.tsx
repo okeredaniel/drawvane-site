@@ -37,22 +37,22 @@ const PILLARS: Pillar[] = [
     title: "Review",
     text: "Bring documents together and explore the details your project team needs to understand.",
     bullets: ["Project document answers", "Clear drawing review & markups", "Questions connected to context"],
-    image: "/solution-plan.avif",
-    imageName: "solution-plan.avif",
+    image: "/construction/solution-plan.webp",
+    imageName: "construction/solution-plan.webp",
   },
   {
     title: "Connect",
     text: "Bring people and project discussions together so your team works from shared context.",
     bullets: ["Shared project discussions", "Project information in context", "Project access & permissions"],
-    image: "/solution-align.avif",
-    imageName: "solution-align.avif",
+    image: "/construction/solution-align.webp",
+    imageName: "construction/solution-align.webp",
   },
   {
     title: "Measure",
     text: "Measure lengths, areas and counts, then review the quantities behind your project work.",
     bullets: ["Drawing measurement tools", "Length, area and count takeoff", "Results for professional review"],
-    image: "/solution-execute.avif",
-    imageName: "solution-execute.avif",
+    image: "/construction/solution-execute.webp",
+    imageName: "construction/solution-execute.webp",
   },
 ];
 
