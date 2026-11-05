@@ -186,7 +186,7 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
     return () => ctx.revert();
   }, []);
 
-  const headline = ["Get", "started", "today", "with", "a", "plan", "that", "fits", "your", "company."];
+  const headline = ["Get", "closer", "today", "to", "the", "detail", "that", "drives", "your", "project."];
 
   return (
     <section
@@ -257,7 +257,7 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
           </h2>
 
           <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
-            <Btn href="/contact" label="Get free demo" variant="white" />
+            <Btn href="/contact" label="Book a demo" variant="white" />
             <Btn href="/contact" label="Contact us" variant="outline" />
           </div>
 

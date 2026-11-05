@@ -35,12 +35,12 @@ const BG_IMAGE: string | undefined = "/product-features-bg.avif";
 type Feature = { id: string; title: string; text: string };
 
 const FEATURES: Feature[] = [
-  { id: "plan", title: "AI Plan Builder", text: "Turn a goal or conversation into a clear plan with tasks and milestones." },
-  { id: "workspace", title: "One Clear Workspace", text: "See every plan, priority, update, and risk in one calm view." },
-  { id: "board", title: "Execution Board", text: "Move work from idea to done with clear owners, status, and next steps." },
-  { id: "context", title: "Shared Team Context", text: "Keep everyone aligned around the same decisions, goals, and priorities." },
-  { id: "memory", title: "Decision Memory", text: "Save the why behind every choice so important context never gets lost." },
-  { id: "signals", title: "Smart Progress Signals", text: "Spot blockers and slipping work before they slow the team down." },
+  { id: "plan", title: "Ask Stratora", text: "Ask questions about project documents and explore the answers in one place." },
+  { id: "workspace", title: "Project Workspace", text: "Keep drawings, documents and discussions in one shared workspace." },
+  { id: "board", title: "Drawing Review", text: "Review drawings and add markups to highlight details for your team." },
+  { id: "context", title: "Team Collaboration", text: "Bring people together around the same project documents and discussions." },
+  { id: "memory", title: "Quantity Takeoff", text: "Measure lengths, areas and counts while keeping the drawing detail in view." },
+  { id: "signals", title: "Call Stratora", text: "Talk through your project questions when speaking feels easier than typing." },
 ];
 
 /* ------------------------------------------------------------------ */

@@ -28,26 +28,26 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
-    tab: "Workspace Overview",
-    eyebrow: "Workspace Overview",
-    title: "See the whole plan at a glance.",
-    body: "Track progress, active plans, upcoming milestones, and risks from one clear workspace instantly by AI.",
+    tab: "ADAPT",
+    eyebrow: "ADAPT",
+    title: "See your company at a glance.",
+    body: "Connect your company, people and projects. Guided company assessments are coming next.",
     background: "/hero/bg-1.avif",
     screenshot: "/hero/workspace-overview.avif",
   },
   {
-    tab: "AI Planner",
-    eyebrow: "AI Planner",
-    title: "Turn goals into a plan in minutes.",
-    body: "Placeholder copy for the AI Planner slide.",
+    tab: "HERALD",
+    eyebrow: "HERALD",
+    title: "Find answers in your project files.",
+    body: "Ask questions. Find answers in your documents.",
     background: "/hero/bg-2.avif",
     screenshot: "/hero/ai-planner.avif",
   },
   {
-    tab: "Execution Board",
-    eyebrow: "Execution Board",
-    title: "Keep every task moving.",
-    body: "Placeholder copy for the Execution Board slide.",
+    tab: "ASSAY",
+    eyebrow: "ASSAY",
+    title: "Make every quantity count.",
+    body: "Measure lengths, areas and counts on your drawings.",
     background: "/hero/bg-3.avif",
     screenshot: "/hero/execution-board.avif",
   },
@@ -169,13 +169,13 @@ export default function Hero() {
               className="mb-4 flex items-center gap-2 text-[13px] uppercase tracking-[0.04em]"
               style={{ ...mono, color: BLUE }}
             >
-              <Ring /> Plan.Align.Execute
+              <Ring /> Understand.Coordinate.Build
             </div>
             <h1
               className="max-w-[620px] text-[40px] font-semibold leading-[1.16] tracking-[-0.025em] sm:text-[48px] lg:text-[56px]"
               style={{ color: INK }}
             >
-              Where plans stop being documents and start being progress.
+              The Construction Intelligence Layer
             </h1>
           </div>
 

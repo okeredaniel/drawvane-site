@@ -29,18 +29,18 @@ type Item = {
 
 const ITEMS: Item[] = [
   {
-    title: "SOC 2 Type II Certified",
-    text: "Independently verified security and controls.",
+    title: "Access That Fits The Role",
+    text: "Set project access for each collaborator.",
     icon: "shield",
   },
   {
-    title: "Private By Design",
-    text: "Customer data is never used to train models or shared externally.",
+    title: "Project Access",
+    text: "Choose who can view, edit or manage work within each project.",
     icon: "lock",
   },
   {
-    title: "GDPR Compliant",
-    text: "Compliant with GDPR and global data protection standards.",
+    title: "Human Review",
+    text: "Review answers and quantities before making project decisions.",
     icon: "stars",
   },
 ];
@@ -332,7 +332,7 @@ export default function Security() {
             </motion.div>
 
             <h2 className="mt-3 text-[34px] font-medium leading-[1.1] tracking-[-0.02em] md:text-[52px]">
-              {["Built for enterprise.", "Trusted globally."].map((line, li) => (
+              {["Built for shared work.", "Clear permissions."].map((line, li) => (
                 <span key={line} data-line className="block overflow-hidden pb-[0.1em]">
                   <motion.span
                     className="block"
@@ -360,8 +360,8 @@ export default function Security() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Built with enterprise-grade security, privacy, and reliability, at its
-            core, {BRAND} is trusted by industry leaders worldwide.
+            Shared work needs clear boundaries. Project permissions in
+            {BRAND} help control who can view, edit and manage your work.
           </motion.p>
         </div>
 

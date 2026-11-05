@@ -49,12 +49,12 @@ const REQUEST_TYPES = [
 ];
 
 const BULLETS: { lead: string; rest: string }[] = [
-  { lead: "Turn strategy into action", rest: " by connecting your product goals to clear roadmaps and everyday work." },
-  { lead: "Keep plans in sync", rest: " with shared priorities, clear ownership, and visibility across your product team." },
-  { lead: "Keep context close", rest: " by bringing briefs, documents, and decisions into the same workspace as your plans." },
+  { lead: "Explore your project information", rest: " by bringing drawings, documents and project questions into one connected workspace." },
+  { lead: "Review drawings in context", rest: " with project markups, clear permissions, and discussions across your project team." },
+  { lead: "Keep context close", rest: " by bringing drawings, quantities, and conversations into the same workspace as your documents." },
   {
-    lead: "Align your team",
-    rest: " around one shared direction—with strategy, roadmaps, documents, and daily work in one calm place, and AI to help keep them in agreement.",
+    lead: "Connect your team",
+    rest: " around the work at hand, with drawings, documents, quantities and discussions in one place, and tools to help you understand the project detail.",
   },
 ];
 
@@ -337,7 +337,7 @@ export default function BookDemo() {
           </ul>
 
           <div>
-            <p className="bd-trusted text-[16px]">Trusted by more than 29,000 companies:</p>
+            <p className="bd-trusted text-[16px]">Built for construction professionals:</p>
             <div
               className="mt-5 overflow-hidden"
               style={{

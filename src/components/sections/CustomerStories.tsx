@@ -22,31 +22,31 @@ type Story = {
 
 const STORIES: Story[] = [
   {
-    name: "Northway",
-    text: "Northway brought product goals, milestones, and dependencies into one shared plan, reducing weekly preparation time by 38%.",
-    value: 38,
-    label: "Less preparation",
+    name: "Contractors",
+    text: "Review project drawings, discuss the details with your team and keep relevant documents close to the work on site.",
+    value: 1,
+    label: "Contractors",
     glyph: "snow",
   },
   {
-    name: "Neurova",
-    text: "Neurova connected implementation decisions with delivery plans, cutting avoidable revisions by 29% across eight client projects.",
-    value: 29,
-    label: "Fewer revisions",
+    name: "Surveyors",
+    text: "Measure lengths, areas and counts on drawings, keeping your quantities close to the details you need to review.",
+    value: 2,
+    label: "Quantity surveyors",
     glyph: "pinwheel",
   },
   {
-    name: "Menlo",
-    text: "Menlo created a shared triage workflow across six regions, reducing weekly preparation time by 45% and clarifying priorities.",
-    value: 45,
-    label: "Less preparation",
+    name: "Designers",
+    text: "Explore project information, mark up drawings and share observations so the team can discuss the details behind design decisions.",
+    value: 3,
+    label: "Design professionals",
     glyph: "dots",
   },
   {
-    name: "Ovo Studio",
-    text: "Ovo Studio aligned five creative disciplines around one launch plan, reducing coordination time by 32% across the team.",
-    value: 32,
-    label: "Less coordination",
+    name: "Project teams",
+    text: "Bring people, documents and conversations together, with clear permissions to help everyone access the projects they work on.",
+    value: 4,
+    label: "Project teams",
     glyph: "stripes",
   },
 ];
@@ -112,13 +112,13 @@ function CountUp({ to }: { to: number }) {
       duration: 1.4,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => {
-        if (ref.current) ref.current.textContent = `${Math.round(v)}%`;
+        if (ref.current) ref.current.textContent = `${Math.round(v)}`.padStart(2, "0");
       },
     });
     return () => controls.stop();
   }, [inView, to]);
 
-  return <span ref={ref}>0%</span>;
+  return <span ref={ref}>00</span>;
 }
 
 function StoryCard({ story, index }: { story: Story; index: number }) {
@@ -230,7 +230,7 @@ export default function CustomerStories() {
               animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             />
-            Customer stories
+            Project workflows
           </motion.div>
 
           <motion.h2
@@ -240,7 +240,7 @@ export default function CustomerStories() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            Read Customer Stories
+            Built For Your Work
           </motion.h2>
         </div>
 
@@ -252,7 +252,7 @@ export default function CustomerStories() {
 
         <div className="mt-12 text-center md:mt-14">
           <motion.a
-            href="/case-studies"
+            href="/contact"
             className="inline-flex h-11 items-center gap-2 rounded-full px-5 text-[13px] font-semibold uppercase tracking-wide"
             style={{
               fontFamily: MONO,
@@ -272,7 +272,7 @@ export default function CustomerStories() {
               className="inline-block h-[9px] w-[9px] rounded-full"
               style={{ border: `2px solid ${INK}`, opacity: 0.45 }}
             />
-            Read all
+            Book demo
           </motion.a>
         </div>
       </div>

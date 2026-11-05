@@ -32,10 +32,10 @@ const TAG = "Product Features";
 type Stat = { id: string; text: string; count?: boolean };
 
 const STATS: Stat[] = [
-  { id: "clock", text: "% platform uptime", count: true },
-  { id: "shield", text: "PCI-DSS & GDPR-compliant" },
-  { id: "globe", text: "Global coverage" },
-  { id: "headset", text: "24/7 incident response" },
+  { id: "clock", text: "Drawing review" },
+  { id: "shield", text: "Document intelligence" },
+  { id: "globe", text: "Quantity takeoff" },
+  { id: "headset", text: "Team collaboration" },
 ];
 
 type Row = {
@@ -52,45 +52,45 @@ type Row = {
 
 const ROWS: Row[] = [
   {
-    title: "Turn a goal into a plan in seconds.",
-    text: "Tell Stratora what you want to achieve. It reads the context around your workspace and turns the goal into objectives, milestones, owners and a realistic sequence of work.",
+    title: "Ask your project a better question.",
+    text: "Ask Stratora what you need to understand. Explore your project documents, work through the details and follow up with questions that help you make sense of the information.",
     bullets: [
-      "Goals become structured plans",
-      "Objectives and milestones generated automatically",
-      "Dependencies and team capacity considered",
+      "Questions about project documents",
+      "Answers with relevant project context",
+      "Follow-up questions as you explore",
     ],
     image: "/features-goal.avif",
     imageName: "features-goal.avif",
   },
   {
-    title: "Keep every team aligned on what matters.",
-    text: "Stratora brings priorities, owners and status into one live view, so everyone sees what is active, what is at risk and what needs a decision.",
+    title: "Keep the drawing and the discussion together.",
+    text: "Bring drawings, markups and conversations together, so your team can review the details, share observations and discuss what needs a decision.",
     bullets: [
-      "Shared priorities across teams",
-      "Owners and status always visible",
-      "Risks flagged before they slip",
+      "Shared discussions around drawings",
+      "Drawing details always close by",
+      "Markups that make observations clear",
     ],
     image: "/features-align.avif",
     imageName: "features-align.avif",
   },
   {
-    title: "Adapt the plan when things change.",
-    text: "When work slips, Stratora spots the impact early and suggests how to recover, so deadlines hold without another round of meetings.",
+    title: "Measure the detail behind your work.",
+    text: "Work through lengths, areas and counts directly on your drawings, keeping each quantity connected to the detail you need to review.",
     bullets: [
-      "Delays detected automatically",
-      "Recovery suggestions you can apply in one click",
-      "Timelines update across the workspace",
+      "Drawing measurements together",
+      "Lengths, areas and counts in the same workspace",
+      "Quantities ready for professional review",
     ],
     image: "/features-adapt.avif",
     imageName: "features-adapt.avif",
   },
   {
-    title: "See project health before it becomes a problem.",
-    text: "Track progress and risk across every project, and let Stratora surface what needs attention and why.",
+    title: "Talk through the detail when speaking feels easier.",
+    text: "Talk to Stratora, explore project questions and follow up wherever you need clarity.",
     bullets: [
-      "Live project health scores",
-      "Top risks ranked by priority",
-      "AI insights with clear next steps",
+      "Voice conversations with Stratora",
+      "Follow up with more questions",
+      "Explore project questions by voice",
     ],
     image: "/features-health.avif",
     imageName: "features-health.avif",
@@ -418,9 +418,9 @@ export default function Features() {
           </div>
 
           <h2 className="headline mx-auto max-w-[18ch] text-4xl font-medium leading-[1.12] tracking-tight md:max-w-none md:text-6xl">
-            One workspace with a <br className="hidden md:block" />
-            memory, a point of view, <br className="hidden md:block" />
-            and a plan.
+            One workspace for <br className="hidden md:block" />
+            drawings, documents, <br className="hidden md:block" />
+            and your team.
           </h2>
         </div>
 
@@ -521,7 +521,7 @@ export default function Features() {
                           className="group inline-flex items-center gap-2 rounded-full bg-[#1f3cff] px-5 py-3 font-mono text-[13px] font-medium uppercase tracking-wide text-white shadow-[0_10px_24px_-10px_rgba(31,60,255,0.7)]"
                         >
                           <span className="size-2.5 rounded-full border-2 border-white/90 transition-colors duration-300 group-hover:bg-white" />
-                          Get free demo
+                          Book a demo
                         </MotionLink>
                       </div>
                       <div className="cta">

@@ -360,7 +360,7 @@ export default function Pricing() {
     e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
   };
 
-  const headline = ["Simple", "pricing.", "No", "coordination", "tax."];
+  const headline = ["Choose", "the", "right", "project", "plan."];
 
   return (
     <section
@@ -435,7 +435,7 @@ export default function Pricing() {
               <Price value={starter} suffix={suffix} />
             </div>
             <p className="mt-3 max-w-[300px] text-[15px] leading-[1.35] text-[#4a4c5c]">
-              For individuals who want a simple way to create and manage clear plans.
+              For individuals who want a clearer way to review and understand project information.
             </p>
             <p className="mt-8 text-[17px] font-medium">Included:</p>
             <FeatureList items={STARTER_FEATURES} />
@@ -501,12 +501,12 @@ export default function Pricing() {
                 <Price value={premium} suffix={suffix} light />
               </div>
               <p className="mt-3 max-w-[330px] text-[15px] leading-[1.35] text-white/85">
-                For teams that need smarter planning, better collaboration, and more control.
+                For teams that need shared context, closer collaboration, and clear project details.
               </p>
               <p className="mt-6 text-[17px] font-medium">Included:</p>
               <FeatureList items={PREMIUM_FEATURES} light />
               <div className="mt-8">
-                <Cta href="/contact" label="Get free trial" variant="white" />
+                <Cta href="/contact" label="Discuss this plan" variant="white" />
               </div>
             </div>
           </article>
@@ -527,7 +527,7 @@ export default function Pricing() {
             <p className="mt-6 text-[17px] font-medium">Included:</p>
             <FeatureList items={ENTERPRISE_FEATURES} />
             <div className="mt-8">
-              <Cta href="/contact" label="Contact to our team" variant="blue" />
+              <Cta href="/contact" label="Talk to our team" variant="blue" />
             </div>
           </article>
         </div>

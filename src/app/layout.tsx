@@ -24,7 +24,7 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "Stratora",
-  description: "Plan Align Execute with Stratora.",
+  description: "The Construction Intelligence Layer. Connect drawings, documents, quantities and project conversations with Stratora.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

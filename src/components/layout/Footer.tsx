@@ -76,9 +76,9 @@ export default function Footer() {
             <div>
               <LogoMark className="size-11" />
               <p className="mt-5 max-w-[350px] text-[15px] leading-[1.45]">
-                {BRAND} is the operating system for product teams. It holds your
-                strategy, roadmap, documents and daily work in one calm place — and
-                uses AI to keep them in agreement.
+                {BRAND} is the construction intelligence layer. Bring drawings,
+                documents, quantities and conversations together to understand
+                the detail and move work forward.
               </p>
             </div>
 

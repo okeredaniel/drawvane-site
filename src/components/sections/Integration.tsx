@@ -19,7 +19,7 @@ const INK = "#0B0F1A";
 const MONO =
   "var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace";
 
-const HEADING_LINES = ["It meets your team where", "the work already happens."];
+const HEADING_LINES = ["Bring your project context together", "where the work happens."];
 
 /** Tilt of the whole marquee in degrees (negative = rises to the right). */
 const TILT_DEG = -4;
@@ -396,7 +396,7 @@ export default function Integration() {
             transition={{ duration: 0.5 }}
           >
             <RingDot />
-            Integrations
+            Project context
           </motion.div>
 
           <h2
@@ -487,10 +487,10 @@ export default function Integration() {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6 }}
           >
-            Unlike other AI agents that rely on integrations, {BRAND} just uses
-            websites and accounts directly, just like you do. That means you can
-            ask any task in your mind anytime you need. The only wall is the
-            imagination.
+            Bring project documents, drawings and conversations into {BRAND}.
+            Keep the context close to the work. Logos shown illustrate the
+            wider working environment, not available integrations. Ask us
+            about your workflow.
           </motion.p>
 
           <motion.a

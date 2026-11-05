@@ -39,7 +39,7 @@ export default function Nav() {
         className="flex h-9 items-center justify-center px-4 text-[12px] font-bold uppercase tracking-[0.02em] text-white"
       >
         <Link href="/team-alignment" className="flex items-center gap-2">
-          <span>Announcing {BRAND} 1.0 — Planning that writes itself</span>
+          <span>Discover {BRAND} · Construction intelligence, connected</span>
           <span aria-hidden>→</span>
         </Link>
       </div>

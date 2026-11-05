@@ -123,11 +123,11 @@ const CARDS: CardData[] = [
     body: (
       <>
         <div className="flex items-center justify-between text-[10px] text-[#6b7083]">
-          <span>#Product</span>
+          <span>#Project</span>
           <span>11:48 AM</span>
         </div>
         <p className="text-[13px] font-semibold text-[#0b0d1a]">Alex</p>
-        <p className="text-[11px] leading-snug text-[#5b6072]">Can we move the launch date?</p>
+        <p className="text-[11px] leading-snug text-[#5b6072]">Have we checked the new plan?</p>
       </>
     ),
   },
@@ -142,8 +142,8 @@ const CARDS: CardData[] = [
     delay: 0.2,
     body: (
       <>
-        <p className="text-[13px] font-semibold text-[#0b0d1a]">Product Brief</p>
-        <p className="text-[11px] text-[#5b6072]">Goals, positioning, messaging</p>
+        <p className="text-[13px] font-semibold text-[#0b0d1a]">Project Brief</p>
+        <p className="text-[11px] text-[#5b6072]">Scope, requirements, deliverables</p>
         <Chip>Updated 2h ago</Chip>
       </>
     ),
@@ -159,7 +159,7 @@ const CARDS: CardData[] = [
     delay: 0.3,
     body: (
       <>
-        <p className="text-[13px] font-semibold text-[#0b0d1a]">Launch campagin</p>
+        <p className="text-[13px] font-semibold text-[#0b0d1a]">Drawing review</p>
         <div className="mt-1 flex items-center gap-1.5 text-[11px] text-[#5b6072]">
           <span className="flex -space-x-1.5">
             {["#f59e8b", "#8ab4f8", "#c4a484"].map((c) => (
@@ -169,7 +169,7 @@ const CARDS: CardData[] = [
           3/7
         </div>
         <div className="mt-2 flex items-center gap-1.5 border-t border-[#eceef4] pt-2 text-[11px] text-[#3a3f52]">
-          <Dot color="#e5322d" /> Launch blocked
+          <Dot color="#e5322d" /> Review pending
         </div>
       </>
     ),
@@ -185,10 +185,10 @@ const CARDS: CardData[] = [
     delay: 0.4,
     body: (
       <>
-        <p className="text-[13px] font-semibold text-[#0b0d1a]">Sprint Review</p>
+        <p className="text-[13px] font-semibold text-[#0b0d1a]">Site Review</p>
         <p className="text-[11px] text-[#5b6072]">Tomorrow, 10:00 AM</p>
         <div className="mt-2 flex items-center gap-1.5 border-t border-[#eceef4] pt-2 text-[11px] text-[#3a3f52]">
-          <Dot color="#f09a1a" /> Stakeholder conflict
+          <Dot color="#f09a1a" /> Drawing clarification
         </div>
       </>
     ),
@@ -204,8 +204,8 @@ const CARDS: CardData[] = [
     delay: 0.5,
     body: (
       <>
-        <p className="text-[13px] font-semibold text-[#0b0d1a]">PRD - v1.3</p>
-        <p className="text-[11px] text-[#5b6072]">Product requirments document</p>
+        <p className="text-[13px] font-semibold text-[#0b0d1a]">A-102 · Rev C</p>
+        <p className="text-[11px] text-[#5b6072]">Ground floor drawing notes</p>
         <Chip>Edited 5h ago</Chip>
       </>
     ),
@@ -226,7 +226,7 @@ const CARDS: CardData[] = [
           <span className="text-[10px] text-[#6b7083]">2 Days Ago</span>
         </div>
         <p className="text-[11px] text-[#5b6072]">from Jane</p>
-        <p className="mt-1 text-[11px] leading-snug text-[#5b6072]">Please review the campaign plan.</p>
+        <p className="mt-1 text-[11px] leading-snug text-[#5b6072]">Please review the revised plan.</p>
       </>
     ),
   },
@@ -329,7 +329,7 @@ export default function Problem() {
           </motion.div>
 
           <h2 className="text-[1rem] font-semibold leading-[0.96] tracking-[-0.04em] text-[#0b0d1a] md:text-[3rem]">
-            {["Your plan isn’t broken.", "Your workflow is."].map((text, i) => (
+            {["The work connects.", "The information should too."].map((text, i) => (
               <span key={text} className="block overflow-hidden pb-1">
                 <motion.span
                   className="block"
@@ -352,7 +352,7 @@ export default function Problem() {
             transition={{ duration: 0.7, delay: 0.55 }}
             className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-[#555a6e] md:text-[15px]"
           >
-            Every update, approval, document, and conversation lives somewhere different. Teams
+            Drawings, quantities, documents, and conversations live in different places. Teams
             spend more time searching than building.
           </motion.p>
         </div>

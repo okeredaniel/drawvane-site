@@ -34,23 +34,23 @@ type Pillar = {
 
 const PILLARS: Pillar[] = [
   {
-    title: "Plan",
-    text: "AI structures what you want to achieve into a roadmap your team can actually follow.",
-    bullets: ["AI-generated roadmaps", "Clear milestones & priorities", "Goals connected to execution"],
+    title: "Review",
+    text: "Bring documents together and explore the details your project team needs to understand.",
+    bullets: ["Project document answers", "Clear drawing review & markups", "Questions connected to context"],
     image: "/solution-plan.avif",
     imageName: "solution-plan.avif",
   },
   {
-    title: "Align",
-    text: "Bring priorities, progress, and context together so your team always knows what matters next.",
-    bullets: ["Shared team priorities", "One source of context", "Progress & risk visibility"],
+    title: "Connect",
+    text: "Bring people and project discussions together so your team works from shared context.",
+    bullets: ["Shared project discussions", "Project information in context", "Project access & permissions"],
     image: "/solution-align.avif",
     imageName: "solution-align.avif",
   },
   {
-    title: "Execute",
-    text: "Track the work, adapt when things change, and let AI surface what needs attention.",
-    bullets: ["Flexible project boards", "Real-time progress tracking", "AI insights & recommendations"],
+    title: "Measure",
+    text: "Measure lengths, areas and counts, then review the quantities behind your project work.",
+    bullets: ["Drawing measurement tools", "Length, area and count takeoff", "Results for professional review"],
     image: "/solution-execute.avif",
     imageName: "solution-execute.avif",
   },
@@ -309,8 +309,8 @@ export default function Solution() {
           </div>
 
           <h2 className="headline text-4xl font-semibold leading-[1.08] tracking-[-0.03em] md:text-6xl">
-            <span className="block">Plan It. Align The Team.</span>
-            <span className="block">Move It Forward.</span>
+            <span className="block">Read It. Connect The Team.</span>
+            <span className="block">Measure The Detail.</span>
           </h2>
         </div>
 

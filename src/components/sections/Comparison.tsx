@@ -116,21 +116,21 @@ function Icon({ name, size = 15 }: { name: string; size?: number }) {
   );
 }
 
-/* Columns: [Stratora, Sheets, Task boards] */
+/* Columns: [Drawing review, Quantity takeoff, Project discussions] */
 type Row = { label: string; icon: string; vals: [boolean, boolean, boolean] };
 
 const ROWS: Row[] = [
-  { label: "AI-generated plans", icon: "sparkles", vals: [true, false, false] },
-  { label: "Task tracking", icon: "checklist", vals: [true, true, true] },
-  { label: "Task owners", icon: "users", vals: [true, true, true] },
-  { label: "Priorities", icon: "flag", vals: [true, true, true] },
-  { label: "Milestones", icon: "calendar", vals: [true, true, false] },
-  { label: "Product roadmaps", icon: "chart", vals: [true, true, false] },
-  { label: "Shared documents", icon: "file", vals: [true, false, false] },
-  { label: "Goal-to-task links", icon: "target", vals: [true, false, false] },
-  { label: "Dependency planning", icon: "dependency", vals: [true, false, false] },
-  { label: "Capacity-aware plans", icon: "users", vals: [true, false, false] },
-  { label: "Workspace-aware AI", icon: "search", vals: [true, false, false] },
+  { label: "Drawing markups", icon: "sparkles", vals: [true, false, false] },
+  { label: "Project context", icon: "checklist", vals: [true, true, true] },
+  { label: "Project access", icon: "users", vals: [true, true, true] },
+  { label: "Human review", icon: "flag", vals: [true, true, true] },
+  { label: "Drawing detail", icon: "calendar", vals: [true, true, false] },
+  { label: "Visual context", icon: "chart", vals: [true, true, false] },
+  { label: "Drawing callouts", icon: "file", vals: [true, false, false] },
+  { label: "Length measurement", icon: "target", vals: [false, true, false] },
+  { label: "Area measurement", icon: "dependency", vals: [false, true, false] },
+  { label: "Drawing counts", icon: "users", vals: [false, true, false] },
+  { label: "Team conversations", icon: "search", vals: [false, false, true] },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -246,7 +246,7 @@ export default function Comparison() {
               animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             />
-            Comparison
+            Workflow coverage
           </motion.div>
 
           <motion.h2
@@ -256,7 +256,7 @@ export default function Comparison() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            How {BRAND} compares
+            How {BRAND} connects
           </motion.h2>
         </div>
 
@@ -293,9 +293,9 @@ export default function Comparison() {
           >
             <div />
             {[
-              { name: BRAND, icon: null },
-              { name: "Sheets", icon: "table" },
-              { name: "Task boards", icon: "columns" },
+              { name: "Review", icon: null },
+              { name: "Takeoff", icon: "table" },
+              { name: "Discuss", icon: "columns" },
             ].map((c, i) => (
               <div
                 key={c.name}

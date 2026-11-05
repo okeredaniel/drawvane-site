@@ -1,2 +1,2 @@
 export const BRAND = "Stratora";
-export const TAGLINE = "Plan.Align.Execute";
+export const TAGLINE = "Understand.Coordinate.Build";

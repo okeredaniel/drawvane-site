@@ -19,10 +19,10 @@ const mono = {
 
 // First three come from the reference. The fourth is a PLACEHOLDER (it is cut off in the screenshot).
 const STATS = [
-  { label: "Workspaces active", value: "12,480" },
-  { label: "Plans generated", value: "1.8M" },
-  { label: "Tasks organized", value: "24.6M" },
-  { label: "Teams onboarded", value: "3,200" },
+  { label: "Drawing review", value: "Mark up" },
+  { label: "Project documents", value: "Ask" },
+  { label: "Quantity takeoff", value: "Measure" },
+  { label: "Team collaboration", value: "Connect" },
 ];
 
 function Sparkle() {
@@ -182,14 +182,14 @@ function IconStripes() {
 // Cards with a `brand` get the black "+" and flip to the dark card on hover.
 // "Menlo" comes from the reference; the other three names are PLACEHOLDERS.
 const CELLS: { icon: ReactNode; brand?: string }[] = [
-  { icon: <IconBurst />, brand: "Vertex" },
+  { icon: <IconBurst />, brand: "Review" },
   { icon: <IconAsterisk /> },
-  { icon: <IconCorners />, brand: "Kinetic" },
+  { icon: <IconCorners />, brand: "Measure" },
   { icon: <IconHash /> },
   { icon: <IconHexCircle /> },
-  { icon: <IconDots />, brand: "Menlo" },
+  { icon: <IconDots />, brand: "Discuss" },
   { icon: <IconBite /> },
-  { icon: <IconStripes />, brand: "Solstice" },
+  { icon: <IconStripes />, brand: "Explore" },
 ];
 
 /* --------------------------------- section --------------------------------- */
@@ -217,7 +217,7 @@ export default function OurImpact() {
                 className="text-[12px] font-semibold uppercase tracking-[0.01em]"
                 style={{ color: INK }}
               >
-                Our impact so far
+                Connected from the start
               </span>
             </div>
             <div
@@ -249,17 +249,17 @@ export default function OurImpact() {
               className="max-w-[300px] text-[24px] leading-[31px] tracking-[-0.01em]"
               style={{ color: INK }}
             >
-              Thousands of modern teams use{" "}
-              <span style={{ color: BLUE }}>{BRAND}</span> to plan faster,
-              collaborate better, and ship products with clarity—not chaos.
+              Use{" "}
+              <span style={{ color: BLUE }}>{BRAND}</span> to review drawings,
+              measure quantities and discuss the details, all in one workspace.
             </p>
 
             <Link
-              href="/case-studies"
+              href="/#features"
               className="group mt-10 inline-flex items-center gap-2 text-[12px] uppercase text-[#3d414d]"
             >
               <span className="underline-offset-4 group-hover:underline">
-                Read customer stories
+                Explore project workflows
               </span>
               <svg
                 width="10"
@@ -314,8 +314,8 @@ export default function OurImpact() {
 
                       {/* hover state: dark card */}
                       <Link
-                        href="/case-studies"
-                        aria-label={`Read the ${c.brand} story`}
+                        href="/#features"
+                        aria-label={`See ${c.brand} workflows`}
                         tabIndex={shown ? 0 : -1}
                         className={`absolute inset-0 flex flex-col justify-between px-3 pb-4 pt-4 text-white transition-opacity duration-300 group-hover/cell:pointer-events-auto group-hover/cell:opacity-100 focus-visible:pointer-events-auto focus-visible:opacity-100 ${
                           shown ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
