@@ -33,24 +33,24 @@ const SLIDES: Slide[] = [
     eyebrow: "ADAPT",
     title: "See your company at a glance.",
     body: "Connect your company, people and projects. Guided company assessments are coming next.",
-    background: "/hero/bg-1.avif",
-    screenshot: "/hero/workspace-overview.avif",
+    background: "/construction/hero-bg-1.webp",
+    screenshot: "/construction/hero-workspace.webp",
   },
   {
     tab: "HERALD",
     eyebrow: "HERALD",
     title: "Find answers in your project files.",
     body: "Ask questions. Find answers in your documents.",
-    background: "/hero/bg-2.avif",
-    screenshot: "/hero/ai-planner.avif",
+    background: "/construction/hero-bg-2.webp",
+    screenshot: "/construction/hero-herald.webp",
   },
   {
     tab: "ASSAY",
     eyebrow: "ASSAY",
     title: "Make every quantity count.",
     body: "Measure lengths, areas and counts on your drawings.",
-    background: "/hero/bg-3.avif",
-    screenshot: "/hero/execution-board.avif",
+    background: "/construction/hero-bg-3.webp",
+    screenshot: "/construction/hero-assay.webp",
   },
 ];
 
@@ -115,7 +115,7 @@ function Visual({ slide }: { slide: Slide }) {
           alt=""
           fill
           sizes="(min-width: 1024px) 742px, 100vw"
-          className="object-cover grayscale opacity-40 mix-blend-multiply"
+          className="object-cover opacity-90"
         />
       ) : (
         <>
@@ -141,7 +141,7 @@ function Visual({ slide }: { slide: Slide }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={slide.screenshot ?? placeholderImage(slide.tab)}
-          alt={`${slide.tab} screenshot`}
+          alt={`${slide.tab} illustrative construction workspace preview`}
           className="h-auto max-h-full w-auto max-w-full rounded-xl shadow-[0_24px_60px_rgba(96,74,0,0.35)] ring-1 ring-white/50"
         />
       </div>

@@ -374,7 +374,7 @@ export default function Problem() {
             className="relative mx-auto w-full max-w-[760px] md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
           >
             <Image
-              src="/problem-board.avif"
+              src="/construction/problem-board.webp"
               alt=""
               width={1400}
               height={1000}

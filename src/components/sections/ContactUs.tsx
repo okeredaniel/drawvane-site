@@ -11,13 +11,13 @@ gsap.registerPlugin(ScrollTrigger);
 /* ------------------------------------------------------------------ */
 /* YOUR IMAGES                                                         */
 /* Save each picture in public/contact/ and put its path here,         */
-/* e.g. notebook: "/contact/notebook.avif". */
+/* e.g. notebook: "/construction/contact-notebook.webp". */
 /* ------------------------------------------------------------------ */
 const IMAGES = {
-  notebook: "/contact/notebook.avif",
-  texture: "/contact/texture.avif",
-  phoneLeft: "/contact/phone-left.png",
-  phoneRight: "/contact/phone-right.png",
+  notebook: "/construction/contact-notebook.webp",
+  texture: "/construction/hero-bg-1.webp",
+  phoneLeft: "/construction/hero-workspace.webp",
+  phoneRight: "/construction/hero-assay.webp",
 };
 
 const ACCENT = "#ffc800";
@@ -200,7 +200,7 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
             <ImageSlot
               src={IMAGES.notebook}
               alt=""
-              label="public/contact/notebook.avif"
+              label="public/construction/contact-notebook.webp"
               fit="object-cover object-top"
             />
           </div>
@@ -264,21 +264,25 @@ export default function ContactUs({ peek = true }: { peek?: boolean }) {
           <div className="ct-phones mt-[70px] flex h-[340px] items-start justify-center gap-6 overflow-hidden">
             <div className="ct-phone">
               <div className="ct-float relative h-[420px] w-[170px] overflow-hidden">
-                <ImageSlot
+                <Image
                   src={IMAGES.phoneLeft}
-                  alt="Stratora app, yearly chart"
-                  label="public/contact/phone-left.png"
-                  fit="object-contain object-center"
+                  alt="Illustrative Stratora organization workspace"
+                  width={842}
+                  height={1869}
+                  sizes="170px"
+                  className="absolute top-1/2 h-auto w-full -translate-y-1/2 rounded-[24px]"
                 />
               </div>
             </div>
             <div className="ct-phone">
               <div className="ct-float relative h-[420px] w-[135px] overflow-hidden">
-                <ImageSlot
+                <Image
                   src={IMAGES.phoneRight}
-                  alt="Stratora app, board"
-                  label="public/contact/phone-right.png"
-                  fit="object-contain object-center"
+                  alt="Illustrative Stratora drawing takeoff"
+                  width={842}
+                  height={1869}
+                  sizes="170px"
+                  className="absolute top-1/2 h-auto w-full -translate-y-1/2 rounded-[24px]"
                 />
               </div>
             </div>

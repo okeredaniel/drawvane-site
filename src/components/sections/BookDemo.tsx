@@ -26,7 +26,7 @@ const CAL_LINK = "daniel-okere-u2qfgp/15min";
 //    the white form sitting on top of it. Save it in public/contact/ and paste
 //    the path, e.g. "/contact/form-image.jpg". Any size works; a tall or square
 //    picture shows best because the card is taller than it is wide.
-const FORM_IMAGE = "/contact/form-image.avif";
+const FORM_IMAGE = "/construction/contact-form.webp";
 
 // 4. Privacy policy page the checkbox text links to.
 const PRIVACY_HREF = "/privacy";
