@@ -183,7 +183,7 @@ function IntegrationTile({ tile, hidden }: { tile: Tile; hidden: boolean }) {
           {tile.src ? (
             <Image src={tile.src} alt="" width={30} height={30} className="h-7 w-7 object-contain" />
           ) : (
-            <span aria-hidden className="h-7 text-[20px] font-semibold leading-7 tracking-[-.04em]">{tile.name}</span>
+            <span className="h-7 text-[20px] font-semibold leading-7 tracking-[-.04em]">{tile.name}</span>
           )}
           <span className="text-center text-[11px] font-medium leading-tight">{tile.category ?? tile.name}</span>
         </div>
