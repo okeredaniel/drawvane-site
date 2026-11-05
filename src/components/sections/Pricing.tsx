@@ -16,27 +16,31 @@ const mono = {
 
 type Billing = "monthly" | "yearly";
 
-const ENTERPRISE_MONTHLY = [399, 599, 799, 999, 1199, 1399];
-const YEARLY_RATIO = 255 / 399;
+// Matches the approved CAD catalogue in stratora-backend/modules/subscription/catalog.py.
+// Annual amounts are totals, not monthly equivalents. Enterprise is sales-assisted.
+const PLAN_PRICES = {
+  starter: { monthly: 450, yearly: 4500 },
+  team: { monthly: 2400, yearly: 24000 },
+  enterprise: { monthly: 6000, yearly: 60000 },
+} as const;
 
 const STARTER_FEATURES = [
-  "AI-powered plan creation",
-  "Tasks and milestone tracking",
-  "One active workspace",
-  "Core planning tools",
+  "One user",
+  "Project document answers",
+  "Drawing review and takeoff",
+  "Controlled project and usage allowance",
 ];
-const PREMIUM_FEATURES = [
-  "Everything in Starter",
-  "Unlimited plans and workspaces",
-  "AI planning assistant",
-  "Team collaboration tools",
-  "Advanced progress tracking",
+const TEAM_FEATURES = [
+  "Up to five users",
+  "Shared projects",
+  "Project discussions",
+  "Priority support",
 ];
 const ENTERPRISE_FEATURES = [
-  "Everything in Premium",
-  "Custom onboarding and integrations",
-  "Advanced roles and permissions",
-  "Priority support",
+  "Annual sales-assisted contract",
+  "Portfolio-based usage",
+  "Dedicated rollout",
+  "Custom procurement and commercial terms",
 ];
 
 function CheckIcon({ light }: { light?: boolean }) {
@@ -107,7 +111,7 @@ function Price({ value, suffix, light }: { value: number; suffix: string; light?
   }, [suffix]);
 
   return (
-    <div className="flex items-baseline gap-1.5">
+    <div className="flex flex-wrap items-baseline gap-1.5">
       <span className="text-[38px] font-medium leading-none tracking-tight tabular-nums">
         ${shown.toLocaleString("en-US")}
       </span>
@@ -183,97 +187,15 @@ function Cta({
   );
 }
 
-function StepSlider({ index, onChange }: { index: number; onChange: (i: number) => void }) {
-  const STEPS = ENTERPRISE_MONTHLY.length;
-  const trackRef = useRef<HTMLDivElement>(null);
-  const thumbRef = useRef<HTMLDivElement>(null);
-  const fillRef = useRef<HTMLDivElement>(null);
-  const dragging = useRef(false);
-  const mounted = useRef(false);
-
-  const pct = (index / (STEPS - 1)) * 100;
-
-  useEffect(() => {
-    const d = mounted.current ? 0.5 : 0;
-    mounted.current = true;
-    gsap.to(thumbRef.current, { left: `${pct}%`, duration: d, ease: "back.out(1.8)" });
-    gsap.to(fillRef.current, { width: `${pct}%`, duration: d, ease: "power3.out" });
-  }, [pct]);
-
-  const fromX = (clientX: number) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const t = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
-    const i = Math.round(t * (STEPS - 1));
-    if (i !== index) onChange(i);
-  };
-
-  return (
-    <div className="mx-[7px] mt-3">
-      <div
-        ref={trackRef}
-        role="slider"
-        tabIndex={0}
-        aria-label="Enterprise plan size"
-        aria-valuemin={1}
-        aria-valuemax={STEPS}
-        aria-valuenow={index + 1}
-        className="relative h-[16px] cursor-pointer touch-none select-none outline-none"
-        onPointerDown={(e) => {
-          dragging.current = true;
-          (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-          fromX(e.clientX);
-          gsap.to(thumbRef.current, { scale: 1.25, duration: 0.25 });
-        }}
-        onPointerMove={(e) => dragging.current && fromX(e.clientX)}
-        onPointerUp={() => {
-          dragging.current = false;
-          gsap.to(thumbRef.current, { scale: 1, duration: 0.4, ease: "back.out(2)" });
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "ArrowRight" || e.key === "ArrowUp") onChange(Math.min(STEPS - 1, index + 1));
-          if (e.key === "ArrowLeft" || e.key === "ArrowDown") onChange(Math.max(0, index - 1));
-        }}
-      >
-        <div className="absolute left-0 right-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full bg-white" />
-        <div
-          ref={fillRef}
-          className="absolute left-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full"
-          style={{ backgroundColor: ACCENT, width: 0 }}
-        />
-        {ENTERPRISE_MONTHLY.map((_, i) => (
-          <span
-            key={i}
-            aria-hidden
-            className="absolute top-1/2 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors duration-300"
-            style={{
-              left: `${(i / (STEPS - 1)) * 100}%`,
-              backgroundColor: i <= index ? ACCENT : "#ffffff",
-            }}
-          />
-        ))}
-        <div
-          ref={thumbRef}
-          className="absolute top-1/2 z-10 h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-[#f5f4ef]"
-          style={{ borderColor: ACCENT, left: 0 }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export default function Pricing() {
   const root = useRef<HTMLElement>(null);
   const [billing, setBilling] = useState<Billing>("monthly");
-  const [tier, setTier] = useState(0);
 
   const yearly = billing === "yearly";
-  const starter = yearly ? 12 : 19;
-  const premium = yearly ? 31 : 49;
-  const entMonthly = ENTERPRISE_MONTHLY[tier];
-  const enterprise = yearly ? Math.round(entMonthly * YEARLY_RATIO) : entMonthly;
-  const suffix = yearly ? "/month, billed yearly" : "/month";
+  const starter = PLAN_PRICES.starter[billing];
+  const team = PLAN_PRICES.team[billing];
+  const enterprise = PLAN_PRICES.enterprise[billing];
+  const suffix = yearly ? "/year" : "/month";
 
   const btnRefs = useRef<Record<Billing, HTMLButtonElement | null>>({ monthly: null, yearly: null });
   const indRef = useRef<HTMLSpanElement>(null);
@@ -392,7 +314,11 @@ export default function Pricing() {
             ))}
           </h2>
 
-          <div className="pr-toggle mt-10 flex items-center gap-4">
+          <p className="mt-4 text-[15px] text-[#4a4c5c]">
+            All prices in Canadian dollars (CAD).
+          </p>
+
+          <div className="pr-toggle mt-10 flex flex-wrap items-center justify-center gap-4">
             <div className="relative flex rounded-full bg-[#e4e0d5] p-1" style={mono}>
               <span
                 ref={indRef}
@@ -420,9 +346,12 @@ export default function Pricing() {
               className="inline-block text-[13px] uppercase transition-colors duration-300"
               style={{ ...mono, color: yearly ? ACCENT_INK : "#4a4c5c" }}
             >
-              Save 36%
+              2 months free
             </span>
           </div>
+          <p className="mt-3 text-[13px] text-[#4a4c5c]">
+            Annual savings apply to Starter and Team. Enterprise uses custom terms.
+          </p>
         </div>
 
         <div className="mt-14 grid items-center gap-5 lg:grid-cols-3 lg:gap-[18px]">
@@ -434,14 +363,17 @@ export default function Pricing() {
             <h3 className="text-[16px] uppercase text-[#2b2d3a]">Starter</h3>
             <div className="mt-9">
               <Price value={starter} suffix={suffix} />
+              <p className="mt-2 text-[13px] text-[#4a4c5c]">
+                {yearly ? "CAD, prepaid annually" : "CAD, billed monthly"}
+              </p>
             </div>
             <p className="mt-3 max-w-[300px] text-[15px] leading-[1.35] text-[#4a4c5c]">
-              For individuals who want a clearer way to review and understand project information.
+              For individual estimators, quantity surveyors and project engineers reviewing project information.
             </p>
             <p className="mt-8 text-[17px] font-medium">Included:</p>
             <FeatureList items={STARTER_FEATURES} />
             <div className="mt-10">
-              <Cta href="/contact" label="Start now" variant="yellow" />
+              <Cta href="https://app.stratora.ai/pricing" label="Get started" variant="yellow" />
             </div>
           </article>
 
@@ -485,7 +417,7 @@ export default function Pricing() {
 
             <div className="relative">
               <div className="flex items-start justify-between">
-                <h3 className="text-[16px] uppercase text-[#0b0b12]/90">Premium</h3>
+                <h3 className="text-[16px] uppercase text-[#0b0b12]/90">Team</h3>
                 <span
                   className="pr-badge flex items-center gap-2 rounded-full bg-white px-3 py-[7px] text-[11px] font-semibold uppercase"
                   style={{ ...mono, color: ACCENT_INK }}
@@ -495,19 +427,22 @@ export default function Pricing() {
                     className="pr-badge-dot inline-block h-[9px] w-[9px] rounded-full border-2"
                     style={{ borderColor: ACCENT }}
                   />
-                  Most popular
+                  For teams
                 </span>
               </div>
               <div className="mt-5">
-                <Price value={premium} suffix={suffix} light />
+                <Price value={team} suffix={suffix} light />
+                <p className="mt-2 text-[13px] text-[#0b0b12]/80">
+                  {yearly ? "CAD, prepaid annually" : "CAD, billed monthly"}
+                </p>
               </div>
               <p className="mt-3 max-w-[330px] text-[15px] leading-[1.35] text-[#0b0b12]/80">
                 For teams that need shared context, closer collaboration, and clear project details.
               </p>
               <p className="mt-6 text-[17px] font-medium">Included:</p>
-              <FeatureList items={PREMIUM_FEATURES} light />
+              <FeatureList items={TEAM_FEATURES} light />
               <div className="mt-8">
-                <Cta href="/contact" label="Discuss this plan" variant="white" />
+                <Cta href="https://app.stratora.ai/pricing" label="Get started" variant="white" />
               </div>
             </div>
           </article>
@@ -519,16 +454,19 @@ export default function Pricing() {
           >
             <h3 className="text-[16px] uppercase text-[#2b2d3a]">Enterprise</h3>
             <div className="mt-7">
+              <p className="mb-1 text-[13px] font-medium text-[#4a4c5c]">From</p>
               <Price value={enterprise} suffix={suffix} />
+              <p className="mt-2 text-[13px] text-[#4a4c5c]">
+                CAD, annual contract with custom terms
+              </p>
             </div>
-            <StepSlider index={tier} onChange={setTier} />
             <p className="mt-4 max-w-[300px] text-[15px] leading-[1.35] text-[#4a4c5c]">
-              For larger teams that need flexible access, stronger security, and dedicated support.
+              For contractors rolling out Stratora across a portfolio, with dedicated support and custom terms.
             </p>
             <p className="mt-6 text-[17px] font-medium">Included:</p>
             <FeatureList items={ENTERPRISE_FEATURES} />
             <div className="mt-8">
-              <Cta href="/contact" label="Talk to our team" variant="yellow" />
+              <Cta href="mailto:support@stratora.ai" label="Contact sales" variant="yellow" />
             </div>
           </article>
         </div>
