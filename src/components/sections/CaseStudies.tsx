@@ -9,7 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FEATURED_IMAGE = "/case-studies/northway.avif";
+const FEATURED_IMAGE = "/construction/site-review.webp";
 
 const ACCENT = "#ffc800";
 const ACCENT_INK = "#755b00";
@@ -118,6 +118,7 @@ function Diamonds() {
 }
 
 type Story = {
+  slug: string;
   name: string;
   text: string;
   n: number;
@@ -127,82 +128,17 @@ type Story = {
 };
 
 const STORIES: Story[] = [
-  {
-    name: "Northway",
-    text: "Northway brought product goals, milestones, and dependencies into one shared plan, reducing weekly preparation time by 38%.",
-    n: 38,
-    suffix: "%",
-    label: "Less preparation",
-    Icon: Snowflake,
-  },
-  {
-    name: "Neurova",
-    text: "Neurova connected implementation decisions with delivery plans, cutting avoidable revisions by 29% across eight client projects.",
-    n: 29,
-    suffix: "%",
-    label: "Fewer revisions",
-    Icon: Pinwheel,
-  },
-  {
-    name: "Menlo",
-    text: "Menlo created a shared triage workflow across six regions, reducing weekly preparation time by 45% and clarifying priorities.",
-    n: 45,
-    suffix: "%",
-    label: "Less preparation",
-    Icon: DotBars,
-  },
-  {
-    name: "Ovo Studio",
-    text: "Ovo Studio aligned five creative disciplines around one launch plan, reducing coordination time by 32% across the team.",
-    n: 32,
-    suffix: "%",
-    label: "Less coordination",
-    Icon: StripedDisc,
-  },
-  {
-    name: "Patgency",
-    text: "Patgency connected three release streams to clear owners, reducing unassigned delivery work by 40% across client programs.",
-    n: 40,
-    suffix: "%",
-    label: "Fewer unassigned",
-    Icon: Bend,
-  },
-  {
-    name: "Skullbox",
-    text: "Skullbox connected planning across seven delivery teams, reducing duplicated coordination work by 35% while preserving team autonomy.",
-    n: 35,
-    suffix: "%",
-    label: "Less duplication",
-    Icon: Asterisk,
-  },
-  {
-    name: "Aurix",
-    text: "Aurix connected planning across four engineering squads, reducing late dependency discoveries by 30% before sprint commitment.",
-    n: 30,
-    suffix: "%",
-    label: "Fewer surprises",
-    Icon: Ring,
-  },
-  {
-    name: "Verdan",
-    text: "Verdan linked nine active initiatives to their decision context, reducing time spent reconstructing product choices by 42%.",
-    n: 42,
-    suffix: "%",
-    label: "Less backtracking",
-    Icon: Diamonds,
-  },
+  { slug: "drawing-review", name: "Drawing review", text: "Bring a drawing question into focus with a clear location, markup and conversation.", n: 1, suffix: "", label: "Drawing review", Icon: Snowflake },
+  { slug: "quantity-takeoff", name: "Quantity takeoff", text: "Review lengths, areas and counts alongside the detail they describe.", n: 2, suffix: "", label: "Quantity takeoff", Icon: Pinwheel },
+  { slug: "project-answers", name: "Project answers", text: "Use a focused question to navigate project documents and inspect the supporting information.", n: 3, suffix: "", label: "Project answers", Icon: DotBars },
+  { slug: "team-coordination", name: "Team coordination", text: "Bring people into the same conversation around the documents they are working with.", n: 4, suffix: "", label: "Team coordination", Icon: StripedDisc },
+  { slug: "rfi-preparation", name: "RFI preparation", text: "Gather the relevant drawing and specification detail before preparing a formal request.", n: 5, suffix: "", label: "RFI preparation", Icon: Bend },
+  { slug: "specification-review", name: "Specification review", text: "Bring related document requirements together before making a material or installation decision.", n: 6, suffix: "", label: "Specification review", Icon: Asterisk },
+  { slug: "organization-workspace", name: "Organization workspaces", text: "Give an organization a clearer structure for the projects and people working within it.", n: 7, suffix: "", label: "Organization workspaces", Icon: Ring },
+  { slug: "project-handover", name: "Project handover", text: "Prepare the project record so the people receiving it can find the detail and understand its status.", n: 8, suffix: "", label: "Project handover", Icon: Diamonds }
 ];
 
-const FEATURED = {
-  name: "Northway",
-  text: "Northway brought product goals, milestones, and dependencies into one shared plan, reducing weekly preparation time by 38%.",
-  stats: [
-    { n: 38, suffix: "%", label: "Less preparation" },
-    { n: 12, suffix: "h", label: "Hours saved" },
-    { n: 42, suffix: "", label: "Team size" },
-  ],
-  href: "/case-studies/northway",
-};
+const FEATURED = { name: "Drawing review", text: "A clearer question starts with the right detail. Bring the drawing, the markup and the people reviewing it into one focused conversation.", stats: [{ n: 1, suffix: "", label: "Locate" }, { n: 2, suffix: "", label: "Review" }, { n: 3, suffix: "", label: "Discuss" }], href: "/case-studies/drawing-review" };
 
 function CountUp({ n, suffix }: { n: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -245,7 +181,7 @@ function FeaturedImage() {
     return (
       <Image
         src={FEATURED_IMAGE}
-        alt={`${FEATURED.name} team planning session`}
+        alt="Illustrative construction drawing review on site"
         fill
         sizes="(max-width: 1024px) 90vw, 500px"
         className="cs-feat-pic object-cover"
@@ -332,7 +268,7 @@ export default function CaseStudies() {
     });
   };
 
-  const title = ["Read", "Customer", "Stories"];
+  const title = ["Built", "for", "the", "work", "you", "do."];
 
   return (
     <section
@@ -351,7 +287,7 @@ export default function CaseStudies() {
               className="inline-block h-[8px] w-[8px] rounded-full border-2"
               style={{ borderColor: ACCENT }}
             />
-            Case study
+            Workflow examples
           </div>
           <h1 className="mt-4 text-[40px] font-medium leading-[1.1] tracking-[-0.02em]">
             {title.map((w, i) => (
@@ -361,6 +297,7 @@ export default function CaseStudies() {
               </span>
             ))}
           </h1>
+          <p className="mt-5 max-w-[620px] text-[16px] leading-relaxed text-[#55576a]">Practical ways to bring construction information together. These are illustrative workflows, not customer testimonials or measured results.</p>
         </div>
 
         <article className="cs-feature group mt-14 grid gap-4 rounded-[20px] bg-[#fdfcf8] p-3.5 lg:grid-cols-2">
@@ -400,7 +337,7 @@ export default function CaseStudies() {
                   aria-hidden
                   className="relative inline-block h-[8px] w-[8px] rounded-full border-2 border-white/80 transition-transform duration-300 group-hover/btn:scale-125"
                 />
-                <span className="relative">Read case study</span>
+                <span className="relative">Explore the workflow</span>
                 <span
                   aria-hidden
                   className="relative -ml-1 w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-300 group-hover/btn:ml-0 group-hover/btn:w-4 group-hover/btn:translate-x-0 group-hover/btn:opacity-100"
@@ -419,10 +356,10 @@ export default function CaseStudies() {
         </article>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2">
-          {STORIES.map(({ name, text, n, suffix, label, Icon }) => (
+          {STORIES.map(({ slug, name, text, n, suffix, label, Icon }) => (
             <Link
               key={name}
-              href={`/case-studies/${name.toLowerCase().replace(/\s+/g, "-")}`}
+              href={`/case-studies/${slug}`}
               className="cs-card flex min-h-[192px] flex-col justify-between rounded-2xl border border-transparent bg-[#fdfcf8] p-4 transition-colors duration-300 hover:border-[#b9bfd6] will-change-transform"
               onMouseEnter={(e) => hover(e, true)}
               onMouseLeave={(e) => hover(e, false)}
@@ -446,4 +383,5 @@ export default function CaseStudies() {
     </section>
   );
 }
+
 

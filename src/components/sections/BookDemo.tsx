@@ -346,27 +346,10 @@ export default function BookDemo() {
                 WebkitMaskImage: "linear-gradient(to right, #000 82%, transparent 100%)",
               }}
             >
-              <div className="flex items-center gap-6 whitespace-nowrap text-[#0b0b12]">
-                <span className="bd-logo flex items-center gap-2">
-                  <RingMark />
-                  <span className="text-[19px] font-extrabold tracking-tight">AURIX</span>
-                </span>
-                <span className="bd-logo flex items-center gap-2">
-                  <GearMark />
-                  <span className="font-serif text-[18px]">Lunair</span>
-                </span>
-                <span className="bd-logo flex items-center gap-2">
-                  <Snowflake />
-                  <span className="font-serif text-[18px]">Northway</span>
-                </span>
-                <span className="bd-logo flex items-center gap-2">
-                  <Diamonds />
-                  <span className="font-serif text-[18px]">Verdan</span>
-                </span>
-                <span className="bd-logo flex items-center gap-2">
-                  <Pinwheel />
-                  <span className="font-serif text-[18px]">Neurova</span>
-                </span>
+              <div className="flex flex-wrap items-center gap-4 text-[#0b0b12]">
+                {['Contractors', 'Quantity surveyors', 'Design professionals'].map(role => (
+                  <span key={role} className="bd-logo rounded-full border border-black/10 bg-[#fdfcf8] px-4 py-2 text-[14px]">{role}</span>
+                ))}
               </div>
             </div>
           </div>
@@ -624,3 +607,4 @@ export default function BookDemo() {
     </section>
   );
 }
+

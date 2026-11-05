@@ -9,7 +9,7 @@ const BRAND = "Stratora";
 
 const LINKS = [
   { label: "Features", href: "/#features" },
-  { label: "Case Study", href: "/case-studies" },
+  { label: "Use cases", href: "/case-studies" },
   { label: "Pricing", href: "/#pricing" },
   { label: "Journal", href: "/journal" },
   { label: "About", href: "/about" },
@@ -142,3 +142,4 @@ export default function Nav() {
     </>
   );
 }
+

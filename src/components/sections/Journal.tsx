@@ -22,11 +22,10 @@ const mono = {
     'var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 };
 
-type AuthorKey = "daniel" | "maya";
+type AuthorKey = "stratora";
 
 const AUTHORS: Record<AuthorKey, { name: string; role: string; avatar: string }> = {
-  daniel: { name: "Daniel Mercer", role: "Founder & CEO", avatar: "/journal/daniel-mercer.avif" },
-  maya: { name: "Maya Chen", role: "Head of Product", avatar: "/journal/maya-chen.avif" },
+  stratora: { name: "Stratora", role: "Construction intelligence", avatar: "/logo.png" },
 };
 
 type Post = {
@@ -41,97 +40,88 @@ type Post = {
 };
 
 const FEATURED: Post = {
-  slug: "announcing-stratora-1-0",
-  title: "Announcing Stratora 1.0 — planning that writes itself",
-  excerpt:
-    "Meet the connected planning workspace that turns goals, context, and team decisions into clear, actionable plans.",
-  date: "Oct 7, 2026",
-  author: "daniel",
-  image: "/journal/announcing-stratora-1-0.avif",
-  href: "/team-alignment",
+  "slug": "announcing-stratora-1-0",
+  "title": "Construction intelligence, connected.",
+  "excerpt": "Drawings, documents, quantities and conversations, brought closer to the decisions that matter.",
+  "date": "Nov 5, 2026",
+  "author": "stratora",
+  "image": "/construction/site-review.webp",
+  "href": "/team-alignment"
 };
 
 const POSTS: Post[] = [
   {
-    slug: "ai-planning-human-decisions",
-    title: "AI Planning, Human Decisions",
-    excerpt:
-      "Use AI to build a strong first draft while your team keeps ownership of estimates, tradeoffs, and final calls.",
-    date: "Oct 7, 2026",
-    author: "maya",
-    image: "/journal/ai-planning-human-decisions.avif",
-    href: "#",
+    "slug": "ai-planning-human-decisions",
+    "title": "AI answers. Professional judgment.",
+    "excerpt": "Use project intelligence to find the detail, then check the evidence before you act.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/hero-bg-2.webp",
+    "href": "/journal/ai-planning-human-decisions"
   },
   {
-    slug: "strategy-into-weekly-work",
-    title: "Strategy Into Weekly Work",
-    excerpt:
-      "Turn product strategy into clear outcomes, milestones, and the next actions your team can start this week.",
-    date: "Oct 7, 2026",
-    author: "maya",
-    image: "/journal/strategy-into-weekly-work.avif",
-    href: "#",
+    "slug": "strategy-into-weekly-work",
+    "title": "A clearer weekly site review",
+    "excerpt": "Bring current drawings, open questions and accountable next steps into one focused conversation.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/site-review.webp",
+    "href": "/journal/strategy-into-weekly-work"
   },
   {
-    slug: "reviews-that-end-in-decisions",
-    title: "Reviews That End in Decisions",
-    excerpt:
-      "Replace status-heavy meetings with focused reviews that surface changes, blockers, owners, and next steps.",
-    date: "Oct 7, 2026",
-    author: "maya",
-    image: "/journal/reviews-that-end-in-decisions.avif",
-    href: "#",
+    "slug": "reviews-that-end-in-decisions",
+    "title": "Drawing reviews that move work forward",
+    "excerpt": "Turn markups into clear questions, useful conversations and documented next steps.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/solution-plan.webp",
+    "href": "/journal/reviews-that-end-in-decisions"
   },
   {
-    slug: "spot-dependencies-earlier",
-    title: "Spot Dependencies Earlier",
-    excerpt:
-      "Make cross-team dependencies visible early enough to clarify ownership, adjust timing, and prevent blockers.",
-    date: "Oct 7, 2026",
-    author: "daniel",
-    image: "/journal/spot-dependencies-earlier.avif",
-    href: "#",
+    "slug": "spot-dependencies-earlier",
+    "title": "Find the gap between disciplines",
+    "excerpt": "Read the architectural, structural and services information together before the detail reaches site.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/problem-board.webp",
+    "href": "/journal/spot-dependencies-earlier"
   },
   {
-    slug: "briefs-that-stay-useful",
-    title: "Briefs That Stay Useful",
-    excerpt:
-      "Keep the problem, evidence, scope, and key decisions connected as an initiative moves from planning to delivery.",
-    date: "Oct 7, 2026",
-    author: "maya",
-    image: "/journal/briefs-that-stay-useful.avif",
-    href: "#",
+    "slug": "briefs-that-stay-useful",
+    "title": "Project briefs that stay useful",
+    "excerpt": "Keep scope, source information and key decisions clear as a construction project develops.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/about-hero.webp",
+    "href": "/journal/briefs-that-stay-useful"
   },
   {
-    slug: "requests-arent-commitments",
-    title: "Requests Aren’t Commitments",
-    excerpt:
-      "Create a clear path from customer feedback to product decisions without treating every request as a promise.",
-    date: "Oct 7, 2026",
-    author: "maya",
-    image: "/journal/requests-arent-commitments.avif",
-    href: "#",
+    "slug": "requests-arent-commitments",
+    "title": "An RFI is a question, not an instruction",
+    "excerpt": "Keep requests, responses and authorized changes distinct throughout the project.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/solution-align.webp",
+    "href": "/journal/requests-arent-commitments"
   },
   {
-    slug: "launch-with-less-chaos",
-    title: "Launch With Less Chaos",
-    excerpt:
-      "Prepare owners, dependencies, communication, and fallback decisions before release week becomes urgent.",
-    date: "Oct 7, 2026",
-    author: "daniel",
-    image: "/journal/launch-with-less-chaos.avif",
-    href: "#",
+    "slug": "launch-with-less-chaos",
+    "title": "A better handover starts earlier",
+    "excerpt": "Organize current documents and open items before the last week of a construction stage.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/contact-notebook.webp",
+    "href": "/journal/launch-with-less-chaos"
   },
   {
-    slug: "keep-decision-context",
-    title: "Keep Decision Context",
-    excerpt:
-      "Preserve the reasoning behind priorities and tradeoffs so growing teams can act without repeated alignment.",
-    date: "Oct 7, 2026",
-    author: "daniel",
-    image: "/journal/keep-decision-context.avif",
-    href: "#",
-  },
+    "slug": "keep-decision-context",
+    "title": "Keep the reasoning with the drawing",
+    "excerpt": "Record why a decision was made so the next person does not have to reconstruct it.",
+    "date": "Nov 5, 2026",
+    "author": "stratora",
+    "image": "/construction/features-align.webp",
+    "href": "/journal/keep-decision-context"
+  }
 ];
 
 /* ------------------------------------------------------------------ */
@@ -186,7 +176,7 @@ function Avatar({ who }: { who: AuthorKey }) {
   return (
     <div className="jr-avatar relative h-[34px] w-[34px] shrink-0 overflow-hidden rounded-[7px]">
       {a.avatar ? (
-        <Image src={a.avatar} alt={a.name} fill sizes="34px" className="object-cover" />
+        <Image src={a.avatar} alt={a.name} fill sizes="34px" className="object-contain p-1" />
       ) : (
         <div
           className="flex h-full w-full items-center justify-center text-[12px] font-semibold text-[#0b0b12]"
@@ -400,4 +390,5 @@ export default function Journal() {
     </section>
   );
 }
+
 
