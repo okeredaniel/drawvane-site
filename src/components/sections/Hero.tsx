@@ -179,13 +179,13 @@ export default function Hero() {
             </h1>
             <p className="mt-5 max-w-[570px] text-[18px] leading-[1.5] text-[#4a4c5c] sm:text-[20px]">
               <strong className="font-semibold" style={{ color: INK }}>
-                Bad data. $89B in rework.*
+                $89B is lost to construction rework every year.
               </strong>
               <br />
-              Stratora helps you find answers before mistakes become expensive.
+              Stratora gives you answers before mistakes happen.
             </p>
             <p className="mt-3 max-w-[570px] text-[12px] leading-[1.5] text-[#5b6072]">
-              *Estimated global construction rework linked to bad data in 2020.
+              Source: Estimated global construction rework linked to bad data in 2020.
               {" "}
               <a
                 href="https://constructioncloud.autodesk.com/rs/572-JSV-775/images/harnessing_the_data_advantage_in_construction_fmi_apac.pdf"
